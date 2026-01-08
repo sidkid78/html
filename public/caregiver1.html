@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase - The Home They Love</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+      --c-bg: #f7f5f0;
+      --c-text: #2d2d2d;
+      --c-accent: #6b7a66;
+      --c-dark: #1a1a1a;
+      --c-glass: rgba(255, 255, 255, 0.85);
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--c-bg);
+      color: var(--c-text);
+      font-family: var(--font-sans);
+      line-height: 1.7;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    /* SVG Texture Overlay */
+    .texture-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+      filter: url(#paper-grain);
+      mix-blend-mode: multiply;
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      color: var(--c-dark);
+    }
+
+    p {
+      margin-bottom: 1.5em;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: #4a4a4a;
+    }
+
+    /* Layout Classes */
+    .section {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 10px;
+    }
+
+    .sticky-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .sticky-bg {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .content-card {
+      background: var(--c-glass);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      padding: clamp(2rem, 5vw, 4rem);
+      max-width: 800px;
+      width: 90%;
+      margin: 5rem auto;
+      border-left: 4px solid var(--c-accent);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1s ease-out forwards;
+      animation-timeline: view();
+      animation-range: entry 10% cover 30%;
+    }
+
+    /* Hero Specifics */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 5vw;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      line-height: 1.1;
+      color: #f7f5f0;
+      max-width: 1200px;
+      margin-bottom: 2rem;
+    }
+
+    .meta-block {
+      font-size: 0.9rem;
+      font-family: var(--font-sans);
+      letter-spacing: 0.05em;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      padding-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .tags span {
+      display: inline-block;
+      padding: 0.2em 0.8em;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Narrative Flow */
+    .narrative {
+      background: var(--c-bg);
+      padding: 10vh 5vw;
+      text-align: left;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .pull-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-style: italic;
+      color: var(--c-accent);
+      border-left: none;
+      text-align: center;
+      margin: 3rem 0;
+      line-height: 1.4;
+    }
+
+    .stat-highlight {
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--c-accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Utility */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--c-dark);
+      color: white;
+      padding: 1rem 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      margin-top: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: var(--c-accent);
+      transform: translateY(-2px);
+    }
+
+    /* Specific Image Overrides for fit */
+    .object-center {
+      object-position: center;
+    }
+
+    .object-top {
+      object-position: top;
+    }
+
+    @media (max-width: 768px) {
+      .sticky-bg {
+        position: relative;
+        height: 60vh;
+      }
+
+      .section {
+        min-height: auto;
+        display: block;
+      }
+
+      .content-card {
+        margin: -50px auto 3rem;
+        position: relative;
+        z-index: 10;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters definition -->
+  <svg style="display: none;">
+    <defs>
+      <filter id="paper-grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.1 0" in="noise"
+          result="coloredNoise" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="texture-overlay"></div>
+
+  <!-- HERO -->
+  <div class="sticky-wrapper">
+    <img
+      src="https://image.pollinations.ai/prompt/warm%20sunlight%20kitchen%20mother%20and%20adult%20daughter%20hugging%20laughing%20modern%20home%20photorealistic%20ar%2016:9?width=1920&height=1080&nologo=true"
+      class="sticky-bg object-center" alt="Mother and daughter hugging in kitchen">
+
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%;">
+      <div class="hero">
+        <h1>The Home They Love Shouldn’t Be the Place That Hurts Them</h1>
+        <div class="meta-block">
+          <p style="color: #eee; margin-bottom: 1rem; width: 100%;">Discover how to bridge the independence gap for
+            aging parents. Learn how AI-powered home scans and CAPS-certified design keep the homes they love safe and
+            stylish.</p>
+          <div class="tags">
+            <span>#Aging in Place</span>
+            <span>#Home Modification</span>
+            <span>#Sandwich Generation</span>
+            <span>#Senior Safety</span>
+            <span>#Inclusive Design</span>
+            <span>#HOMEase</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NARRATIVE: THE FEAR -->
+  <section class="narrative">
+    <h2>The Home They Love Shouldn’t Be the Place That Hurts Them</h2>
+    <p>There is a specific kind of silence that happens when you call your mom’s house and she doesn’t answer after four
+      rings. Your heart rate spikes. Your breath hitches. You wonder: Did she just step out to the garden to check on
+      the hydrangeas, or is she lying on the bathroom tile, unable to reach the phone?</p>
+    <p>This isn't just paranoia; it’s the quiet, constant background noise of being part of the "Sandwich Generation."
+      Most of us grew up in homes designed for 30-year-olds with sturdy knees and perfect balance. We have steep stairs,
+      slick porcelain tubs, and narrow hallways that were meant for bustling families, not for the slow, graceful aging
+      of the people we love. As our parents grow older, these familiar, memory-filled spaces undergo a silent
+      transformation. They shift from a "home" into a "hazard map."</p>
+    <p>The very place where you learned to walk becomes the place where they are most likely to fall. At HOMEase, we
+      believe the place they love shouldn't be the place that hurts them. We’re here to bridge the gap between wanting
+      to stay and being able to do so safely.</p>
+  </section>
+
+  <!-- DATA SECTION -->
+  <section class="narrative" style="background-color: #f0ede6; padding: 5rem 5vw; max-width: 100%;">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">The Heart of the Matter: The Independence Gap</h2>
+      <p><span class="stat-highlight">87%</span> AARP research shows that a staggering 87% of seniors want to age in
+        their own homes. They want the kitchen where they taught you to bake; the porch where they watch the sunset; the
+        living room where they hosted thirty years of Christmas mornings. However, the reality of American
+        infrastructure is bleak: currently, only 3% of American homes are actually safe enough to let them stay there as
+        they age.</p>
+      <p>This discrepancy creates what we call "The Independence Gap," where the desire for autonomy clashes with the
+        physical limitations of the environment. Most homes lack the basic features required for long-term safety, such
+        as no-step entries, wide doorways, or accessible controls like lowered light switches and smart thermostats that
+        can be adjusted without reaching or straining. We aren't just talking about wheelchair accessibility; we are
+        talking about the subtle changes that make daily life manageable and safe for someone whose mobility is
+        changing.</p>
+    </div>
+  </section>
+
+  <!-- TECH SECTION -->
+  <div class="sticky-wrapper">
+    <img
+      src="https://image.pollinations.ai/prompt/smartphone%20screen%20showing%20AR%20scan%20of%20bathroom%20grab%20bar%20wireframe%20interface%20modern%20tech%20cinematic?width=1920&height=1080&nologo=true"
+      class="sticky-bg object-center" alt="Smartphone showing AI scan">
+    <div style="position: relative; z-index: 10; padding-bottom: 10vh;">
+      <div class="content-card">
+        <h2>Seeing Your Home Through New Eyes</h2>
+        <p>At HOMEase, we didn’t build our platform to be just another tech tool. We built it to give you clarity and
+          peace of mind. Using your smartphone, you can perform a simple two-minute walk-through of your parents' home.
+          Our AI doesn't just see "rooms"—it identifies the trip hazard at the rug’s edge, the lack of leverage in the
+          shower, and the height of a threshold that a walker simply cannot clear.</p>
+        <p>Within minutes, the AI processes this data and provides a comprehensive safety roadmap. You aren’t looking at
+          a vague list of problems; you’re looking at a personalized plan for independence. Our integrated AR tool even
+          lets you visualize the solutions. You can see exactly how a beautiful, curbless shower looks in their specific
+          bathroom, removing the guesswork and the "what-if" anxiety that often stalls these necessary conversations.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN SECTION -->
+  <div class="sticky-wrapper">
+    <img
+      src="https://image.pollinations.ai/prompt/luxury%20modern%20accessible%20bathroom%20curbless%20shower%20wood%20bench%20spa%20atmosphere?width=1920&height=1080&nologo=true"
+      class="sticky-bg object-center" alt="Luxury accessible bathroom">
+    <div style="position: relative; z-index: 10; padding-bottom: 10vh;">
+      <div class="content-card">
+        <h2>Safety That Feels Like Home</h2>
+        <p>One of the biggest hurdles in senior home modification is the stigma of aging. Many parents resist changes
+          because they don't want their home to look like a hospital ward. This is where the concept of "Invisible
+          Safety" comes in. Modern modifications don't have to be clunky, chrome, or clinical.</p>
+        <p>We focus on high-end interior design that incorporates safety features seamlessly. Think of it as "hotel
+          luxury" meets "home safety." Curbless showers, designer grab bars that double as elegant towel racks, and
+          smart lighting that illuminates the path to the bathroom at night can all be integrated without sacrificing
+          the home's aesthetic. We ensure the home remains a sanctuary, not a reminder of decline.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPERTISE SECTION -->
+  <div class="sticky-wrapper">
+    <img
+      src="https://image.pollinations.ai/prompt/friendly%20contractor%20showing%20plans%20to%20happy%20family%20at%20dining%20table%20warm%20lighting?width=1920&height=1080&nologo=true"
+      class="sticky-bg object-top" alt="Family consultation">
+    <div style="position: relative; z-index: 10; padding-bottom: 10vh;">
+      <div class="content-card">
+        <h2>Expertise You Can Lean On</h2>
+        <p>The home modification industry can be a minefield of unvetted general contractors who don't understand the
+          specific needs of aging bodies. We solve this through our curated network of professionals. We only partner
+          with CAPS-certified (Certified Aging-in-Place Specialist) experts.</p>
+        <p>These specialists are trained by the National Association of Home Builders to understand the unique needs of
+          older adults. They treat your parents' home with the same reverence you do. Every contractor in our network is
+          vetted for licenses, insurance, and specialized training, ensuring that the work performed is technically
+          sound and empathetically executed. We wouldn't send anyone into your mom's house that we wouldn't trust in our
+          own.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROACTIVE & CONCLUSION -->
+  <section class="narrative" style="max-width: 900px; padding-bottom: 5rem;">
+    <h2>Choosing Safety Before the Crisis</h2>
+    <p>Too often, home modifications happen in a state of crisis—after a fall, after a broken hip, or after a hospital
+      discharge. This reactive approach is stressful, expensive, and often leads to rushed decisions. HOMEase encourages
+      a proactive shift.</p>
+    <p>By identifying hazards before they cause an injury, we move the conversation from "what happened" to "what is
+      possible." We turn the Independence Gap into a celebration of longer, self-sufficient lives. When you optimize a
+      home early, you aren't just building ramps; you are preserving dignity and ensuring that the last move a person
+      makes is a choice, not a medical necessity.</p>
+
+    <div style="background: var(--c-dark); color: #f7f5f0; padding: 3rem; margin-top: 4rem; border-radius: 4px;">
+      <h2 style="color: white; margin-bottom: 1rem;">Conclusion</h2>
+      <p style="color: #ccc;">The best nursing home in the world will never smell like Mom’s kitchen or feel like the
+        house you grew up in. Our mission is simple: to make sure she never has to leave it. By combining cutting-edge
+        technology with a human-centric approach to design, HOMEase is redefining what it means to age in place. We are
+        here to ensure that "home" remains the safest place on earth for the people who mean the most to you.</p>
+      <p style="color: white; font-weight: 600; font-size: 1.25rem; margin-top: 2rem;">Scan Mom’s home today—it’s a
+        simple step that might just be the most important thing you do this year.</p>
+    </div>
+  </section>
+
+  <footer style="background: #111; color: #555; padding: 2rem; text-align: center; font-size: 0.8rem;">
+    &copy; HOMEase. Designed with care.
+  </footer>
+
+</body>
+
+</html>

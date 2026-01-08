@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOMEase Scrollytelling Art</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --text-light: #f3f4f6;
+            --accent-red: #ef4444;
+            --accent-gold: #d97706;
+            --accent-blue: #3b82f6;
+            --glass: rgba(255, 255, 255, 0.1);
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            font-size: 18px;
+            line-height: 1.6
+        }
+
+        .svg-filters {
+            position: absolute;
+            width: 0;
+            height: 0
+        }
+
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.4;
+            filter: url(#noise)
+        }
+
+        .scrolly-container {
+            width: 100%;
+            max-width: 100vw
+        }
+
+        .slide {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden
+        }
+
+        .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.7)
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0, rgba(0, 0, 0, 0.5) 90%);
+            z-index: 1;
+            pointer-events: none
+        }
+
+        /* TYPOGRAPHY */
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            line-height: 1.1
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5)
+        }
+
+        .display-text {
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            max-width: 800px;
+            position: relative;
+            z-index: 10
+        }
+
+        .highlight {
+            color: var(--accent-red);
+            font-style: italic
+        }
+
+        .highlight-gold {
+            color: var(--accent-gold)
+        }
+
+        .highlight-blue {
+            color: var(--accent-blue)
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse-red {
+
+            0%,
+            100% {
+                text-shadow: 0 0 10px rgba(239, 68, 68, 0)
+            }
+
+            50% {
+                text-shadow: 0 0 20px rgba(239, 68, 68, 0.8)
+            }
+        }
+
+        .pulse-text {
+            animation: pulse-red 3s infinite ease-in-out
+        }
+
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s forwards;
+            animation-fill-mode: forwards;
+            animation-timeline-delay: 1s;
+            animation-range: entry 10% cover 30%;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* SECTION SPECIFIC */
+        .section-fear {
+            background: #000;
+            text-align: center
+        }
+
+        .fear-content {
+            max-width: 700px;
+            text-align: left;
+            border-left: 4px solid var(--accent-red);
+            padding-left: 2rem;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px)
+        }
+
+        .section-stats {
+            background: #f3f4f6;
+            color: #111;
+            flex-direction: column;
+            align-items: flex-start
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 3rem
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1)
+        }
+
+        .big-num {
+            font-size: 5rem;
+            font-weight: 700;
+            display: block;
+            font-family: var(--font-serif)
+        }
+
+        .section-tech {
+            color: var(--text-light);
+            text-align: center
+        }
+
+        .ar-overlay {
+            border: 2px solid var(--accent-red);
+            padding: 2rem;
+            position: relative;
+            background: rgba(0, 0, 0, 0.6);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px)
+        }
+
+        .ar-marker {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-red);
+            padding: 0.25rem 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px
+        }
+
+        .section-future {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0;
+            min-height: 100vh
+        }
+
+        @media (max-width:768px) {
+            .section-future {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .split-pane {
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem
+        }
+
+        .split-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1
+        }
+
+        .bg-dark-pane {
+            background: rgba(0, 0, 0, 0.7)
+        }
+
+        .bg-light-pane {
+            background: rgba(255, 255, 255, 0.3);
+            color: #111
+        }
+
+        .section-mission {
+            color: var(--text-light)
+        }
+
+        .warm-filter {
+            filter: sepia(0.3) saturate(1.2) contrast(1.1) brightness(0.6)
+        }
+
+        .mission-text {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2)
+        }
+
+        .section-faq {
+            background: #111;
+            flex-direction: column;
+            align-items: center
+        }
+
+        .faq-container {
+            max-width: 800px;
+            width: 100%
+        }
+
+        details {
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease
+        }
+
+        details[open] {
+            background: rgba(255, 255, 255, 0.1)
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 1.2rem;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 1.5rem
+        }
+
+        details[open] summary::after {
+            content: '-'
+        }
+
+        details p {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #ccc
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--text-light);
+            color: var(--bg-dark);
+            padding: 1.5rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 3rem;
+            transition: transform 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            background: var(--accent-gold)
+        }
+
+        img {
+            max-width: 100%;
+            display: block
+        }
+    </style>
+</head>
+
+<body><svg class="svg-filters">
+        <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 -0.2" />
+        </filter>
+    </svg>
+    <div class="grain-overlay"></div><!-- ACT 1: THE FEAR (Image 1) -->
+    <article>
+        <section class="slide section-fear"><!-- USER IMAGE 1: Dark Hallway/Person on Phone --><img
+                src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (45).jpg?q=80&w=2000&auto=format&fit=crop"
+                class="slide-bg" alt="Dark Hallway - User Storyboard Image 1">
+            <div class="vignette"></div>
+            <div class="fear-content reveal-up">
+                <h1>Title: The Home They Love Shouldn’t Be the Place That Hurts Them.</h1>
+                <p class="display-text">There is a specific kind of silence that happens when you call your mom’s house
+                    and she doesn't answer after four rings. Your heart rate spikes. You wonder: <span
+                        class="highlight pulse-text">Did she just step out to the garden, or is she lying on the
+                        bathroom tile?</span></p><br>
+                <p>Most of us grew up in homes designed for 30-year-olds. We have steep stairs, slick tubs, and narrow
+                    hallways. But as the people we love grow older, these familiar spaces transform from "home" into a
+                    "hazard map."</p>
+            </div>
+        </section><!-- ACT 2: THE PROBLEM (Data) -->
+        <section class="slide section-stats">
+            <div class="reveal-up">
+                <h2>The Gap Between Wanting to Stay and Being Able To</h2>
+                <div class="stat-grid">
+                    <div class="stat-card"><span class="big-num highlight-blue">87%</span>
+                        <p>of seniors want to age in their own homes. They want the kitchen where they taught you to
+                            bake; the porch where they watch the sunset.</p>
+                    </div>
+                    <div class="stat-card" style="background:#1a1a1a; color:white"><span
+                            class="big-num highlight-red">3%</span>
+                        <p>of American homes are actually safe enough to let them stay there.</p>
+                    </div>
+                </div>
+                <p style="margin-top:2rem; max-width:800px">At HOMEase, we believe "Aging in Place" shouldn’t be a
+                    luxury or a gamble. It should be a standard.</p>
+            </div>
+        </section><!-- ACT 3: THE SOLUTION (Image 2 - AR View) -->
+        <section class="slide section-tech"><!-- USER IMAGE 2: Phone AR scanning rug --><img
+                src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (48).jpg?q=80&w=2000&auto=format&fit=crop"
+                class="slide-bg" alt="Phone Scanning Hazard - User Storyboard Image 2">
+            <div class="vignette" style="background:rgba(0,0,0,0.7)"></div>
+            <div class="reveal-up" style="z-index:2; max-width:600px">
+                <h2 class="highlight-blue" style="margin-bottom:20px">Technology with a Soul</h2>
+                <p>We didn’t build HOMEase AI to be another tech platform. We built it to give you <strong>The Scan of
+                        Certainty.</strong></p>
+                <div class="ar-overlay" style="margin-top:2rem">
+                    <div class="ar-marker">AI DETECTION ACTIVE</div>
+                    <h3 style="color:var(--accent-red); font-family:var(--font-sans)">TRIP HAZARD DETECTED</h3>
+                    <p>Using your phone, you can walk through your parents' home. Our AI doesn't just see "rooms"—it
+                        sees the trip hazard at the rug’s edge, the lack of leverage in the shower, and the height of
+                        the threshold that a walker can't clear.</p>
+                    <p style="margin-top:1rem; font-size:0.9rem; border-top:1px solid #555; padding-top:1rem">
+                        Generating: <strong>Blueprint for Independence</strong></p>
+                </div>
+            </div>
+        </section><!-- ACT 4: THE FUTURE (Image 3 - Split View) -->
+        <section class="slide section-future"><!-- Left: The Features -->
+            <div class="split-pane bg-dark-pane">
+                <div class="reveal-up" style="padding-left:2rem">
+                    <h3>Within minutes, you aren’t looking at a "lead report"—you’re looking at a Blueprint for
+                        Independence.</h3>
+                    <ul style="margin-top:2rem; list-style:none">
+                        <li style="margin-bottom:1.5rem"><strong class="highlight-gold">See the Future:</strong> Our AR
+                            tool lets you see exactly how a beautiful, ADA-compliant curbless shower looks in
+                            <em>their</em> bathroom. No guesswork.
+                        </li>
+                        <li style="margin-bottom:1.5rem"><strong class="highlight-gold">The Circle of Trust:</strong> We
+                            don’t just "sell leads" to any contractor with a truck. We only partner with CAPS-certified
+                            specialists who treat your parents' home with the same reverence you do.</li>
+                        <li><strong class="highlight-gold">Zero-Wasted Anxiety:</strong> No more "vague estimates." You
+                            get a precise scope of work so you can stop worrying about the "what ifs" and start enjoying
+                            the "right nows."</li>
+                    </ul>
+                </div>
+            </div><!-- Right: The Visual (Bathroom) -->
+            <div class="split-pane bg-light-pane"><!-- USER IMAGE 3: Bathroom Renovation AR --><img
+                    src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (39).jpg?q=80&w=2000&auto=format&fit=crop"
+                    class="split-img" alt="Modern Bathroom - User Storyboard Image 3">
+                <div class="reveal-up" style="text-align:center">
+                    <h2>See the Future</h2>
+                    <p>Transforming hazard zones into safe havens.</p>
+                </div>
+            </div>
+        </section><!-- ACT 5: THE MISSION (Image 4 - Grandma) -->
+        <section class="slide section-mission"><!-- USER IMAGE 4: Happy Grandma in Kitchen --><img
+                src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (42).jpg?q=80&w=2000&auto=format&fit=crop"
+                class="slide-bg warm-filter" alt="Grandma Baking - User Storyboard Image 4">
+            <div class="mission-text reveal-up">
+                <h2>Our Mission: The Last Move is a Choice</h2>
+                <p>We aren't here to build ramps; we are here to preserve dignity. We are here to ensure that the
+                    "Demographic Bomb" isn't a crisis, but a celebration of longer, independent lives.</p>
+                <p style="margin-top:1.5rem; font-style:italic; font-size:1.4rem; font-family:var(--font-serif)">Because
+                    the best nursing home in the world will never smell like Mom’s kitchen. We’re here to make sure she
+                    never has to leave it.</p>
+            </div>
+        </section><!-- ACT 6: FAQs & CTA -->
+        <section class="slide section-faq">
+            <div class="faq-container reveal-up">
+                <h3 style="margin-bottom:2rem; text-align:center">FAQs (The Human Edition)</h3>
+                <details>
+                    <summary>Is this going to make my dad feel "old"?</summary>
+                    <p>No. We focus on "Invisible Safety." Modern modifications look like high-end interior design, not
+                        a hospital ward. We preserve the "home" feel while adding "hotel" luxury safety.</p>
+                </details>
+                <details>
+                    <summary>Do I need to be a tech genius to use the scan?</summary>
+                    <p>If you can take a video of your kids, you can use HOMEase. It’s a 2-minute walk-through. The AI
+                        does the heavy lifting; you just hold the phone.</p>
+                </details>
+                <details>
+                    <summary>How do I know these contractors aren't scammers?</summary>
+                    <p>Every contractor in our network is vetted for licenses, insurance, and specialized Aging-in-Place
+                        certifications. We wouldn't send anyone into your mom's house that we wouldn't send into our
+                        own.</p>
+                </details>
+                <div style="text-align:center"><a href="#" class="cta-btn">Scan Mom’s Home Today — It’s Free and Takes 2
+                        Minutes</a></div>
+            </div>
+        </section>
+    </article>
+</body>
+
+</html>
