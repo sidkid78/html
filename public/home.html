@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase: The Home is the Medicine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* CUSTOM FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap');
+
+    :root {
+      --c-cream: #FDFBF7;
+      --c-slate: #1A202C;
+      --c-blue: #2B6CB0;
+      --c-teal: #319795;
+      --c-alert: #9B2C2C;
+      --c-paper: #F0EFE9;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--c-cream);
+      color: var(--c-slate);
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    .serif {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* SVG GRAIN FILTER CLASS */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.07;
+      filter: url(#noise);
+    }
+
+    /* SCROLLYTELLING UTILS */
+    .scroll-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .sticky-image-container {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .sticky-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1s ease-out;
+    }
+
+    .content-overlay {
+      position: relative;
+      z-index: 10;
+      background: rgba(253, 251, 247, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 3rem;
+      max-width: 600px;
+      margin: -20vh auto 0 auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* BLUEPRINT GRID BACKGROUND */
+    .bg-blueprint {
+      background-color: #f0f4f8;
+      background-image:
+        linear-gradient(rgba(43, 108, 176, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(43, 108, 176, 0.1) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* KINETIC TEXT ANIMATIONS */
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-text.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* INTERACTIVE FAQ DETAILS */
+    details>summary {
+      list-style: none;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    details>summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details[open] summary~* {
+      animation: sweep .5s ease-in-out;
+    }
+
+    @keyframes sweep {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* IMAGE BLEND MODES */
+    .blend-multiply {
+      mix-blend-mode: multiply;
+    }
+
+    /* SCANNER LINE ANIMATION */
+    .scanner-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #4FD1C5;
+      box-shadow: 0 0 15px #4FD1C5;
+      animation: scan 4s infinite linear;
+    }
+
+    @keyframes scan {
+      0% {
+        top: 0;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- SVG FILTERS -->
+  <svg style="display: none;">
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.4 0" />
+    </filter>
+  </svg>
+  <div class="noise-overlay"></div>
+
+  <!-- HERO -->
+  <header class="min-h-[80vh] flex items-center justify-center text-center px-6 relative">
+    <div class="max-w-4xl">
+      <p class="text-xs tracking-[0.3em] uppercase text-gray-500 mb-6 animate-pulse">Editorial • Social Impact •
+        Technology</p>
+      <h1 class="text-6xl md:text-8xl leading-none font-light mb-8 text-gray-900 serif">
+        The Home is the <br><span class="italic text-teal-700">Medicine</span>
+      </h1>
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        <span class="text-xs border border-gray-400 text-gray-500 px-3 py-1 rounded-full">#AgingInPlace</span>
+        <span class="text-xs border border-gray-400 text-gray-500 px-3 py-1 rounded-full">#HomeSafety</span>
+        <span class="text-xs border border-gray-400 text-gray-500 px-3 py-1 rounded-full">#Accessibility</span>
+      </div>
+      <div class="w-px h-24 bg-gray-300 mx-auto mt-8"></div>
+    </div>
+  </header>
+
+  <!-- SECTION 1: THE DANGER (Sticky Parallax) -->
+  <div class="relative">
+    <div class="sticky-image-container">
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (47).jpg" alt="Dangerous Bathroom"
+        class="sticky-image filter grayscale brightness-75 contrast-125">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
+    </div>
+
+    <section class="relative pb-32 pt-[60vh] px-4">
+      <div class="content-overlay reveal-on-scroll">
+        <h2 class="text-3xl serif mb-6 text-red-900 border-l-4 border-red-900 pl-4">The Danger</h2>
+        <p class="text-lg leading-relaxed mb-6">
+          The most dangerous place for an American over the age of 65 isn't a highway or a crowded city—it is their own
+          bathroom.
+        </p>
+        <p class="text-gray-700 mb-6">
+          Every 11 seconds, an older adult is treated in an emergency room for a fall. Every 19 minutes, one of those
+          falls is fatal. But the tragedy isn't just the injury; it’s the aftermath. A single trip on a loose rug or a
+          slip in a tub often marks the end of independence, forcing seniors out of the homes they love and into the
+          sterile, expensive, and lonely world of institutional care.
+        </p>
+        <p class="font-semibold text-gray-900">
+          We call this the "Accessibility Gap," but for families, it feels like a ticking clock.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <!-- SECTION 2: THE MISSION (Clean Typography) -->
+  <section class="py-32 px-6 bg-(--c-cream) text-center">
+    <div class="max-w-3xl mx-auto reveal-on-scroll">
+      <h2 class="text-4xl md:text-5xl serif mb-8 text-gray-900">The HOMEase Mission</h2>
+      <p class="text-xl md:text-2xl leading-relaxed font-light text-gray-600">
+        At HOMEase, we believe that <span class="text-teal-700 font-normal italic">aging is not a disease</span>, and a
+        home should not be a hazard. We are not just building a technology platform; we are building the infrastructure
+        for a life lived on one’s own terms.
+      </p>
+      <div class="grid md:grid-cols-2 gap-12 mt-16 text-left text-sm">
+        <div class="border-t border-gray-300 pt-4">
+          <strong class="block uppercase tracking-widest mb-2">The Problem</strong>
+          Current solutions are broken. Homeowners don't know what they need, and contractors are tired of chasing
+          "leads" that don't pan out.
+        </div>
+        <div class="border-t border-teal-500 pt-4">
+          <strong class="block uppercase tracking-widest mb-2 text-teal-700">The Solution</strong>
+          HOMEase solves this by putting the power of a professional home assessment into the palm of a daughter’s hand.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: HOW IT WORKS (Tech Visualization) -->
+  <section class="relative min-h-screen bg-slate-900 text-white flex items-center overflow-hidden">
+    <!-- Background Tech Image -->
+    <div class="absolute inset-0 opacity-40">
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (50).jpg" class="w-full h-full object-cover"
+        alt="AR Scan">
+    </div>
+    <div class="absolute inset-0 bg-blue-900/30 mix-blend-overlay"></div>
+    <div class="scanner-line"></div>
+
+    <div class="relative z-10 container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div class="reveal-on-scroll">
+        <div class="inline-block px-3 py-1 border border-cyan-400 text-cyan-400 text-xs tracking-widest mb-4">PRECISE
+          TECHNOLOGY</div>
+        <h2 class="text-4xl md:text-6xl serif mb-6">How It Works: <br>Dignity, Scaled</h2>
+        <p class="text-lg text-gray-300 mb-6">
+          Using simple, intuitive smartphone technology, a family member can scan a room in less than two minutes. Our
+          AI—trained on thousands of safety protocols—doesn't just "see" a bathroom; it identifies the exact height a
+          grab bar needs to be, the trip hazard in the doorway, and the potential for a curbless shower.
+        </p>
+        <p class="text-cyan-300 font-mono text-sm border-l-2 border-cyan-300 pl-4">
+          We remove the guesswork. We provide a Digital Blueprint for Independence.
+        </p>
+      </div>
+
+      <!-- Tech Cards -->
+      <div class="space-y-6 reveal-on-scroll delay-200">
+        <div
+          class="bg-white/10 backdrop-blur-md p-6 border border-white/20 rounded-lg hover:bg-white/20 transition duration-300">
+          <h3 class="text-xl font-bold mb-2 text-cyan-300">For Families</h3>
+          <p class="text-sm text-gray-300">A clear, visual roadmap to safety. No jargon, no high-pressure sales.</p>
+        </div>
+        <div
+          class="bg-white/10 backdrop-blur-md p-6 border border-white/20 rounded-lg hover:bg-white/20 transition duration-300">
+          <h3 class="text-xl font-bold mb-2 text-cyan-300">For Contractors</h3>
+          <p class="text-sm text-gray-300">Zero-waste opportunities. Validated, ready-to-build projects with precise
+            measurements.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE IMPACT (Split Screen) -->
+  <section class="min-h-screen bg-blueprint grid md:grid-cols-2">
+    <div class="relative h-64 md:h-auto overflow-hidden group">
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (42).jpg"
+        class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-105"
+        alt="Family and Contractor">
+      <div class="absolute inset-0 bg-teal-900/20 group-hover:bg-transparent transition duration-500"></div>
+    </div>
+    <div class="flex items-center p-8 md:p-16">
+      <div class="reveal-on-scroll">
+        <h2 class="text-4xl serif mb-6 text-slate-800">The Impact</h2>
+        <div class="text-6xl font-bold text-teal-800/20 absolute -mt-12 -ml-4 z-0 pointer-events-none">2030</div>
+        <p class="relative z-10 text-lg text-slate-700 mb-6">
+          By 2030, 71 million Americans will hit the age of 65. Only 3.5% of our housing stock is ready for them. This
+          is a massive structural failure, but it is also our greatest opportunity to do good.
+        </p>
+        <p class="relative z-10 text-slate-600 mb-8">
+          By streamlining the path from "unsafe" to "accessible," we aren't just generating revenue; we are preventing
+          the falls that break families apart. We are turning the $161 billion aging-in-place market into a movement for
+          human dignity.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: THE PROMISE (Warmth) -->
+  <section class="py-24 px-6 bg-[#f7f5f0]">
+    <div class="container mx-auto max-w-5xl grid md:grid-cols-12 gap-12 items-center">
+      <div class="md:col-span-5 order-2 md:order-1 reveal-on-scroll">
+        <div class="relative">
+          <div class="absolute -inset-4 border border-gray-900/10 z-0 transform translate-x-4 translate-y-4"></div>
+          <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (44).jpg"
+            class="relative z-10 shadow-xl grayscale hover:grayscale-0 transition duration-1000" alt="Happy Senior">
+        </div>
+      </div>
+      <div class="md:col-span-7 order-1 md:order-2 reveal-on-scroll">
+        <h2 class="text-4xl md:text-5xl serif mb-6">The HOMEase Promise</h2>
+        <p class="text-xl font-light italic text-gray-600 mb-6 border-l-4 border-yellow-500 pl-6">
+          We operate with a "Human-First" mandate. While our backend is powered by the world’s most advanced spatial
+          computing, our front-end is designed for the person who is worried about their father.
+        </p>
+        <p class="text-gray-800">
+          We are fast, we are data-driven, and we are asset-light. But we are driven by a heavy purpose: to ensure that
+          "home" remains the safest place on earth.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="py-24 px-6 bg-white border-t border-gray-100">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl serif mb-12 text-center">Frequently Asked Questions</h2>
+
+      <div class="space-y-4 reveal-on-scroll">
+        <details class="group border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+          <summary class="flex justify-between items-center p-5 font-semibold text-gray-800 hover:bg-gray-100">
+            Is this just for people with a lot of money?
+            <span class="transform group-open:rotate-180 transition-transform text-teal-600">▼</span>
+          </summary>
+          <div class="p-5 pt-0 text-gray-600 border-t border-gray-100 mt-2">
+            No. We are actively partnering with federal grant programs (like HUD’s OAHMP) to ensure that our assessment
+            tools and contractor network are available to low-income seniors who need these modifications the most.
+          </div>
+        </details>
+
+        <details class="group border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+          <summary class="flex justify-between items-center p-5 font-semibold text-gray-800 hover:bg-gray-100">
+            Do I need to be a tech expert to use the app?
+            <span class="transform group-open:rotate-180 transition-transform text-teal-600">▼</span>
+          </summary>
+          <div class="p-5 pt-0 text-gray-600 border-t border-gray-100 mt-2">
+            If you can take a photo, you can use HOMEase. We’ve designed the interface specifically for the "Adult
+            Child" and their parents, focusing on large icons, clear instructions, and zero technical friction.
+          </div>
+        </details>
+
+        <details class="group border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+          <summary class="flex justify-between items-center p-5 font-semibold text-gray-800 hover:bg-gray-100">
+            How do you vet your contractors?
+            <span class="transform group-open:rotate-180 transition-transform text-teal-600">▼</span>
+          </summary>
+          <div class="p-5 pt-0 text-gray-600 border-t border-gray-100 mt-2">
+            We don't just check licenses. We prioritize contractors who hold "Certified Aging-in-Place Specialist"
+            (CAPS) designations. These are professionals who understand the intersection of construction and clinical
+            safety.
+          </div>
+        </details>
+
+        <details class="group border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+          <summary class="flex justify-between items-center p-5 font-semibold text-gray-800 hover:bg-gray-100">
+            What happens to my data?
+            <span class="transform group-open:rotate-180 transition-transform text-teal-600">▼</span>
+          </summary>
+          <div class="p-5 pt-0 text-gray-600 border-t border-gray-100 mt-2">
+            Your home is your sanctuary. We use the highest levels of encryption and adhere to strict privacy standards.
+            Your spatial data is used only to generate your safety report and connect you with a qualified professional.
+          </div>
+        </details>
+
+        <details class="group border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+          <summary class="flex justify-between items-center p-5 font-semibold text-gray-800 hover:bg-gray-100">
+            Is this an emergency response system?
+            <span class="transform group-open:rotate-180 transition-transform text-teal-600">▼</span>
+          </summary>
+          <div class="p-5 pt-0 text-gray-600 border-t border-gray-100 mt-2">
+            No. HOMEase is proactive, not reactive. We want to fix the home *before* the emergency happens. We are the
+            "Pre-Fall" solution.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FOOTER -->
+  <footer class="bg-slate-900 text-white py-24 px-6 text-center">
+    <div class="max-w-2xl mx-auto">
+      <p class="serif text-3xl md:text-4xl mb-8 leading-tight">
+        Protect the home that protected you.
+      </p>
+      <a href="https://hom-ease-ai-main-4-zip--homeaseai.replit.app/"
+        class="inline-block bg-teal-600 hover:bg-teal-500 text-white font-bold py-4 px-8 rounded-full transition duration-300 transform hover:scale-105 shadow-lg shadow-teal-500/30 no-underline">
+        Start your 2-minute home scan today
+      </a>
+      <div class="mt-12 opacity-50 text-sm">
+        &copy; HOMEase. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Simple Intersection Observer to trigger fade-ins without external libs */
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            entry.target.classList.add('animate-fadeInUp');
+            // Optional: Unobserve after triggering once
+            // observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        el.classList.add('reveal-text');
+        observer.observe(el);
+      });
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home is the Best Medicine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* DESIGN SYSTEM & VARIABLES */
+    :root {
+      --color-bg: #F9F7F2;
+      --color-text: #2D3748;
+      --color-accent: #38B2AC;
+      --color-warm: #DD6B20;
+      --color-sage: #E6FFFA;
+      --color-dark: #1A202C;
+      --font-serif: 'Georgia', 'Times New Roman', serif;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* RESET & BASE */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* SVG FILTERS */
+    .texture-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+      mix-blend-mode: overlay;
+    }
+
+    /* TYPOGRAPHY UTILS */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-serif);
+      font-weight: 700;
+    }
+
+    .display-text {
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .sub-text {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+    }
+
+    .accent-text {
+      color: var(--color-warm);
+      font-style: italic;
+    }
+
+    /* SCROLLYTELLING SECTIONS */
+    section {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    /* SECTION 1: HERO */
+    .hero-section {
+      background-color: var(--color-dark);
+      color: var(--color-bg);
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .hero-img-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+      filter: grayscale(20%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      text-align: center;
+      animation: fadeUp 2s ease-out forwards;
+    }
+
+    /* SECTION 2: THE PROBLEM (Sticky) */
+    .problem-container {
+      background-color: #FED7D7;
+      color: #742A2A;
+    }
+
+    .stat-highlight {
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: 900;
+      line-height: 1;
+      color: #C53030;
+      animation: pulse 2s infinite;
+    }
+
+    /* SECTION 3: THE BRIDGE (Why) */
+    .bridge-section {
+      background: var(--color-bg);
+      display: grid;
+      grid-template-columns: 1fr;
+      align-content: center;
+    }
+
+    /* SECTION 4: TECH (Sticky Parallax) */
+    .tech-section {
+      background-color: #E6FFFA;
+      overflow: hidden;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .tech-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+      }
+    }
+
+    .scan-img-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .scan-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(56, 178, 172, 0.2) 0%, rgba(56, 178, 172, 0) 50%);
+      animation: scanMove 3s infinite linear;
+      border-bottom: 2px solid var(--color-accent);
+    }
+
+    /* SECTION 5: EXPERTS */
+    .expert-section {
+      background-color: #FFFAF0;
+    }
+
+    .expert-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      max-width: 1000px;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .polaroid-img {
+      flex: 1 1 300px;
+      transform: rotate(-2deg);
+      border: 10px solid white;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* SECTION 6: CONCLUSION */
+    .conclusion-section {
+      background-color: var(--color-accent);
+      color: white;
+      text-align: center;
+    }
+
+    .icon-graphic {
+      max-width: 200px;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    }
+
+    /* KEYFRAMES */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes scanMove {
+      0% {
+        top: -100%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    /* UTILITIES */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.7);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 2rem;
+      border-radius: 1rem;
+    }
+
+    .hash-tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: 1px solid currentColor;
+      padding: 0.2em 0.6em;
+      margin: 0.2em;
+      border-radius: 50px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- GLOBAL SVG FILTER -->
+  <svg class="hidden" style="display: none;">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5" />
+      </feComponentTransfer>
+    </filter>
+  </svg>
+  <div class="texture-overlay" style="filter: url(#noiseFilter);"></div>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-1 (17).png"
+      alt="Elderly couple looking at phone happily" class="hero-img-bg">
+    <div class="hero-content">
+      <div class="mb-6 flex justify-center flex-wrap">
+        <span class="hash-tag">#AgingInPlace</span>
+        <span class="hash-tag">#HomeSafety</span>
+        <span class="hash-tag">#Accessibility</span>
+      </div>
+      <h1 class="display-text mb-4">Your Home is the <span class="accent-text">Best Medicine</span></h1>
+      <p class="sub-text mb-8">A Simple Guide to Aging-in-Place</p>
+      <div class="glass-panel inline-block text-left text-gray-800">
+        <p>Every 11 seconds, a senior is treated for a fall. Learn how HOMEase uses simple 3D scanning and expert advice
+          to turn your home into a safe sanctuary for aging.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM INTRO -->
+  <section class="problem-container">
+    <div class="max-w-4xl text-center">
+      <p class="text-xl uppercase tracking-widest mb-4">The Silent Hazard</p>
+      <h2 class="display-text mb-8">The most dangerous place isn't a highway.</h2>
+      <div class="grid md:grid-cols-2 gap-12 text-left">
+        <div class="bg-white/50 p-8 rounded-lg">
+          <p class="text-2xl font-serif">It's their own bathroom.</p>
+          <p class="mt-4">Every <span class="font-bold text-red-700">11 seconds</span>, an older adult is treated in an
+            emergency room for a fall. Every 19 minutes, one of those falls is fatal.</p>
+        </div>
+        <div class="bg-white/50 p-8 rounded-lg flex flex-col justify-center">
+          <p class="font-serif italic text-lg">"The Accessibility Gap"</p>
+          <p class="mt-2">A single trip on a loose rug often marks the end of independence. We believe aging isn't a
+            disease, and your home shouldn't be a hazard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY SECTION -->
+  <section class="bridge-section">
+    <div class="max-w-3xl text-center">
+      <h2 class="text-4xl md:text-6xl mb-6 text-gray-800">Why Our Homes Aren't Ready for Us</h2>
+      <p class="text-xl text-gray-600 mb-8">By 2030, 71 million Americans will be over 65.</p>
+      <p class="sub-text text-left leading-relaxed">
+        However, a staggering 96.5% of our current houses aren't physically prepared. Most homes were designed for
+        young, able-bodied families. For a senior, narrow doorways and high-walled tubs aren't just design flaws—they're
+        obstacles to living with dignity.
+        <br><br>
+        When we talk about <strong>'The Home as Medicine,'</strong> we're talking about a mindset shift. We aren't just
+        renovating rooms; we're preventing the falls that break families apart.
+      </p>
+    </div>
+  </section>
+
+  <!-- TECH SECTION -->
+  <section class="tech-section">
+    <div class="tech-grid">
+      <div class="order-2 md:order-1">
+        <div class="scan-img-wrapper">
+          <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-2 (16).png"
+            alt="Phone scanning bathroom for safety" class="w-full h-auto block">
+          <div class="scan-overlay"></div>
+        </div>
+      </div>
+      <div class="order-1 md:order-2 text-left">
+        <h2 class="text-3xl md:text-5xl mb-6 text-teal-800">A 2-Minute Scan for Total Peace of Mind</h2>
+        <p class="mb-4 text-lg">You don't need to be a tech expert. If you can take a photo, you can use HOMEase. Simple
+          3D scanning on your smartphone lets you scan a room in less than two minutes.</p>
+        <ul class="space-y-4">
+          <li class="flex items-start">
+            <span class="mr-2 text-teal-500">✔</span> Identifies exact grab bar height.
+          </li>
+          <li class="flex items-start">
+            <span class="mr-2 text-teal-500">✔</span> Spots trip hazards.
+          </li>
+          <li class="flex items-start">
+            <span class="mr-2 text-teal-500">✔</span> Suggests curbless showers.
+          </li>
+        </ul>
+        <p class="mt-6 text-sm text-gray-500 italic">We use the highest levels of encryption to ensure your data is only
+          used to generate your safety report.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERT SECTION -->
+  <section class="expert-section">
+    <div class="expert-card">
+      <div class="flex-1 text-left">
+        <h2 class="text-3xl md:text-4xl mb-4 font-serif text-gray-800">Real Experts for Real Safety</h2>
+        <p class="mb-4">Nothing replaces the human touch. We prioritize professionals who are <strong>'Certified
+            Aging-in-Place Specialists' (CAPS)</strong>.</p>
+        <p class="mb-4">They know that a misplaced handrail can be just as dangerous as no handrail at all. By
+          connecting you with these specialized experts, we make sure every change is rooted in best practices.</p>
+        <blockquote class="border-l-4 border-orange-400 pl-4 italic text-gray-600">
+          "Making sure 'home' remains the safest place on earth for you."
+        </blockquote>
+      </div>
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-3 (17).png" alt="Safety Expert with Senior"
+        class="polaroid-img rounded-lg">
+    </div>
+  </section>
+
+  <!-- ACCESSIBILITY/COST -->
+  <section class="bg-white text-gray-800">
+    <div class="max-w-4xl text-center">
+      <h2 class="display-text mb-8">Safety Shouldn't Be a Luxury</h2>
+      <p class="sub-text mb-8">Is home safety only for people with big budgets? Absolutely not. We believe that safety
+        is a right.</p>
+      <div class="bg-gray-100 p-8 rounded-xl">
+        <p class="mb-4 text-left">We're actively partnering with federal grant programs, like <strong>HUD’s Older Adult
+            Home Modification Program</strong>. We want to help you fix the home before an emergency happens, allowing
+          you to protect the house that once protected you.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCLUSION -->
+  <section class="conclusion-section">
+    <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-4 (16).png" alt="Home Safety Icon" class="icon-graphic">
+    <div class="max-w-2xl px-4">
+      <h2 class="text-3xl md:text-5xl mb-6">Stop the Ticking Clock</h2>
+      <p class="text-xl md:text-2xl mb-8 opacity-90">The choice to age at home should be a happy one. Bridge the
+        accessibility gap with smart tech and caring experts.</p>
+      <a href="https://hom-ease-ai-main-4-zip--homeaseai.replit.app/"
+        class="inline-block border-2 border-white px-8 py-4 text-xl rounded-full hover:bg-white hover:text-teal-500 transition-colors cursor-pointer no-underline text-white">
+        Start your 2-minute home scan today
+      </a>
+      <p class="mt-8 opacity-75">Make sure your home stays a place of healing and independence.</p>
+    </div>
+  </section>
+
+</body>
+
+</html>
