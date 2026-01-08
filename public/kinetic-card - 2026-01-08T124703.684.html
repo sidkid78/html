@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOMEase Scrollytelling Art</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --c-bg: #f5f2eb;
+            --c-text-primary: #1a1a1a;
+            --c-text-muted: #4a4a4a;
+            --c-accent: #e05d44;
+            --c-tech: #2a9d8f;
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-mono: 'Courier New', monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--c-bg);
+            color: var(--c-text-primary);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* SVG Filters */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.07;
+            filter: url(#noiseFilter);
+        }
+
+        /* Typography Utilities */
+        .font-editorial {
+            font-family: var(--font-serif);
+        }
+
+        .font-tech {
+            font-family: var(--font-mono);
+        }
+
+        .text-shadow {
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Layout */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .full-img-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 0.5s ease-out;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .overlay-grad {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .sticky-text {
+            position: sticky;
+            top: 20vh;
+        }
+
+        /* Animations */
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20vh;
+            background: linear-gradient(to bottom, transparent, var(--c-tech), transparent);
+            opacity: 0.5;
+            animation: scanline 4s linear infinite;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal-text span {
+            opacity: 0;
+            display: inline-block;
+            animation: revealChar 0.05s forwards;
+        }
+
+        @keyframes revealChar {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Custom Components */
+        .faq-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--c-accent);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-card:hover {
+            transform: translateX(10px);
+        }
+
+        .split-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        @media(max-width:768px) {
+            .split-view {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body><!-- SVG Filters Definition --><svg style="display: none;">
+        <defs>
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+            </filter>
+            <filter id="blur-edge">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+            </filter>
+        </defs>
+    </svg><!-- Global Grain -->
+    <div class="grain-overlay"></div><!-- SECTION 1: The Haunting Silence -->
+    <section class="section text-white"><img src="[Storyboard Image 1]" class="full-img-bg"
+            style="filter: brightness(0.6) sepia(0.2);" alt="Dark Hallway">
+        <div class="overlay"></div>
+        <div class="content-layer text-center">
+            <h1 class="font-editorial text-5xl md:text-7xl mb-6 leading-tight text-shadow fade-in-up">Home shouldn’t be
+                a waiting room for a hospital.</h1>
+            <p class="text-xl md:text-2xl font-light max-w-2xl mx-auto leading-relaxed opacity-90 fade-in-up"
+                style="animation-delay: 0.5s;">There is a specific kind of silence that haunts the children of aging
+                parents. It’s the silence that follows a phone call you’ve been expecting for years—the one where your
+                mother tells you she "slipped" in the bathroom.</p>
+        </div>
+    </section><!-- SECTION 2: The Obstacles -->
+    <section class="section bg-[#1a1a1a] text-[#f5f2eb]">
+        <div class="content-layer grid md:grid-cols-2 gap-12 items-center">
+            <div class="font-editorial text-4xl md:text-5xl space-y-8">
+                <div class="fade-in-up" style="animation-delay: 0.2s;">The rug is a <span
+                        style="color:var(--c-accent); font-style:italic;">trip hazard.</span></div>
+                <div class="fade-in-up" style="animation-delay: 0.4s;">The tub is a <span
+                        style="color:var(--c-accent); font-style:italic;">mountain.</span></div>
+                <div class="fade-in-up" style="animation-delay: 0.6s;">The stairs are a <span
+                        style="color:var(--c-accent); font-style:italic;">gamble.</span></div>
+            </div>
+            <div class="text-lg md:text-xl leading-relaxed opacity-80">
+                <p class="mb-6">In that moment, the house she spent forty years turning into a home suddenly becomes a
+                    landscape of obstacles.</p>
+                <p>At HOMEase, we believe no one should be forced out of the home they love because the architecture
+                    failed to age with them. We don't see a "Demographic Bomb." We see millions of parents who deserve
+                    to keep their dignity, and millions of children who deserve to sleep through the night.</p>
+            </div>
+        </div>
+    </section><!-- SECTION 3: The Problem & Solution (Tech) -->
+    <section class="section text-white"><img src="[Storyboard Image 2]" class="full-img-bg"
+            style="filter: contrast(1.1);" alt="AR Scan">
+        <div class="overlay overlay-grad"></div>
+        <div class="scanner-line"></div>
+        <div class="content-layer">
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="bg-black/60 backdrop-blur-md p-8 border border-[#2a9d8f]">
+                    <h3 class="font-tech text-[#2a9d8f] mb-2 uppercase tracking-widest text-sm">// The Problem</h3>
+                    <h2 class="text-3xl font-bold mb-4">The Hidden Traps</h2>
+                    <p class="text-sm md:text-base opacity-90">Most homes were built for thirty-year-olds. But as we
+                        age, our environment stays static while our needs evolve. Only 3.5% of homes in this country are
+                        prepared for a senior to live in them safely. We call this the "Accessibility Gap."</p>
+                </div>
+                <div class="bg-black/60 backdrop-blur-md p-8 border border-white/20">
+                    <h3 class="font-tech text-[#2a9d8f] mb-2 uppercase tracking-widest text-sm">// The Solution</h3>
+                    <h2 class="text-3xl font-bold mb-4">A Second Set of Eyes</h2>
+                    <p class="text-sm md:text-base opacity-90">We’ve replaced the stress of "guessing" with the clarity
+                        of technology. Using a simple scan from a smartphone, HOMEase looks at a room and sees what the
+                        human eye misses. It identifies the missing handrail, the dangerous threshold, and the poor
+                        lighting.</p>
+                </div>
+            </div>
+        </div>
+    </section><!-- SECTION 4: The Vision -->
+    <section class="section" style="padding:0;">
+        <div class="split-view">
+            <div
+                style="background: url('[Storyboard Image 3]') center left/cover no-repeat; height:100%; border-right: 2px solid white;">
+            </div>
+            <div style="background: url('[Storyboard Image 3]') center right/cover no-repeat; height:100%;"></div>
+        </div>
+        <div class="content-layer w-full p-8">
+            <div class="bg-white/90 p-8 md:p-12 max-w-4xl mx-auto shadow-2xl mt-[50vh]">
+                <h2 class="font-editorial text-4xl mb-8 text-center text-black">How it Works <span
+                        class="text-lg font-sans text-gray-500 block mt-2">(The Caregiver’s Check)</span></h2>
+                <div class="grid md:grid-cols-3 gap-8 text-black">
+                    <div>
+                        <div class="font-tech text-4xl text-[#2a9d8f] mb-2">01.</div>
+                        <h4 class="font-bold mb-2">The Scan</h4>
+                        <p class="text-sm text-gray-700">You walk through your parents' home with your phone. In two
+                            minutes, our system maps the space.</p>
+                    </div>
+                    <div>
+                        <div class="font-tech text-4xl text-[#2a9d8f] mb-2">02.</div>
+                        <h4 class="font-bold mb-2">The Vision</h4>
+                        <p class="text-sm text-gray-700">You see an immediate "Safety Score" and a visual preview—a
+                            walk-in shower where the dangerous tub used to be.</p>
+                    </div>
+                    <div>
+                        <div class="font-tech text-4xl text-[#2a9d8f] mb-2">03.</div>
+                        <h4 class="font-bold mb-2">The Connection</h4>
+                        <p class="text-sm text-gray-700">We match you with a vetted, certified contractor who
+                            specializes in these modifications. No guesswork.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- SECTION 5: Commitment & FAQs -->
+    <section class="section"><img src="[Storyboard Image 4]" class="full-img-bg"
+            style="opacity:0.3; object-position: top;" alt="Senior Man">
+        <div class="content-layer w-full">
+            <div class="grid md:grid-cols-12 gap-10">
+                <div class="md:col-span-5">
+                    <h2 class="font-editorial text-4xl mb-6">Our Commitment: Beyond the Lead</h2>
+                    <p class="mb-4 font-light text-lg">A mercenary wants a transaction. A missionary wants a result. Our
+                        goal isn't to sell a lead to a contractor; it’s to ensure that your father can get to the
+                        kitchen for his morning coffee without a second thought.</p>
+                    <p class="mb-8 text-sm opacity-70">We are building the data moat that will eventually allow
+                        insurance companies to reward homeowners for being proactive.</p>
+                    <div class="bg-[var(--c-accent)] text-white p-6 inline-block w-full md:w-auto text-center">
+                        <h3 class="text-xl font-bold uppercase tracking-wider">Protect their independence.</h3>
+                        <p class="mt-2">Scan your parents' home today.</p>
+                    </div>
+                </div>
+                <div class="md:col-span-7">
+                    <h3 class="font-tech uppercase tracking-widest text-gray-500 mb-6">Frequently Asked Questions</h3>
+                    <div class="faq-card">
+                        <h4 class="font-bold text-lg mb-1">Is this going to make my parents feel "old"?</h4>
+                        <p class="text-sm text-gray-600">Quite the opposite. Our modifications are designed to be
+                            "invisible" or high-end. A curbless shower is a modern luxury.</p>
+                    </div>
+                    <div class="faq-card">
+                        <h4 class="font-bold text-lg mb-1">Who performs the actual work?</h4>
+                        <p class="text-sm text-gray-600">We only work with contractors who hold specialized
+                            "Aging-in-Place" certifications and understand ADA compliance.</p>
+                    </div>
+                    <div class="faq-card">
+                        <h4 class="font-bold text-lg mb-1">Why use an app instead of a traditional inspector?</h4>
+                        <p class="text-sm text-gray-600">Traditional inspections are expensive and slow. We give you a
+                            professional-grade safety assessment in the time it takes to boil a kettle.</p>
+                    </div>
+                    <div class="faq-card">
+                        <h4 class="font-bold text-lg mb-1">Does insurance cover this?</h4>
+                        <p class="text-sm text-gray-600">Many policies are recognizing that a grab bar is cheaper than a
+                            hip replacement. Our reports are "insurance-ready" to help you advocate for coverage.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="py-12 text-center text-gray-400 text-sm bg-[#1a1a1a]">
+        <p>Because the best way to manage a crisis is to make sure it never happens.</p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Invisible Safety Lens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --c-dark: #0f1115;
+            --c-light: #f4f4f0;
+            --c-alert: #e63946;
+            --c-tech: #00f0ff;
+            --c-gold: #d4af37;
+            --c-warm: #e8dcc5;
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-mono: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--c-dark);
+            color: var(--c-light);
+            font-family: var(--font-serif);
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* --- Typography & Textures --- */
+        .text-gradient {
+            background: linear-gradient(to right, #fff, #999);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.07;
+            filter: url('#noiseFilter');
+        }
+
+        /* --- Layout Utilities --- */
+        .scrolly-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .sticky-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 0.5s ease-out;
+        }
+
+        .content-card {
+            position: relative;
+            z-index: 10;
+            background: rgba(15, 17, 21, 0.85);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            max-width: 600px;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- Specific FX --- */
+        .hud-border {
+            border: 1px solid var(--c-tech);
+            position: relative;
+        }
+
+        .hud-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid var(--c-tech);
+            border-left: 2px solid var(--c-tech);
+        }
+
+        .hud-border::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            border-bottom: 2px solid var(--c-tech);
+            border-right: 2px solid var(--c-tech);
+        }
+
+        .gold-border {
+            border: 1px solid var(--c-gold);
+        }
+
+        /* --- Animations --- */
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(200%);
+            }
+        }
+
+        .scanner-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--c-tech);
+            box-shadow: 0 0 20px var(--c-tech);
+            animation: scanline 3s linear infinite;
+            opacity: 0.7;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .text-distort {
+            filter: url('#turbulence');
+        }
+
+        .drop-cap {
+            float: left;
+            font-size: 4rem;
+            line-height: 0.8;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG Filters -->
+    <svg style="display: none;">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        </filter>
+        <filter id="turbulence">
+            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" result="turbulence" />
+            <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="2" xChannelSelector="R"
+                yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <!-- Noise Texture Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- 1. INTRO / DREAD (Image 1) -->
+    <section class="scrolly-section">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (43).jpg?q=80&w=2000" alt="Dark Bedroom"
+            class="sticky-bg" style="filter: brightness(0.4) grayscale(0.5);">
+        <div class="relative z-10 max-w-4xl text-center">
+            <p class="text-xs tracking-[0.3em] uppercase mb-4 text-gray-400">Home Modification & AI Technology</p>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight tracking-tight text-white mix-blend-overlay">
+                The Invisible <br><span class="italic font-serif text-white opacity-90">Safety Lens</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 italic mb-8">Why Your Home Should Not Be a Cage</p>
+
+            <div class="h-px w-24 bg-white mx-auto mb-8"></div>
+
+            <div class="bg-black/60 p-6 md:p-8 text-left max-w-2xl mx-auto border-l-4 border-red-900">
+                <p class="text-lg md:text-xl leading-relaxed font-serif text-gray-200">
+                    <span class="drop-cap text-red-700">I</span>t is the sound every adult child dreads: the sharp,
+                    intrusive ring of a telephone in the middle of the night. In that split second before you answer,
+                    your mind races through a thousand scenarios, but they all lead to the same fear—that Mom or Dad has
+                    fallen.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. THE CLIFF (Text Transition) -->
+    <section class="bg-[#0f1115] text-[#f4f4f0] py-24 px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+            <h2 class="text-4xl font-bold mb-6 font-mono tracking-tighter">The 'Structural Cliff'</h2>
+            <p class="text-lg leading-relaxed text-gray-400 mb-6">
+                This is the fragile boundary between a senior living a life of vibrant independence and the sudden,
+                jarring transition into institutional care. For millions of seniors, their home—the place where they
+                raised families—is quietly transforming into a series of traps.
+            </p>
+            <ul class="space-y-2 font-mono text-sm text-red-400">
+                <li>// Loose rugs</li>
+                <li>// Poorly lit hallways</li>
+                <li>// Slippery bathroom floors</li>
+            </ul>
+        </div>
+        <div class="border border-white/10 p-8 relative">
+            <div class="absolute top-0 right-0 p-2 bg-white text-black text-xs font-bold">CRISIS CATALYST</div>
+            <p class="italic text-2xl leading-relaxed text-gray-300">
+                "One day they are independent... the next, a single slippery tile turns their sanctuary into a cage."
+            </p>
+        </div>
+    </section>
+
+    <!-- 3. THE SUPERPOWER / AI (Image 2) -->
+    <section class="scrolly-section">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (46).jpg?q=80&w=2000" alt="AR Safety Scan"
+            class="sticky-bg" style="filter: contrast(1.1) brightness(0.6);">
+        <div class="scanner-bar"></div>
+
+        <div class="relative z-10 grid md:grid-cols-2 gap-8 w-full max-w-6xl">
+            <!-- Left: Context -->
+            <div class="bg-black/90 p-8 hud-border self-center">
+                <h3 class="text-[#00f0ff] font-mono text-xl mb-4">> Giving the Adult Child a Superpower</h3>
+                <p class="text-gray-300 mb-4">
+                    If you are the 'Adult Child'... you know the weight of caregiver guilt. We provide you with a
+                    digital superpower. Through our AR Assessment Engine, you can walk through your father’s home
+                    virtually and see the invisible hazards.
+                </p>
+                <p class="text-sm text-[#00f0ff] font-mono">
+                    [ANALYSIS: X-RAY VISION ACTIVATED]
+                </p>
+            </div>
+
+            <!-- Right: Tech Detail -->
+            <div class="bg-black/80 p-8 backdrop-blur-md border-t border-[#00f0ff]">
+                <h4 class="text-white font-bold mb-2">Google Gemini: The Heart of the Lens</h4>
+                <p class="text-sm text-gray-400 mb-6 font-mono">
+                    Our AI is trained on thousands of home safety data points, from the height of a step to the
+                    brightness of a hallway light.
+                </p>
+                <div class="grid grid-cols-2 gap-4 text-xs font-mono text-[#00f0ff] opacity-80">
+                    <div class="border border-[#00f0ff]/30 p-2">Analyze Textures</div>
+                    <div class="border border-[#00f0ff]/30 p-2">Calculate Distances</div>
+                    <div class="border border-[#00f0ff]/30 p-2">Predict Movement</div>
+                    <div class="border border-[#00f0ff]/30 p-2">Spot Hazards</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. BEAUTY VS INSTITUTION (Image 3) -->
+    <section class="scrolly-section">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (37).jpg?q=80&w=2000" alt="Luxury Bathroom"
+            class="sticky-bg" style="filter: brightness(0.9);">
+
+        <div class="content-card"
+            style="background: rgba(255,255,255,0.9); color: #1a1a1a; border-left: 4px solid var(--c-gold);">
+            <h3 class="text-3xl font-serif font-bold mb-4 text-[#1a1a1a]">Safety Does Not Have to Look Institutional
+            </h3>
+            <p class="mb-4 leading-relaxed font-serif text-gray-800">
+                One of the biggest hurdles is the 'hospital look.' They do not want chrome grab bars that scream
+                'frailty.'
+            </p>
+            <p class="mb-6 leading-relaxed font-serif text-gray-800">
+                We are redefining home modifications. We believe that a walk-in tub can look like a spa feature. When a
+                home is modified correctly, it does not feel like a compromise; it feels like an upgrade.
+            </p>
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 rounded-full border border-[#d4af37] flex items-center justify-center text-[#d4af37] font-serif italic">
+                    UD</div>
+                <span class="uppercase tracking-widest text-xs font-bold text-[#d4af37]">Universal Design</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. CRAFTSMANSHIP & RESPECT (Text Block) -->
+    <section class="bg-[#1a1a1a] text-gray-300 py-20 px-6">
+        <div class="max-w-4xl mx-auto grid md:grid-cols-12 gap-8">
+            <div class="md:col-span-4">
+                <h3 class="text-2xl text-white font-bold mb-4 border-b border-gray-700 pb-4">Respecting the Craftsman
+                </h3>
+                <p class="font-mono text-xs text-gray-500 uppercase">Precision Over Guesswork</p>
+            </div>
+            <div class="md:col-span-8">
+                <p class="mb-6">
+                    The contractors in our network are the specialized elite who understand the nuance of accessibility.
+                    Traditionally, contractors spend hours driving to homes for projects that might never happen. We
+                    remove that friction.
+                </p>
+                <p class="italic text-white border-l-2 border-white pl-4">
+                    "By providing them with high-quality digital scans... we allow them to focus on what they do best:
+                    modifying the physical world to preserve human dignity."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. LEGACY / 2030 VISION (Image 4) -->
+    <section class="scrolly-section">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (40).jpg?q=80&w=2000" alt="Grandfather Reading"
+            class="sticky-bg" style="filter: sepia(0.3) brightness(0.8);">
+
+        <div class="relative z-10 text-center max-w-3xl mx-auto">
+            <div class="bg-white/10 backdrop-blur-sm p-8 md:p-12 rounded-lg border border-white/20">
+                <h2 class="text-4xl md:text-5xl font-serif text-white mb-6 drop-shadow-md">The 2030 Vision</h2>
+                <p class="text-xl md:text-2xl text-[#f4f4f0] font-light mb-8">
+                    10 Million More Years
+                </p>
+                <p class="text-lg text-white leading-relaxed mb-8">
+                    Imagine what those 10 million years represent: 10 million more Thanksgiving dinners, 10 million more
+                    bedtime stories for grandchildren, and 10 million more mornings waking up in a bed that feels like
+                    home.
+                </p>
+                <p class="text-sm uppercase tracking-widest text-white/80 font-mono">
+                    Building a Legacy of Independence
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. CONCLUSION -->
+    <footer class="bg-white text-[#0f1115] py-24 px-6 md:px-12">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="mb-12">
+                <h3 class="text-3xl md:text-4xl font-serif font-bold mb-4">HOMEase AI is more than a platform;<br>it is
+                    a promise.</h3>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    It is the promise that your parent’s dignity is worth protecting and that technology can finally
+                    serve the heart.
+                </p>
+            </div>
+
+            <div class="inline-block p-1 border-b-2 border-black mb-12">
+                <p class="text-2xl md:text-3xl font-serif italic">
+                    "Let us build a world where the only reason the phone rings at 3:00 AM is to say 'I love you.'"
+                </p>
+            </div>
+
+            <div
+                class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono uppercase tracking-wider text-gray-500 mt-12 border-t pt-8">
+                <span>#SeniorSafety</span>
+                <span>#AgingInPlace</span>
+                <span>#AITechnology</span>
+                <span>#Caregiving</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

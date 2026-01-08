@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase AI - The Promise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --c-ink: #111111;
+      --c-paper: #F2F0E9;
+      --c-warm: #E6B685;
+      --c-tech: #C4D9FF;
+      --c-fear: #FF4D4D;
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--c-ink);
+      color: var(--c-paper);
+      overflow-x: hidden;
+      font-family: var(--font-sans);
+    }
+
+    /* --- SVG Filters & Utilities --- */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.07;
+      filter: url(#grain);
+    }
+
+    .text-glow {
+      text-shadow: 0 0 20px rgba(196, 217, 255, 0.4);
+    }
+
+    /* --- Typography --- */
+    h1,
+    h2,
+    h3,
+    .serif-font {
+      font-family: var(--font-serif);
+    }
+
+    .headline-fluid {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .quote-fluid {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      line-height: 1.4;
+    }
+
+    /* --- Layout & Animation --- */
+    .story-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 10;
+    }
+
+    .sticky-bg {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      object-fit: cover;
+      z-index: 1;
+      filter: brightness(0.4);
+      transition: filter 0.5s ease;
+    }
+
+    .content-layer {
+      position: relative;
+      z-index: 20;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .card-glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: clamp(2rem, 5vw, 4rem);
+      border-radius: 4px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .fear-list li {
+      opacity: 0;
+      animation: reveal 0.8s forwards;
+      margin-bottom: 1rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--c-fear);
+    }
+
+    .fear-list li:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .fear-list li:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    .fear-list li:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .highlight {
+      position: relative;
+      display: inline-block;
+    }
+
+    .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      width: 100%;
+      height: 0.3em;
+      background: var(--c-fear);
+      z-index: -1;
+      opacity: 0.7;
+      mix-blend-mode: color-dodge;
+    }
+
+    /* --- Sections Specifics --- */
+    #sec-intro {
+      mix-blend-mode: normal;
+    }
+
+    #sec-loss .sticky-bg {
+      filter: grayscale(1) brightness(0.3);
+    }
+
+    #sec-tech .sticky-bg {
+      filter: brightness(0.6) contrast(1.1);
+    }
+
+    #sec-family .sticky-bg {
+      filter: brightness(0.5) sepia(0.2);
+    }
+
+    .logo-mark {
+      font-family: var(--font-sans);
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid currentColor;
+      padding: 0.2em 0.5em;
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters -->
+  <svg style="display: none;">
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5" />
+      </feComponentTransfer>
+    </filter>
+  </svg>
+
+  <div class="noise-overlay"></div>
+
+  <!-- Section 1: Headline -->
+  <div class="relative">
+    <div class="sticky top-0 h-screen w-full overflow-hidden">
+      <!-- Image 4: House Exterior -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (38).jpg?q=80&w=1920&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover" style="filter: brightness(0.4);" alt="House at dusk">
+    </div>
+
+    <section class="story-section" style="margin-top: -100vh;">
+      <div class="content-layer text-center">
+        <h1 class="headline-fluid text-white mb-6">
+          The most expensive room in America is an <span class="italic text-[var(--c-warm)]">empty one.</span>
+        </h1>
+        <div class="w-16 h-1 bg-[var(--c-warm)] mx-auto mt-8"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Section 2: Loss & History -->
+  <div class="relative bg-[var(--c-ink)]">
+    <div class="sticky top-0 h-screen w-full overflow-hidden">
+      <!-- Image 1: Old Man in Kitchen -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (41).jpg?q=80&w=1920&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover" style="filter: grayscale(1) brightness(0.3);"
+        alt="Senior man in kitchen">
+    </div>
+
+    <section class="story-section" style="margin-top: -100vh;">
+      <div class="content-layer grid md:grid-cols-2 gap-12 items-center">
+        <div class="card-glass border-l-4 border-white md:col-start-1">
+          <p class="quote-fluid font-light mb-6">
+            When a senior loses their independence, we don't just lose a resident; we lose a <span
+              class="serif-font italic">story</span>.
+          </p>
+          <p class="text-lg opacity-80">
+            We lose a neighborhood's history.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Section 3: Fear -->
+  <section
+    class="bg-[#0f0f0f] text-white py-32 px-6 flex items-center justify-center min-h-[80vh] relative overflow-hidden">
+    <!-- Abstract Fear Background -->
+    <div class="absolute inset-0 opacity-20"
+      style="background: radial-gradient(circle at 70% 30%, #4a0000 0%, transparent 60%);"></div>
+
+    <div class="content-layer max-w-3xl w-full">
+      <p class="text-2xl md:text-3xl font-light leading-relaxed mb-12">
+        For most, the <span class="border-b border-gray-600">"nursing home conversation"</span> isn't driven by a lack
+        of love. It’s driven by <span class="font-bold text-[var(--c-fear)] text-4xl block mt-2">FEAR.</span>
+      </p>
+      <ul class="fear-list text-xl md:text-2xl font-light space-y-6">
+        <li>Fear of the fall that goes unnoticed.</li>
+        <li>Fear of the stove left on.</li>
+        <li>Fear that "the house" has become a <span class="highlight">trap</span> rather than a sanctuary.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Section 4: The Solution (Tech) -->
+  <div class="relative">
+    <div class="sticky top-0 h-screen w-full overflow-hidden">
+      <!-- Image 2: Blue LED Room -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (44).jpg?q=80&w=1920&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover" style="filter: brightness(0.5);" alt="Smart home interior">
+      <div class="absolute inset-0 bg-blue-900 mix-blend-overlay opacity-50"></div>
+    </div>
+
+    <section class="story-section" style="margin-top: -100vh;">
+      <div class="content-layer text-center">
+        <div class="inline-block mb-4 p-4 rounded-full border border-[var(--c-tech)] bg-blue-900/30 backdrop-blur-md">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--c-tech)" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <h2 class="text-[var(--c-tech)] font-bold text-3xl md:text-5xl mb-8 tracking-tight">At HOMEase AI</h2>
+        <div class="card-glass mx-auto max-w-2xl">
+          <p class="text-xl md:text-2xl leading-relaxed">
+            We believe technology shouldn’t be something seniors have to "learn." It should be something that watches
+            over them like a <span class="text-[var(--c-tech)] text-glow font-serif italic">silent guardian.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Section 5: Stability & Infrastructure -->
+  <section class="bg-[#0A1120] text-gray-300 py-24 px-6 border-t border-gray-800">
+    <div class="max-w-4xl mx-auto grid md:grid-cols-12 gap-12 items-center">
+      <div class="md:col-span-5 border-r border-gray-800 pr-8 text-right">
+        <span class="text-xs tracking-[0.3em] uppercase text-blue-400 block mb-2">Architecture</span>
+        <h3 class="text-4xl font-bold text-white">System<br>Stability</h3>
+      </div>
+      <div class="md:col-span-7">
+        <p class="mb-8 text-lg font-light leading-relaxed">
+          We are obsessed with "serverless architecture" and "system stability" for one reason only:
+        </p>
+        <p class="text-2xl text-white font-serif italic border-l-4 border-blue-500 pl-6 py-2">
+          Because in senior care, "downtime" isn't a technical glitch. It’s a human risk.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Family (Resolution) -->
+  <div class="relative">
+    <div class="sticky top-0 h-screen w-full overflow-hidden">
+      <!-- Image 3: Couple on Porch -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (35).jpg?q=80&w=1920&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover" style="filter: brightness(0.8) sepia(0.2);"
+        alt="Happy senior couple">
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--c-ink)] via-transparent to-transparent"></div>
+    </div>
+
+    <section class="story-section" style="margin-top: -100vh;">
+      <div
+        class="content-layer md:ml-auto md:w-1/2 bg-[var(--c-paper)] text-[var(--c-ink)] p-8 md:p-16 shadow-2xl rounded-sm transform md:-translate-y-12">
+        <p class="mb-6 font-light leading-relaxed">
+          We’ve built the most sophisticated AI infrastructure in the industry so that families in Austin don’t have to
+          worry about the tech.
+        </p>
+        <p class="text-2xl md:text-3xl serif-font font-bold mb-4 text-[#8B4513]">
+          They can just worry about being a son, a daughter, or a friend again.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Section 7: Outro & Promise -->
+  <section class="bg-[var(--c-paper)] text-[var(--c-ink)] py-32 px-6 text-center">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-4xl md:text-6xl serif-font mb-12">Trust isn’t built on code.</h2>
+      <p class="text-2xl font-light mb-8">
+        It’s built on the promise that you can stay home.
+      </p>
+      <div class="w-px h-24 bg-gray-300 mx-auto my-8"></div>
+      <p class="text-3xl md:text-5xl font-bold tracking-tight mb-4">
+        We’re making sure that promise is kept. <span class="text-4xl">🏠✨</span>
+      </p>
+
+      <!-- Footer Hashtags -->
+      <div class="mt-20 flex flex-wrap justify-center gap-4 text-xs tracking-widest uppercase text-gray-500">
+        <span>#AgingInPlace</span>
+        <span>#AustinTech</span>
+        <span>#SeniorCare</span>
+        <span>#HumanFirstAI</span>
+        <span>#MissionDriven</span>
+      </div>
+    </div>
+  </section>
+
+</body>
+
+</html>
