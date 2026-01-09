@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeEaseAI Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --neon: #00f3ff;
+            --grid: #1e293b;
+            --bg: #0f172a;
+            --surface: #1e293b;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* SVG Filter Classes */
+        .filter-noise {
+            filter: url(#noise);
+        }
+
+        .filter-glow {
+            filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.5));
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Typography Effects */
+        .tech-text {
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Animations */
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        .scan-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--neon);
+            box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon);
+            animation: scanHorizontal 4s ease-in-out infinite;
+            z-index: 20;
+            opacity: 0.8;
+        }
+
+        @keyframes scanHorizontal {
+            0% {
+                top: 0;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        .pulse-text {
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+                opacity: 0.9;
+            }
+
+            to {
+                text-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Layout Utilities */
+        .blueprint-grid {
+            background-image:
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .reveal-mask {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: clip-path 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Image Container specific styling */
+        .ar-frame {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .ar-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid transparent;
+            background:
+                linear-gradient(to right, var(--neon) 2px, transparent 2px) 0 0,
+                linear-gradient(to bottom, var(--neon) 2px, transparent 2px) 0 0,
+                linear-gradient(to left, var(--neon) 2px, transparent 2px) 100% 0,
+                linear-gradient(to bottom, var(--neon) 2px, transparent 2px) 100% 0,
+                linear-gradient(to left, var(--neon) 2px, transparent 2px) 100% 100%,
+                linear-gradient(to top, var(--neon) 2px, transparent 2px) 100% 100%,
+                linear-gradient(to right, var(--neon) 2px, transparent 2px) 0 100%,
+                linear-gradient(to top, var(--neon) 2px, transparent 2px) 0 100%;
+            background-repeat: no-repeat;
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen blueprint-grid relative selection:bg-cyan-500 selection:text-white">
+
+    <!-- SVG Filters Definition -->
+    <svg class="hidden">
+        <defs>
+            <filter id="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0" />
+                <feComposite operator="in" in2="SourceGraphic" result="monoNoise" />
+                <feBlend in="SourceGraphic" in2="monoNoise" mode="screen" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- HUD Header -->
+    <header
+        class="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center text-[10px] md:text-xs text-cyan-400 opacity-70 mix-blend-screen pointer-events-none tech-text">
+        <div class="flex gap-4">
+            <span class="animate-pulse">● Connected</span>
+        </div>
+        <div class="border border-cyan-500/30 px-2 py-1">AR_MODULE_V2.1</div>
+    </header>
+
+    <main class="w-full max-w-4xl mx-auto px-6 py-24 md:py-32 flex flex-col gap-16 relative z-10">
+
+        <!-- Hero Section -->
+        <section class="flex flex-col gap-6 filter-noise">
+            <div class="w-12 h-1 bg-cyan-400 mb-4 shadow-[0_0_10px_#00f3ff]"></div>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-cyan-600">The Future
+                    of</span>
+                <span class="block text-white filter-glow">Independence</span>
+                <span class="block text-2xl md:text-4xl font-light text-slate-400 mt-2">looks like this.</span>
+            </h1>
+        </section>
+
+        <!-- Visual Section: The Scan -->
+        <section class="relative w-full aspect-[4/3] md:aspect-[16/9] group">
+            <div
+                class="absolute -inset-4 bg-cyan-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+            </div>
+
+            <!-- Image Container -->
+            <div class="ar-frame w-full h-full bg-slate-800 relative shadow-2xl rounded-sm">
+                <div class="scan-overlay"></div>
+
+                <!-- Simulated Image Structure (Since image is known context, we fit it cover) -->
+                <!-- NOTE: User image is embedded below as a data URI or placeholder logic as per instructions -->
+                <img src="https://694d8b0339fe8ba173f56f36.imgix.net/download (9).png?q=80&w=2000"
+                    alt="Bathroom renovation triptych: Before, AR Wireframe, and After Accessibility Update"
+                    class="w-full h-full object-cover opacity-80 mix-blend-screen" />
+
+                <!-- Interactive Overlay Text -->
+                <div
+                    class="absolute bottom-4 left-4 bg-black/60 backdrop-blur px-3 py-1 text-xs text-cyan-300 border-l-2 border-cyan-400 tech-text">
+                    SCANNING ROOM GEOMETRY...
+                </div>
+            </div>
+
+            <div class="mt-4 flex justify-between text-xs text-slate-500 font-mono">
+                <span>[IMG_SRC_DATA_LOADED]</span>
+                <span>DIMENSIONS: CALIBRATED</span>
+            </div>
+        </section>
+
+        <!-- Editorial Body -->
+        <section class="grid md:grid-cols-12 gap-8 items-start">
+            <div class="md:col-span-4 hidden md:block">
+                <svg viewBox="0 0 100 100" class="w-24 h-24 animate-[spin_10s_linear_infinite] opacity-30">
+                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="1" fill="none"
+                        stroke-dasharray="10 5" class="text-cyan-500" />
+                    <circle cx="50" cy="50" r="30" stroke="currentColor" stroke-width="1" fill="none"
+                        class="text-white" />
+                </svg>
+            </div>
+
+            <div class="md:col-span-8 space-y-8 glass-panel p-8 rounded-xl">
+                <blockquote class="text-xl md:text-2xl font-light leading-relaxed border-l-4 border-cyan-500 pl-6">
+                    "See the 'After' before you spend a dime."
+                </blockquote>
+
+                <p class="text-slate-300 leading-7 font-light">
+                    Our AR technology lets you visualize life-changing modifications in your own home. Which room in
+                    your house needs a safety upgrade the most?
+                </p>
+
+                <!-- CTA -->
+                <a href="https://hom-ease-ai-main-4-zip--homeaseai.replit.app/"
+                    class="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-bold text-white transition-all duration-300 bg-transparent border border-cyan-500 rounded-none hover:bg-cyan-500/10 focus:outline-none">
+                    <span
+                        class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-cyan-500"></span>
+                    <span class="relative flex items-center gap-3">
+                        Try the AR Tool
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer Hash -->
+        <footer class="border-t border-slate-800 pt-8">
+            <div class="flex flex-wrap gap-3 text-sm font-mono text-cyan-700/80">
+                <span class="hover:text-cyan-400 transition-colors cursor-pointer">##SmartHome</span>
+                <span class="hover:text-cyan-400 transition-colors cursor-pointer">##AccessibilityDesign</span>
+                <span class="hover:text-cyan-400 transition-colors cursor-pointer">##InteriorDesign</span>
+                <span class="hover:text-cyan-400 transition-colors cursor-pointer">##HomeEaseAI</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Background Ambient Glow -->
+    <div
+        class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-blue-900/20 blur-[100px] -z-10 rounded-full pointer-events-none">
+    </div>
+
+</body>
+
+</html>
