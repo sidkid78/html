@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Invisible Cage</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --c-dark: #121212;
+      --c-light: #f4f1ea;
+      --c-accent: #c4a474;
+      --c-muted: #8b8b8b;
+    }
+
+    body {
+      background-color: var(--c-dark);
+      color: var(--c-light);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    .serif {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* SVG Filters */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.07;
+      filter: url(#noiseFilter);
+    }
+
+    .glass-panel {
+      background: rgba(18, 18, 18, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Kinetic Type & Animations */
+    .scrolly-section {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      position: relative;
+      perspective: 1000px;
+      overflow: hidden;
+    }
+
+    /* Animation Utilities supporting CSS scroll-driven animations */
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scale-reveal {
+      from {
+        transform: scale(1.1);
+        filter: grayscale(100%);
+      }
+
+      to {
+        transform: scale(1);
+        filter: grayscale(0%);
+      }
+    }
+
+    @keyframes split-slide {
+      from {
+        transform: translateX(-100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .animate-on-scroll {
+      animation-timeline: view();
+      animation-range: entry 25% cover 50%;
+      animation-fill-mode: both;
+    }
+
+    .reveal-text {
+      animation-name: fade-in-up;
+    }
+
+    .reveal-img {
+      animation-name: scale-reveal;
+      animation-range: entry 0% cover 40%;
+    }
+
+    /* Specific Section Styles */
+    .split-screen {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media(min-width: 768px) {
+      .split-screen {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- SVG Filters Definition -->
+  <svg class="hidden">
+    <defs>
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0" />
+      </filter>
+      <filter id="distort">
+        <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence" />
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="noise-overlay"></div>
+
+  <main>
+
+    <!-- SLIDE 1: THE HOOK -->
+    <section class="scrolly-section">
+      <div class="absolute inset-0 z-0">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (49).jpg?q=80&w=2560&auto=format&fit=crop"
+          class="w-full h-full object-cover opacity-60 animate-on-scroll reveal-img" alt="Hand gripping rail">
+        <div class="absolute inset-0 bg-gradient-to-t from-(--c-dark) via-transparent to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 max-w-4xl px-6 text-center animate-on-scroll reveal-text">
+        <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-6 serif text-[var(--c-accent)] opacity-90">
+          The Invisible Cage
+        </h1>
+        <p class="text-xl md:text-3xl font-light leading-relaxed max-w-2xl mx-auto">
+          The moment you stop trusting your own floors is the moment your home starts feeling like a cage.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: HIDDEN FEAR -->
+    <section class="scrolly-section justify-end items-end p-0">
+      <div class="absolute inset-0 z-0">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (52).jpg?q=80&w=2560&auto=format&fit=crop"
+          class="w-full h-full object-cover animate-on-scroll"
+          style="animation-name: scale-reveal; animation-range: entry 0% cover 100%;" alt="Luxury bathtub">
+      </div>
+
+      <div
+        class="relative z-10 w-full md:w-1/2 min-h-screen flex flex-col justify-center bg-black/40 backdrop-blur-sm px-8 md:px-16 border-l border-white/10">
+        <h2 class="text-3xl md:text-5xl serif mb-8 animate-on-scroll reveal-text text-[var(--c-light)]">
+          The Hidden Fear
+        </h2>
+        <p class="text-lg md:text-xl font-light leading-loose text-gray-200 animate-on-scroll reveal-text"
+          style="animation-delay: 0.1s;">
+          We’re told that "aging-in-place" is a clinical term. But for most of us, it’s a silent battle to stay in the
+          place where our memories live.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: THE MYTH VS REALITY -->
+    <section class="scrolly-section block !min-h-0">
+      <div class="split-screen min-h-screen relative">
+
+        <!-- Left: The Myth -->
+        <div class="relative bg-gray-800 flex flex-col items-center justify-center p-8 border-r border-white/10">
+          <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (45).jpg?q=80&w=1000&auto=format&fit=crop"
+            class="absolute inset-0 w-full h-full object-cover mix-blend-overlay grayscale opacity-40"
+            alt="Clinical shower chair">
+          <div class="relative z-10 max-w-md animate-on-scroll reveal-text">
+            <h3 class="text-2xl uppercase tracking-widest text-red-400 mb-4 font-bold">The Myth</h3>
+            <p class="text-2xl serif leading-tight">Needing help means giving up your identity.</p>
+          </div>
+        </div>
+
+        <!-- Right: The Reality -->
+        <div class="relative bg-[var(--c-accent)]/10 flex flex-col items-center justify-center p-8">
+          <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (45).jpg?q=80&w=1000&auto=format&fit=crop"
+            class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Teak bench shower">
+          <div class="relative z-10 max-w-md text-right animate-on-scroll reveal-text" style="animation-delay: 0.2s;">
+            <h3 class="text-2xl uppercase tracking-widest text-[var(--c-accent)] mb-4 font-bold">The Missionary Reality
+            </h3>
+            <p class="text-lg leading-relaxed mb-4">
+              We don't build "accessible bathrooms." We build <span
+                class="text-[var(--c-accent)] italic serif text-2xl">fortresses of independence</span>.
+            </p>
+            <p class="text-lg leading-relaxed">
+              Safety doesn't have to look like a hospital. It should look like home.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 4: THE EMOTIONAL ANCHOR -->
+    <section class="scrolly-section bg-[#e8e4dc] text-[var(--c-dark)]">
+      <div class="w-full max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+        <div class="order-2 md:order-1">
+          <div
+            class="relative aspect-square rounded-full overflow-hidden border-4 border-white shadow-2xl animate-on-scroll"
+            style="animation-name: scale-reveal; animation-range: entry 10% cover 60%;">
+            <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (46).jpg?q=80&w=1000&auto=format&fit=crop"
+              class="w-full h-full object-cover" alt="Grandmother laughing at vanity">
+          </div>
+        </div>
+
+        <div class="order-1 md:order-2 animate-on-scroll reveal-text">
+          <h2 class="text-4xl md:text-6xl serif italic text-[var(--c-accent)] mb-6">Grace.</h2>
+          <p class="text-xl md:text-2xl font-light leading-relaxed">
+            Because you shouldn't be reminded of your limitations every time you brush your teeth.
+            <br><br>
+            <strong class="serif font-normal">You should be reminded of your grace.</strong>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 5: THE MANIFESTO -->
+    <section class="scrolly-section">
+      <!-- Textured Background using SVG via CSS mask or simple overlay -->
+      <div class="absolute inset-0 bg-[#c4a474] z-0">
+        <svg class="w-full h-full opacity-30 mix-blend-multiply">
+          <filter id="paper">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
+            <feDiffuseLighting in="noise" lighting-color="#f0e6d2" surfaceScale="2">
+              <feDistantLight azimuth="45" elevation="60" />
+            </feDiffuseLighting>
+          </filter>
+          <rect width="100%" height="100%" filter="url(#paper)" fill="none" />
+        </svg>
+      </div>
+
+      <div class="relative z-10 max-w-5xl px-8 text-center text-[#2a2a2a]">
+        <p class="text-2xl md:text-4xl serif leading-normal animate-on-scroll reveal-text">
+          We are obsessed with one thing: Making sure the home you love is the home you never have to leave.
+        </p>
+        <div class="w-24 h-1 bg-black mx-auto my-8"></div>
+        <p class="text-xl uppercase tracking-widest font-bold animate-on-scroll reveal-text"
+          style="animation-delay: 0.2s;">
+          Design is our tool; Dignity is our mission.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: CTA -->
+    <section class="scrolly-section bg-[var(--c-dark)]">
+      <div
+        class="glass-panel p-10 md:p-16 rounded-sm max-w-3xl w-full mx-6 animate-on-scroll reveal-text border-t-4 border-[var(--c-accent)]">
+        <h2 class="text-3xl md:text-4xl serif mb-8 text-[var(--c-accent)]">
+          What part of your home has started to feel like a hurdle?
+        </h2>
+
+        <p class="text-xl mb-8 text-gray-300">Tell us your story below. Let’s figure out how to take your floor plan
+          back.</p>
+
+        <div class="space-y-6">
+          <div class="relative group">
+            <textarea
+              class="w-full bg-transparent border-b border-gray-600 py-4 text-xl focus:outline-none focus:border-[var(--c-accent)] transition-colors resize-none h-32"
+              placeholder="My story begins..."></textarea>
+            <div
+              class="absolute bottom-0 left-0 h-[1px] w-0 bg-[var(--c-accent)] transition-all duration-500 group-hover:w-full">
+            </div>
+          </div>
+
+          <button
+            class="px-10 py-4 bg-[var(--c-accent)] text-[var(--c-dark)] font-bold uppercase tracking-wider hover:bg-white transition-colors">
+            Send Story
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+
+</html>

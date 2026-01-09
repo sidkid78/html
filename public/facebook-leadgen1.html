@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Phone Call</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --c-dark: #050505;
+      --c-light: #f4f4f5;
+      --c-alert: #ff4500;
+      --c-warn: #ffae00;
+      --c-safe: #FCD34D;
+      --font-serif: 'Playfair Display', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background-color: var(--c-dark);
+      color: var(--c-light);
+      overflow-x: hidden;
+      font-family: var(--font-serif);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Utility: Full Screen Panels */
+    .panel {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    /* Background Logic */
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0.6;
+      transition: transform 10s ease;
+    }
+
+    .panel:hover .bg-img {
+      transform: scale(1.05);
+    }
+
+    /* SVG Filters */
+    .grain-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.15;
+      filter: url(#noise);
+    }
+
+    /* Typography Styles */
+    h1,
+    h2 {
+      z-index: 10;
+      position: relative;
+      line-height: 1.1;
+    }
+
+    .text-shadow {
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    /* SECTION 1: DREAD - Pulse Animation for Ticking Clock Vibe */
+    @keyframes tick {
+      0% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+
+      5% {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      10% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+
+      100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+    }
+
+    .ticker {
+      animation: tick 1s infinite;
+      color: var(--c-alert);
+    }
+
+    /* SECTION 2 & 3: SCANNER HUD */
+    .hud-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.8) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--c-warn);
+      box-shadow: 0 0 15px var(--c-warn);
+      animation: scan 3s ease-in-out infinite;
+      z-index: 5;
+      opacity: 0.7;
+    }
+
+    @keyframes scan {
+      0% {
+        top: 10%;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        top: 90%;
+        opacity: 0;
+      }
+    }
+
+    .hazard-box {
+      border: 1px solid var(--c-warn);
+      box-shadow: 0 0 20px rgba(255, 174, 0, 0.3), inset 0 0 20px rgba(255, 174, 0, 0.1);
+      background: rgba(255, 174, 0, 0.05);
+      position: relative;
+    }
+
+    .hazard-box::before {
+      content: "⚠️ HAZARD DETECTED";
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: var(--c-warn);
+      color: black;
+      padding: 2px 6px;
+      position: absolute;
+      top: -24px;
+      left: -1px;
+      font-weight: bold;
+    }
+
+    /* Reveal Animation */
+    .reveal-text {
+      animation: fadeInUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .delay-1 {
+      animation-delay: 0.5s;
+    }
+
+    .delay-2 {
+      animation-delay: 1s;
+    }
+
+    .delay-3 {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Button Styling */
+    .cta-btn {
+      background: var(--c-safe);
+      color: #000;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1rem 2rem;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(252, 211, 77, 0.4);
+    }
+
+    .cta-btn:hover {
+      background: #fff;
+      box-shadow: 0 0 25px rgba(252, 211, 77, 0.8);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition -->
+  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5" />
+      </feComponentTransfer>
+    </filter>
+  </svg>
+
+  <!-- SECTION 1: THE DREAD (Image 1) -->
+  <section class="panel bg-black">
+    <div class="grain-overlay"></div>
+    <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (50).jpg?q=80&w=2560&auto=format&fit=crop"
+      alt="Daughter in dark" class="bg-img grayscale">
+
+    <div class="relative z-10 max-w-4xl text-center">
+      <div class="mb-6 flex justify-center">
+        <!-- Visual Metronome -->
+        <div class="w-2 h-2 rounded-full bg-red-600 ticker"></div>
+      </div>
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-shadow reveal-text">
+        “The phone call every daughter dreads is preventable.”
+      </h1>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE HAZARD (Image 2 - Rug) -->
+  <section class="panel bg-neutral-900">
+    <div class="hud-overlay"></div>
+    <div class="scan-line"></div>
+
+    <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (53).jpg" alt="Rug Scan" class="bg-img opacity-40">
+
+    <div class="grid md:grid-cols-2 gap-12 max-w-6xl w-full z-10 items-center">
+      <!-- Text Side -->
+      <div class="space-y-6">
+        <h2 class="text-3xl md:text-4xl font-serif text-shadow reveal-text">It’s not just a rug.</h2>
+        <p class="text-lg md:text-xl font-light leading-relaxed reveal-text delay-1 opacity-90">
+          To your mom, it’s a trip hazard that could end her independence forever.
+        </p>
+        <div
+          class="border-l-2 border-orange-500 pl-4 py-2 mt-4 reveal-text delay-2 font-mono text-sm tracking-wide text-orange-200">
+          WARNING: UNEVEN SURFACE DETECTED
+        </div>
+      </div>
+
+      <!-- HUD Effect visual -->
+      <div class="hazard-box p-8 rounded-lg backdrop-blur-sm reveal-text delay-3">
+        <p class="font-mono text-xs uppercase tracking-widest text-orange-400 mb-2">Scan Analysis</p>
+        <p class="text-md leading-relaxed">
+          Most falls happen in the bathroom or hallway—places that felt 'safe' until they weren't.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: THE TECH (Image 3 - Phone/Bathroom) -->
+  <section class="panel bg-slate-900">
+    <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (46).jpg" alt="AR Phone Scan"
+      class="bg-img opacity-50">
+    <div class="absolute inset-0 bg-blue-900 mix-blend-multiply opacity-40"></div>
+
+    <div
+      class="relative z-10 max-w-3xl text-center space-y-8 p-6 border border-white/10 bg-black/40 backdrop-blur-md rounded-xl">
+      <h2 class="text-2xl md:text-3xl font-serif text-white">
+        We don’t just 'scan' homes; we eliminate the 'What Ifs.'
+      </h2>
+      <p class="text-gray-300 leading-relaxed">
+        In Bell County, 1 in 4 seniors falls every year. Using clinical-grade AR technology, we reveal the hidden
+        dangers in your parents’ home before the emergency room does. Because 'staying at home' only works if the home
+        is actually on her side.
+      </p>
+      <div class="inline-block border border-white/20 px-4 py-1 rounded-full text-xs font-mono uppercase text-cyan-400">
+        System Status: Protection Active
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: SOLUTION & CTA (Image 4 - Happy) -->
+  <section class="panel bg-stone-900">
+    <!-- Warm Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-stone-900/60 to-stone-950 z-10"></div>
+    <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (47).jpg" alt="Happy Family" class="bg-img">
+
+    <div class="relative z-20 text-center max-w-4xl px-4 mt-20">
+      <h2 class="text-4xl md:text-6xl font-serif text-amber-50 mb-6 drop-shadow-lg">
+        Protect her independence.
+      </h2>
+      <p class="text-xl md:text-2xl font-light mb-12 text-amber-100/90">
+        Stop the 'what ifs' today.
+      </p>
+
+      <div class="flex flex-col items-center gap-6">
+        <button class="cta-btn font-bold text-lg rounded">
+          Check Her Safety Now
+        </button>
+
+        <div class="flex items-center gap-2 text-sm font-mono text-amber-200/80 bg-black/50 px-4 py-2 rounded-full">
+          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          Join 400+ Killeen families who chose prevention over the ER.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+
+</html>

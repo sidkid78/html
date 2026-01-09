@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOMEase AI - The 2-Minute Peace of Mind</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CUSTOM FONTS & VARS */
+        :root {
+            --color-bg: #fdfbf7;
+            --color-text: #2d2d2d;
+            --color-accent: #0047FF;
+            --color-alert: #e63946;
+            --font-serif: "Georgia", serif;
+            --font-mono: "Courier New", monospace;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: var(--font-serif);
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* SVG FILTERS */
+        .texture-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.15;
+            filter: url(#paper-grain);
+            mix-blend-mode: multiply;
+        }
+
+        /* UTILITIES */
+        .font-mono-tech {
+            font-family: var(--font-mono);
+            letter-spacing: -0.05em;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        /* ANIMATIONS */
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes pulse-alert {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(230, 57, 70, 0);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(230, 57, 70, 0.4);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .animate-scan {
+            animation: scanline 3s linear infinite;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* STICKY LAYOUT */
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* SPECIFIC VISUALS */
+        .trip-hazard-marker {
+            animation: pulse-alert 2s infinite;
+        }
+
+        .ar-hud-grid {
+            background-image: linear-gradient(var(--color-accent) 1px, transparent 1px),
+                linear-gradient(90deg, var(--color-accent) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center;
+            opacity: 0.1;
+        }
+
+        /* IMAGE STYLING */
+        .polaroid {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transform: rotate(-2deg);
+            background: white;
+            padding: 1rem;
+            padding-bottom: 3rem;
+        }
+
+        .phone-frame {
+            border: 8px solid #333;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            background: #000;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- GLOBAL SVG FILTERS -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="paper-grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0" in="noise"
+                    result="coloredNoise" />
+            </filter>
+            <filter id="blue-glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="texture-overlay"></div>
+
+    <!-- HERO -->
+    <header class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#eceae4]"></div>
+        <div class="relative z-10 text-center max-w-4xl px-6">
+            <p class="font-mono-tech text-xs uppercase tracking-[0.3em] mb-4 text-gray-500">#AgingInPlace #AI #Safety
+            </p>
+            <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6 tracking-tight">
+                The <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">2-Minute</span><br>
+                Peace of Mind
+            </h1>
+            <p class="text-xl md:text-2xl opacity-80 italic font-serif">How HOMEase AI is Fixing the Aging-in-Place
+                Crisis</p>
+            <div class="mt-12 flex flex-wrap justify-center gap-2 font-mono-tech text-xs text-gray-400 opacity-60">
+                <span>#PropTech</span>
+                <span>#SandwichGeneration</span>
+                <span>#HomeAutomation</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- PART 1: THE ANXIETY (Image 1) -->
+    <section class="story-section bg-[#e8e6df]">
+        <div class="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto w-full">
+            <div class="order-2 md:order-1 relative">
+                <!-- VISUAL: IMAGE 1 PLACEHOLDER -->
+                <div class="polaroid">
+                    <div class="aspect-[4/3] bg-gray-300 relative overflow-hidden grayscale contrast-125">
+                        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (48).jpg"
+                            class="w-full h-full object-cover mix-blend-multiply"
+                            alt="Storyboard 1: Elderly woman looking worried at a rug">
+                        <div
+                            class="absolute bottom-10 right-10 w-8 h-8 rounded-full border-2 border-red-500 trip-hazard-marker">
+                        </div>
+                    </div>
+                    <div class="mt-4 font-mono-tech text-xs text-gray-500 flex justify-between">
+                        <span>mom_hallway.jpg</span>
+                        <span>Trip Hazard: Detected?</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-1 md:order-2 space-y-6">
+                <h2 class="text-3xl font-bold font-serif">The Sandwich Generation</h2>
+                <p class="text-lg leading-relaxed text-gray-700">
+                    Let’s be real for a second: most of us are stuck in the middle. You visit your mom’s house and
+                    suddenly notice things you never did before—that <span class="bg-red-100 text-red-800 px-1">loose
+                        rug</span> in the hallway, the high step into the shower, or the narrow doorway.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-700">
+                    It’s a "gut feeling" backed by a looming <strong>Demographic Bomb</strong>. By 2030, 71 million
+                    Americans will be over 65. While 90% want to stay home, only 3.5% of U.S. housing is built for it.
+                </p>
+                <div class="border-l-4 border-red-400 pl-4 italic text-gray-600">
+                    "This gap isn't just a number; it’s a safety crisis waiting to happen."
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PART 2: THE TECH (Image 2) -->
+    <section class="story-section bg-gray-900 text-white relative overflow-hidden">
+        <!-- BG Tech Pattern -->
+        <div class="absolute inset-0 ar-hud-grid"></div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto w-full relative z-10">
+            <div class="space-y-6">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></span>
+                    <h2 class="text-cyan-400 font-mono-tech tracking-widest text-sm">AR ASSESSMENT ENGINE</h2>
+                </div>
+                <h3 class="text-4xl font-bold">The 2-Minute Scan</h3>
+                <p class="text-gray-300 leading-relaxed">
+                    No salesmen. No pressure. HOMEase AI flips the script.
+                </p>
+                <p class="text-gray-400 text-sm font-mono-tech border-l border-cyan-500 pl-4">
+                    > INITIATING GOOGLE GEMINI CORE<br>
+                    > ANALYZING SPATIAL DATA<br>
+                    > DETECTING HAZARDS...
+                </p>
+                <p class="text-gray-300 leading-relaxed">
+                    Our AI does the heavy lifting. It spots trip hazards, measures doorway width to the millimeter, and
+                    identifies exactly where grab bars should go.
+                </p>
+            </div>
+
+            <!-- VISUAL: IMAGE 2 PHONE AR -->
+            <div class="flex justify-center">
+                <div class="phone-frame w-64 md:w-80 aspect-[9/19] relative bg-gray-800">
+                    <!-- CSS MOCKUP OF AR IMAGE -->
+                    <div class="absolute inset-0 bg-cover bg-center opacity-60"
+                        style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (51).jpg');">
+                    </div>
+
+                    <!-- UI OVERLAY -->
+                    <div class="absolute inset-0 flex flex-col justify-between p-4">
+                        <div class="flex justify-between text-xs font-mono-tech text-cyan-400">
+                            <span>SCANNING...</span>
+                            <span>82%</span>
+                        </div>
+                        <!-- Focus Box -->
+                        <div class="absolute top-1/4 left-8 right-8 bottom-1/4 border border-cyan-400 opacity-80">
+                            <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400"></div>
+                            <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400"></div>
+                            <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400"></div>
+                            <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400"></div>
+                            <div
+                                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-cyan-400 text-xs bg-black px-2 py-1">
+                                DOORWAY: 82 CM
+                            </div>
+                        </div>
+                        <!-- Scanline -->
+                        <div
+                            class="absolute top-0 left-0 w-full h-1 bg-cyan-400 shadow-[0_0_20px_cyan] animate-scan opacity-50">
+                        </div>
+
+                        <div class="text-center">
+                            <span
+                                class="inline-block px-4 py-2 bg-red-600/80 text-white text-xs font-bold rounded uppercase tracking-wider">
+                                Trip Hazard Detected
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PART 3: VISUALIZATION (Image 3) -->
+    <section class="story-section bg-white">
+        <div class="max-w-5xl mx-auto w-full text-center mb-12">
+            <h2 class="text-4xl font-serif font-bold mb-4">Zero Wasted Bids</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Use advanced image generation to see the "after" before you spend
+                a dime. From scary clinical accessibility to exciting home upgrade.</p>
+        </div>
+
+        <!-- SPLIT COMPARISON -->
+        <div class="relative w-full max-w-6xl mx-auto h-[60vh] overflow-hidden rounded-xl shadow-2xl">
+            <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (43).jpg" class="w-full h-full object-cover"
+                alt="Bathroom Renovation Before and After">
+        </div>
+    </section>
+
+    <!-- PART 4: DATA & TRUST -->
+    <section class="py-24 bg-gray-50 text-gray-800">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="mb-16 glass-panel p-8 rounded-xl">
+                <h3 class="text-2xl font-bold mb-4 font-serif">The Engine of Trust</h3>
+                <p class="mb-4">Built on world-class cloud technology. From Bell County, Texas to a nationwide rollout.
+                </p>
+                <div class="grid grid-cols-2 gap-4 font-mono-tech text-xs text-gray-500">
+                    <div class="border p-2">> SPEED: 5G OPTIMIZED</div>
+                    <div class="border p-2">> SECURITY: ENTERPRISE</div>
+                    <div class="border p-2">> BIDS: PRE-VALIDATED</div>
+                    <div class="border p-2">> CONTRACTORS: CAPS CERTIFIED</div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h2 class="text-3xl font-serif font-bold mb-6">Preventative Healthcare is the New Home Decor</h2>
+                <p class="text-lg leading-relaxed text-gray-600 mb-8">
+                    A single fall can cost tens of thousands. A $150 grab bar is a fraction of that cost.
+                    HOMEase AI is mapping safety, predicting falls before they happen.
+                </p>
+                <hr class="border-gray-300 w-1/4 mx-auto">
+            </div>
+        </div>
+    </section>
+
+    <!-- CONCLUSION (Image 4) -->
+    <section class="story-section bg-[#fdfbf7]">
+        <div class="max-w-5xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
+            <div class="order-2 md:order-1">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold mb-6">Dignity.</h2>
+                <p class="text-xl text-gray-700 leading-relaxed mb-6">
+                    It’s about making sure that the home your parents spent thirty years building doesn’t become a place
+                    they’re afraid to move around in.
+                </p>
+                <p class="font-mono-tech text-sm text-gray-500">
+                    Turning the "Demographic Bomb" into a $161 Billion Opportunity.
+                </p>
+            </div>
+
+            <div class="order-1 md:order-2">
+                <!-- VISUAL: IMAGE 4 PLACEHOLDER -->
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="aspect-square bg-yellow-50 relative">
+                        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (45).jpg"
+                            class="w-full h-full object-cover"
+                            alt="Storyboard 4: Happy elderly woman in renovated kitchen">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-orange-100/50 to-transparent mix-blend-overlay">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-gray-400 font-mono-tech text-xs uppercase">
+        <p>© HOMEase AI // Aging in Place Solved.</p>
+    </footer>
+
+</body>
+
+</html>
