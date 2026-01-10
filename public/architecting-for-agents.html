@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecting for Agents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #7c3aed;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1)
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: .07;
+            filter: url(#noiseFilter)
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5)
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, var(--accent-cyan), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .scrolly-section {
+            position: sticky;
+            top: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden
+        }
+
+        .code-block {
+            background: #0f172a;
+            border-left: 2px solid var(--accent-cyan);
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            color: #cbd5e1
+        }
+
+        .code-comment {
+            color: #64748b
+        }
+
+        .code-key {
+            color: #22d3ee
+        }
+
+        .code-str {
+            color: #a5b4fc
+        }
+
+        .grid-bg {
+            background-image: linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black, transparent);
+            mask-image: linear-gradient(to bottom, transparent, black, transparent)
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .animate-fade {
+            animation: fadeIn 1s ease-out forwards
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-cyan-500 selection:text-white"><!-- SVG Filters --><svg style="display: none;">
+        <defs>
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+            </filter>
+        </defs>
+    </svg><!-- Noise Overlay -->
+    <div class="noise-overlay"></div><!-- Hero Section -->
+    <section class="relative min-h-screen flex flex-col justify-between p-6 md:p-12 overflow-hidden">
+        <!-- Bg Image 1 Placeholder: Folders/Circuit -->
+        <div class="absolute inset-0 z-0"><img src="images\visual-1(21).png?q=80&w=2940&auto=format&fit=crop"
+                alt="Circuit Board Glowing Folders" class="w-full h-full object-cover opacity-40 mix-blend-overlay">
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950"></div>
+        </div>
+        <div class="relative z-10 max-w-4xl mx-auto text-center mt-20">
+            <p class="font-mono text-cyan-400 text-sm tracking-widest uppercase mb-4 animate-fade"></p>
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-tight mb-8 animate-fade delay-1">
+                Architecting for Agents: <br><span class="text-gradient">Three Folders for Algorithmic Leverage</span>
+            </h1>
+            <div class="glass-card p-6 rounded-xl max-w-2xl mx-auto text-left animate-fade delay-2">
+                <p class="text-slate-300 font-mono text-xs uppercase mb-2 text-cyan-500">By Shaun Koehne</p>
+                <p class="text-lg leading-relaxed">Transform your codebase into a machine-readable environment for AI
+                    agents. Learn how AI_docs, specs, and prompt directories enable autonomous engineering workflows.
+                </p>
+            </div>
+        </div>
+        <div class="relative z-10 flex flex-wrap justify-center gap-3 mt-12 mb-20 animate-fade delay-3"><span
+                class="px-3 py-1 border border-cyan-900 rounded-full text-xs font-mono text-cyan-300">#AI
+                Engineering</span><span
+                class="px-3 py-1 border border-cyan-900 rounded-full text-xs font-mono text-cyan-300">#Agentic
+                Workflows</span><span
+                class="px-3 py-1 border border-cyan-900 rounded-full text-xs font-mono text-cyan-300">#Software
+                Architecture</span><span
+                class="px-3 py-1 border border-cyan-900 rounded-full text-xs font-mono text-cyan-300">#LLM Context
+                Management</span><span
+                class="px-3 py-1 border border-cyan-900 rounded-full text-xs font-mono text-cyan-300">#Developer
+                Productivity</span></div>
+    </section><!-- Narrative Intro -->
+    <section class="relative py-24 px-6 border-t border-slate-800 bg-slate-950">
+        <div class="absolute inset-0 grid-bg opacity-30"></div>
+        <div class="max-w-3xl mx-auto relative z-10">
+            <h2 class="text-3xl font-bold mb-8 font-mono">Architecting for Agents: Three Folders for Algorithmic
+                Leverage</h2>
+            <p class="text-xl text-slate-300 mb-6 leading-relaxed">Imagine opening a complex, legacy codebase and having
+                your AI coding assistant instantly understand the architecture, dependencies, and business logic better
+                than the original author. This isn't a futuristic dream; it is the reality of algorithmic leverage—the
+                efficiency gained through strategic AI automation.</p>
+            <p class="text-lg text-slate-400 mb-6 leading-relaxed">In the generative AI era, the difference between a
+                productive engineer and a 10x architect isn't just the tools they use; it is how they organize context.
+                To understand this shift, we must distinguish between AI Coding and Agentic Engineering. AI coding is
+                simply using a model to generate a snippet of code. Agentic engineering, however, is a superset that
+                encompasses the entire development life cycle: planning, building, testing, and iterating.</p>
+            <p class="text-lg text-slate-400 leading-relaxed">Whether you are using Cursor, Windsurf, Claude Code, or
+                custom agentic frameworks, one fundamental truth remains: context density is the primary determinant of
+                agent performance. If your agent cannot see the critical patterns and constraints of your project, it
+                cannot build what you need. To solve this systematically, we must move beyond the 'chat' interface and
+                start treating our codebase as a machine-readable environment. By implementing three essential
+                directories—AI_docs, specs, and a reusable prompts folder—you transform your repository into a
+                persistent knowledge base that enables autonomous, self-validating loops.</p>
+        </div>
+    </section><!-- Section 1: AI_docs -->
+    <section class="scrolly-section"><!-- Bg Image 2: Server Room -->
+        <div class="absolute inset-0 z-0"><img src="images\visual-2(20).png?q=80&w=2800&auto=format&fit=crop"
+                alt="Futuristic Server Room" class="w-full h-full object-cover brightness-[0.4]">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-transparent to-transparent"></div>
+        </div>
+        <div class="relative z-10 container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="glass-card p-8 rounded-2xl md:translate-x-12">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold font-mono">
+                        1</div>
+                    <h3 class="text-2xl font-bold">AI_docs: Building Persistent Memory for Your Agent</h3>
+                </div>
+                <p class="text-slate-300 mb-6">The AI_docs directory serves as the persistent memory for your agentic
+                    tools. Unlike a standard README intended for human eyes, AI_docs is a repository of high-density
+                    knowledge that your AI can access instantly to understand third-party APIs, internal conventions,
+                    and implementation notes.</p>
+                <p class="text-slate-300 mb-6">In a typical project, you might include markdown files for specific SDKs
+                    or best practices. For example:</p>
+                <div class="code-block rounded-lg shadow-2xl">
+                    <div class="text-xs text-slate-500 mb-2 border-b border-slate-700 pb-2">markdown</div>
+                    <p class="mb-1"><span class="code-comment"># AI_docs/internal-api-conventions.md</span></p>
+                    <ul class="list-disc ml-4 space-y-1">
+                        <li>All endpoints must use the /v2/ prefix.</li>
+                        <li>Error responses must follow the RFC 7807 standard.</li>
+                        <li>Use the internal 'Logger' utility for all trace events.</li>
+                    </ul>
+                </div>
+                <p class="text-slate-300 mt-6 text-sm">By housing third-party documentation and custom patterns here,
+                    you ensure the agent operates with a 'grounded' understanding of the environment. This reduces
+                    hallucinations and ensures generated code adheres to your project's specific architectural standards
+                    without you having to re-explain the basics in every prompt.</p>
+            </div>
+            <div class="hidden md:block"></div>
+        </div>
+    </section><!-- Section 2: Specs Directory -->
+    <section class="scrolly-section bg-slate-900"><!-- Bg Image 3: Robot Arm / UI -->
+        <div class="absolute inset-0 z-0"><img src="images\visual-3(21).png?q=80&w=2940&auto=format&fit=crop"
+                alt="Robot Arm and UI" class="w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-l from-slate-900 via-slate-900/80 to-transparent"></div>
+        </div>
+        <div class="relative z-10 container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="hidden md:block relative"><!-- Visual embellishment for 'Plan Drafting' -->
+                <div class="absolute -inset-4 border border-cyan-500/30 rounded-lg opacity-50"></div>
+                <div class="absolute -inset-8 border border-purple-500/20 rounded-lg opacity-30"></div>
+            </div>
+            <div class="glass-card p-8 rounded-2xl md:-translate-x-12">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold font-mono">
+                        2</div>
+                    <h3 class="text-2xl font-bold">The Specs Directory: Scaling through Plan Drafting</h3>
+                </div>
+                <p class="text-slate-300 mb-6">The specs directory is the most critical folder in a modern codebase.
+                    This is where you transition from iterative, back-and-forth prompting to high-leverage engineering.
+                    A 'spec' is a technical blueprint—a PRD for your AI.</p>
+                <p class="text-slate-300 mb-6">The core principle here is that the plan is the prompt. By writing a
+                    detailed specification, you can hand off massive chunks of work to agentic tools that execute
+                    self-validating loops. A powerful technique to use here is Plan Drafting: instead of writing the
+                    entire spec yourself, you provide a high-level goal and have the AI generate the first draft of the
+                    plan based on its understanding of the codebase.</p>
+                <p class="text-slate-300 text-sm border-l-2 border-purple-500 pl-4">You then review and curate this
+                    plan, acting as an architect rather than a typist. This allows a single 1,000-token prompt in a spec
+                    file to expand into an entire feature set, scaling your engineering output by focusing on high-level
+                    design rather than line-by-line implementation.</p>
+            </div>
+        </div>
+    </section><!-- Section 3: Prompts -->
+    <section class="scrolly-section"><!-- Bg Image 4: Laser / Data Stream -->
+        <div class="absolute inset-0 z-0"><img src="images\visual-4(19).png?q=80&w=2940&auto=format&fit=crop"
+                alt="Laser Stream Data" class="w-full h-full object-cover opacity-50 mix-blend-screen">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950"></div>
+        </div>
+        <div class="relative z-10 max-w-5xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold font-mono">
+                            3</div>
+                        <h3 class="text-2xl font-bold">Reusable Prompts and Managing Session Decay</h3>
+                    </div>
+                    <p class="text-slate-300 mb-6">The final piece of the puzzle is a directory for reusable prompts,
+                        often named .claude or .prompts. These are runnable, version-controlled scripts that automate
+                        repetitive tasks like environment setup or code reviews.</p>
+                    <p class="text-slate-300">The most vital prompt to include is the Context Prime. Because LLMs have
+                        finite context windows, they eventually suffer from session decay—the degradation of model
+                        coherence and focus as the context window fills with irrelevant history.</p>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="code-block rounded-xl shadow-2xl ring-1 ring-emerald-500/30">
+                        <div class="flex justify-between text-xs text-slate-500 mb-4 border-b border-slate-700 pb-2">
+                            <span>bash</span><span>.prompts/prime-feature-x.sh</span>
+                        </div>
+                        <p class="text-emerald-300 mb-2"># 1. List files in /src/features/x</p>
+                        <p class="text-emerald-300 mb-2"># 2. Read the relevant AI_docs/feature-x-spec.md</p>
+                        <p class="text-emerald-300 mb-2"># 3. Summarize current test failures</p>
+                    </div>
+                    <p class="text-slate-300 mt-6 text-sm bg-slate-950/80 p-4 rounded-lg">A context priming prompt uses
+                        tool calls like <code class="bg-slate-800 px-1 rounded text-cyan-400">ls</code> or <code
+                            class="bg-slate-800 px-1 rounded text-cyan-400">grep</code> to surgically feed the agent
+                        only the information it needs for the current task. By automating this priming process, you can
+                        reset your agent's context frequently while maintaining a high level of situational awareness,
+                        ensuring every session starts with a clear, focused understanding of the project's state.</p>
+                </div>
+            </div>
+        </div>
+    </section><!-- Conclusion -->
+    <footer class="relative py-32 px-6 bg-slate-950 overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-cyan-900/40 to-transparent"></div>
+        </div>
+        <div class="relative z-10 max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 text-white tracking-tight">Conclusion: <span
+                    class="text-cyan-400">The Self-Validating Loop</span></h2>
+            <p class="text-xl text-slate-300 mb-8 leading-relaxed">Scaling your engineering work in the age of AI
+                requires a shift from manual labor to architectural curation. When you use this three-directory
+                structure, you enable the agent to perform self-validation. In your spec files, you can define specific
+                test commands that the agent must run and pass before it considers a task complete.</p>
+            <p class="text-lg text-slate-400 leading-relaxed mb-12">This transforms the AI from a simple code generator
+                into an autonomous engineer that verifies its own work. By standardizing AI_docs, specs, and reusable
+                prompt directories, you create a machine-readable codebase that empowers agents to operate with maximum
+                autonomy.</p>
+            <div class="inline-block p-1 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg">
+                <div class="bg-slate-950 px-8 py-4 rounded-md">
+                    <p class="text-xl font-bold text-white tracking-wide">Start organizing your folders today, and let
+                        your agents do the heavy lifting.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
