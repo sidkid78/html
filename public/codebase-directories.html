@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context is King: Agentic Engineering</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* CUSTOM FONTS & VARS */
+    :root {
+      --bg-dark: #020617;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* SMOOTH SCROLL */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    /* SVG FILTERS */
+    .filter-noise {
+      filter: url(#noiseFilter);
+      opacity: 0.05;
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 50;
+    }
+
+    .glow-text {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.3);
+    }
+
+    /* UTILITIES */
+    .scrolly-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: 2rem;
+      z-index: 10;
+    }
+
+    /* CARD STYLES */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .code-block {
+      background: #0f172a;
+      border-left: 3px solid var(--accent-green);
+      font-family: var(--font-mono);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      color: var(--accent-cyan);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ANIMATIONS */
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    .scanline-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(6, 182, 212, 0.1), transparent);
+      animation: scanline 8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .floating-element {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* TEXT STYLING */
+    h1,
+    h2,
+    h3 {
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dir-title {
+      font-family: var(--font-mono);
+      color: var(--accent-cyan);
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- SVG FILTERS DEFINITION -->
+  <svg style="display: none;">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </svg>
+
+  <div class="filter-noise"></div>
+
+  <!-- HERO SECTION -->
+  <section class="scrolly-section items-center text-center relative overflow-hidden">
+    <div class="scanline-overlay"></div>
+    <div class="z-20 max-w-4xl mx-auto space-y-6">
+      <div class="flex flex-wrap justify-center gap-2 mb-8 opacity-70">
+        <span class="tag">#AgenticEngineering</span>
+        <span class="tag">#SoftwareArchitecture</span>
+        <span class="tag">#DevOps</span>
+      </div>
+      <h1 class="text-5xl md:text-8xl font-bold uppercase tracking-tighter glow-text">
+        Context<br>is King
+      </h1>
+      <p class="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto font-light leading-relaxed">
+        The Three Essential Directories for <span class="text-cyan-400 font-mono">Agentic Engineering</span>
+      </p>
+    </div>
+    <div class="absolute bottom-10 animate-bounce">
+      <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- INTRO: THE PROBLEM -->
+  <section class="scrolly-section">
+    <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
+      <div class="space-y-6">
+        <h2 class="text-3xl md:text-5xl font-bold gradient-text">The Syntax Era is Over.</h2>
+        <p class="text-lg text-slate-400 leading-relaxed">
+          The landscape of software engineering is undergoing its most significant transformation since the invention of
+          the high-level language. We are moving away from an era defined by "syntax mastery"—where the primary value of
+          an engineer was their ability to recall complex language features—into the <span
+            class="text-white font-medium">agentic era</span>.
+        </p>
+        <div class="glass-card p-6 border-l-4 border-purple-500">
+          <p class="italic text-slate-300">
+            "Without project-specific context, these high-powered AI agents are prone to hallucination, architectural
+            drift, and the implementation of outdated patterns."
+          </p>
+        </div>
+      </div>
+      <div class="relative h-full min-h-[400px] glass-card overflow-hidden flex items-center justify-center">
+        <!-- ABSTRACT UI ELEMENT -->
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-purple-900/20"></div>
+        <div class="text-center space-y-4 relative z-10">
+          <div class="text-6xl font-mono text-cyan-500 opacity-50">404</div>
+          <div class="text-xl font-mono text-slate-500">CONTEXT_NOT_FOUND</div>
+          <div class="w-16 h-1 bg-red-500 mx-auto mt-4"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SOLUTION: THREE PILLARS (IMAGE 1) -->
+  <section class="scrolly-section bg-black relative overflow-hidden">
+    <img src="images\visual-1(20).png" alt="The Three Directories Pillars"
+      class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen" style="filter: blur(2px);" />
+    <div class="relative z-20 max-w-5xl mx-auto text-center space-y-8">
+      <h2 class="text-4xl md:text-6xl font-bold text-white">The Essential Framework</h2>
+      <p class="text-xl text-slate-300 max-w-3xl mx-auto">
+        To harness the full potential of agentic coding, we must treat our repositories as structured knowledge graphs.
+        By implementing the <span class="text-cyan-400">Three Essential Directories framework</span>, we provide our AI
+        agents with a persistent "brain".
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div class="glass-card p-8 hover:border-cyan-500 transition-colors duration-300">
+          <div class="text-4xl mb-4">🧠</div>
+          <h3 class="text-xl font-mono text-cyan-400 mb-2">/ai_docs</h3>
+          <p class="text-sm text-slate-400">The Knowledge Base</p>
+        </div>
+        <div class="glass-card p-8 hover:border-cyan-500 transition-colors duration-300">
+          <div class="text-4xl mb-4">📐</div>
+          <h3 class="text-xl font-mono text-cyan-400 mb-2">/specs</h3>
+          <p class="text-sm text-slate-400">The Blueprint</p>
+        </div>
+        <div class="glass-card p-8 hover:border-cyan-500 transition-colors duration-300">
+          <div class="text-4xl mb-4">⚡</div>
+          <h3 class="text-xl font-mono text-cyan-400 mb-2">/.prompts</h3>
+          <p class="text-sm text-slate-400">The Runtime</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. KNOWLEDGE BASE (IMAGE 2) -->
+  <section class="scrolly-section relative">
+    <div class="absolute right-0 top-0 w-full md:w-1/2 h-full opacity-30 pointer-events-none">
+      <img src="images\visual-2(19).png" alt="Holographic Data Interface" class="w-full h-full object-cover"
+        style="mask-image: linear-gradient(to left, black, transparent); -webkit-mask-image: linear-gradient(to left, black, transparent);" />
+    </div>
+
+    <div class="relative z-10 max-w-4xl">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="bg-cyan-500 text-black font-bold px-3 py-1 text-sm font-mono">01</span>
+        <h2 class="text-3xl md:text-5xl font-mono text-white">/ai_docs</h2>
+      </div>
+      <h3 class="text-2xl text-slate-300 mb-8 font-light">The Knowledge Base & Persistent Memory</h3>
+
+      <div class="glass-card p-8 space-y-6 max-w-2xl">
+        <p class="text-slate-300 leading-relaxed">
+          AI models are frequently trained on outdated documentation. The <span
+            class="font-mono text-cyan-300">/ai_docs</span> directory solves that problem by hosting Markdown versions
+          of third-party documentation, internal heuristics, and integration details.
+        </p>
+        <div class="border-t border-slate-700 pt-6 space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="mt-1 text-cyan-400">►</div>
+            <div>
+              <strong class="block text-white">External API Specs</strong>
+              <span class="text-sm text-slate-500">Save relevant .md files for specific library versions.</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="mt-1 text-cyan-400">►</div>
+            <div>
+              <strong class="block text-white">Internal Heuristics</strong>
+              <span class="text-sm text-slate-500">Document custom design patterns and wrappers.</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="mt-1 text-cyan-400">►</div>
+            <div>
+              <strong class="block text-white">Integration Logic</strong>
+              <span class="text-sm text-slate-500">Notes on how services are wired together.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE BLUEPRINT (IMAGE 3) -->
+  <section class="scrolly-section bg-slate-900/50">
+    <div class="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+      <div
+        class="order-2 md:order-1 relative rounded-xl overflow-hidden shadow-2xl border border-slate-700 floating-element">
+        <img src="images\visual-3(20).png" alt="Spec Driven Development" class="w-full h-auto object-cover" />
+        <div class="absolute inset-0 bg-cyan-900/30 mix-blend-overlay"></div>
+      </div>
+
+      <div class="order-1 md:order-2 space-y-8">
+        <div class="flex items-center gap-4">
+          <span class="bg-purple-500 text-black font-bold px-3 py-1 text-sm font-mono">02</span>
+          <h2 class="text-3xl md:text-5xl font-mono text-white">/specs</h2>
+        </div>
+        <h3 class="text-xl text-purple-300">Spec-Driven Development (SDD)</h3>
+
+        <p class="text-slate-400 leading-relaxed">
+          We must move away from unstructured development. Instead, we adopt Spec-Driven Development. A specification
+          file acts as the "Algorithm of Thought"—defining *what* is being built and *why*.
+        </p>
+
+        <div class="code-block">
+          <div class="text-xs text-slate-500 mb-2 border-b border-slate-700 pb-2 flex justify-between">
+            <span>user_auth_update.md</span>
+            <span class="text-green-500">● Approved</span>
+          </div>
+          <pre class="text-xs md:text-sm">
+# Spec: User Authentication Update
+
+## Problem Statement
+Migrate from local JWT to Auth0 providers.
+
+## Technical Implementation
+- Modify `auth_middleware.ts`
+- Update `User` schema in Prisma
+
+## Validation
+- Run `npm test`, ensure 15 auth tests pass.</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. THE RUNTIME -->
+  <section class="scrolly-section items-center">
+    <div class="max-w-4xl mx-auto w-full">
+      <div class="text-center mb-12">
+        <span class="bg-green-500 text-black font-bold px-3 py-1 text-sm font-mono">03</span>
+        <h2 class="text-3xl md:text-5xl font-mono text-white mt-4">/.prompts</h2>
+        <p class="text-xl text-slate-400 mt-4">Context Priming & Session Initialization</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="glass-card p-6">
+          <h4 class="text-lg font-bold text-green-400 mb-4">Metainstructions</h4>
+          <p class="text-slate-400 text-sm mb-4">
+            Unlike /specs which are feature-specific, these are reusable scripts for the agent's operational behavior.
+            Create a command like <code class="bg-slate-800 px-1 py-0.5 rounded">prime.md</code>.
+          </p>
+          <ul class="list-disc pl-5 text-sm text-slate-300 space-y-2">
+            <li>Read README.md for high-level goals.</li>
+            <li>Run ls -R to visualize file structure.</li>
+            <li>Summarize core architecture.</li>
+          </ul>
+        </div>
+
+        <div class="code-block font-mono text-sm leading-relaxed">
+          <span class="text-purple-400"># Command: Prime</span><br>
+          <span class="text-cyan-400">Role:</span> You are a Senior Architect.<br>
+          <span class="text-cyan-400">Action:</span> Read /ai_docs/architecture.md...<br>
+          <span class="text-cyan-400">Output:</span> Provide a 3-sentence summary of our tech stack and current sprint
+          goals.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEBUGGING THE CONTEXT (IMAGE 4) -->
+  <section class="scrolly-section relative overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="images\visual-4(18).png" alt="Debugging Context" class="w-full h-full object-cover opacity-20" />
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 glow-text">Debugging the Context,<br>Not the AI</h2>
+      <p class="text-lg text-slate-300 leading-relaxed mb-8">
+        One of the most important shifts in philosophy is how we handle errors. If an agent fails to solve a problem,
+        the error is almost always found in the <span class="text-cyan-400 font-mono">/specs</span> or the <span
+          class="text-cyan-400 font-mono">/ai_docs</span>.
+      </p>
+      <div class="glass-card p-6 inline-block mx-auto">
+        <p class="font-mono text-green-400 text-sm md:text-base">
+          ERROR: Ambiguous Specification.<br>
+          ACTION: Refine Context.<br>
+          RESULT: Virtuous Cycle Established.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCLUSION -->
+  <section class="py-24 px-6 bg-gradient-to-t from-black to-slate-900 text-center">
+    <div class="max-w-2xl mx-auto space-y-6">
+      <h2 class="text-2xl font-bold text-white uppercase tracking-widest">Conclusion</h2>
+      <p class="text-slate-400 leading-relaxed">
+        The transition to agentic engineering is not about replacing developers; it is about elevating them. By
+        implementing the Three Essential Directories, you create a repository that is "AI-native."
+      </p>
+      <p class="text-xl font-medium text-white">
+        Mastering context orchestration today is the best way to future-proof your career and your codebase for the era
+        of the agent.
+      </p>
+      <div class="w-20 h-1 bg-cyan-500 mx-auto mt-8 rounded-full"></div>
+    </div>
+  </section>
+
+  <footer class="py-8 text-center text-slate-600 text-xs font-mono border-t border-slate-800">
+    GENERATED BY AGENTIC DESIGN • BASED ON INPUT TEXT
+  </footer>
+</body>
+
+</html>
