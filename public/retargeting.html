@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase - The Standard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --dark-bg: #0f172a;
+      --text-light: #f1f5f9;
+      --text-muted: #94a3b8;
+      --brand-accent: #3b82f6;
+      --warm-gold: #f59e0b;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-color: var(--dark-bg);
+      color: var(--text-light);
+    }
+
+    h1,
+    h2,
+    h3,
+    .serif {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Kinetic Typography Utilities */
+    .reveal-text {
+      animation: reveal 1.5s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .delay-200 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-500 {
+      animation-delay: 0.5s;
+    }
+
+    .delay-700 {
+      animation-delay: 0.7s;
+    }
+
+    @keyframes reveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .breathe {
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.02);
+      }
+    }
+
+    /* Image Handling */
+    .parallax-container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      transition: transform 0.5s ease-out;
+    }
+
+    .overlay-dark {
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.95));
+      z-index: 1;
+    }
+
+    .overlay-warm {
+      background: linear-gradient(to top, rgba(245, 158, 11, 0.2), rgba(0, 0, 0, 0.1));
+      z-index: 1;
+      mix-blend-mode: overlay;
+    }
+
+    .text-layer {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Custom Filters */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .noise-bg::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.05;
+      filter: url(#noiseFilter);
+    }
+
+    /* Specific Section Styles */
+    .section-light {
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    .text-gradient {
+      background: linear-gradient(45deg, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-gradient-gold {
+      background: linear-gradient(45deg, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+
+<body class="noise-bg">
+
+  <!-- SVG Filters Definition -->
+  <svg class="hidden">
+    <defs>
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+      </filter>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Intro -->
+  <section class="h-screen flex flex-col justify-center items-center text-center px-6 relative">
+    <p class="text-sm tracking-[0.2em] uppercase text-slate-400 mb-6 reveal-text"></p>
+    <h1 class="text-4xl md:text-6xl font-light leading-tight max-w-4xl reveal-text delay-200 serif">
+      From <span class="italic text-blue-400">"Logic"</span> to <span class="font-bold">"Life"</span>.
+    </h1>
+  </section>
+
+  <!-- PART 1: ANXIETY (Dark) -->
+  <section class="parallax-container">
+    <img src="images/scene-1(52).jpg" alt="Anxious woman on phone" class="bg-img">
+    <div class="absolute inset-0 overlay-dark"></div>
+
+    <div class="text-layer container mx-auto px-6 max-w-2xl">
+      <div class="glass-card p-8 md:p-12 rounded-lg reveal-text delay-500 shadow-2xl">
+        <h2 class="text-2xl md:text-3xl font-serif mb-6 text-white"></h2>
+        <p class="text-lg md:text-xl font-light text-slate-200 leading-relaxed mb-6">
+          "The middle-of-the-night phone call is the loudest sound in the world."
+        </p>
+        <p class="text-base text-slate-300 leading-relaxed mb-6">
+          For the millions of adult children caring for aging parents, life isn't a 'customer journey.' It’s a state of
+          constant, quiet hyper-vigilance. They aren't 'searching' for a product; they are looking for a way to breathe
+          again.
+        </p>
+        <hr class="border-slate-700 my-6">
+        <p class="text-base text-slate-300 italic">
+          At HOMEase, we realized that the old way of helping these families is broken. Google gives you 10 million
+          links. AI gives you a paragraph. But neither gives you <strong>certainty.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART 2: THE SHIFT (Light/Clinical) -->
+  <section class="section-light py-24 relative">
+    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+      <div class="order-2 md:order-1 relative group">
+        <div
+          class="absolute inset-0 bg-blue-100 rounded-lg transform translate-x-4 translate-y-4 transition-transform group-hover:translate-x-2 group-hover:translate-y-2">
+        </div>
+        <img src="images/scene-2(55).jpg"
+          class="relative rounded-lg shadow-xl w-full object-cover aspect-[4/3] z-10 filter sepia-[0.2]"
+          alt="Handrail Safety">
+      </div>
+
+      <div class="order-1 md:order-2">
+        <h2 class="text-4xl font-serif text-slate-900 mb-6">The Validation of Trust</h2>
+        <div class="prose prose-lg text-slate-600">
+          <p class="mb-4">"When a daughter asks, <em class="text-slate-900">'Is my dad’s bathroom safe?'</em> she isn't
+            looking for an ad. She is looking for a truth she can bet her father's life on.</p>
+          <ul class="list-none space-y-2 pl-4 border-l-2 border-blue-200 mb-6">
+            <li>She goes to Reddit to find a 'me too.'</li>
+            <li>She goes to YouTube to see the 'how.'</li>
+            <li>She asks AI to find the 'standard.'</li>
+          </ul>
+          <p class="font-medium text-slate-800">
+            HOMEase doesn't exist to rank #1 on Google. We exist to be the <strong>most trusted name in the moments that
+              matter.</strong> We aren't building a website; we are building a 'Standard of Safety' that AI recognizes
+            as the truth."
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART 3: THE STRATEGY (Hybrid) -->
+  <section class="bg-slate-50 py-24">
+    <div class="container mx-auto px-6 max-w-5xl">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-5xl font-serif text-slate-900 mb-4">Being the Beacon</h2>
+        <p class="text-xl text-slate-500">"We don’t chase views. We provide clarity in the chaos."</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <div class="text-blue-600 text-4xl mb-4 opacity-20 font-serif">01</div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2">Our AI Presence</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            We don’t optimize for keywords; we optimize for <strong>Answers.</strong> When a family asks a machine if AI
+            home safety is real, they find HOMEase—not because we paid to be there, but because we are the clearest
+            voice in the room.
+          </p>
+        </div>
+        <!-- Card 2 -->
+        <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <div class="text-blue-600 text-4xl mb-4 opacity-20 font-serif">02</div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2">Our Community Presence</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            We don't 'market' in caregiver groups. We show up as the expert friend. We explain the 'why' before the
+            'how.' We earn the right to be the name they whisper to each other.
+          </p>
+        </div>
+        <!-- Card 3 -->
+        <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <div class="text-blue-600 text-4xl mb-4 opacity-20 font-serif">03</div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2">Our Video Presence</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Our YouTube isn't about 'content.' It’s a library of peace of mind. Short, calm, and clinical. No hype. Just
+            the facts a son needs to see before he goes to sleep.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 rounded-2xl overflow-hidden shadow-2xl relative h-64 md:h-96">
+        <img src="images\scene-3(47).jpg" alt="Man with Tablet" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/10"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART 4: THE CLOSING (Warmth/Resolution) -->
+  <section class="parallax-container">
+    <img src="images\scene-4(48).jpg" alt="Family Warmth" class="bg-img">
+    <!-- Warm Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+    <div class="absolute inset-0 overlay-warm"></div>
+
+    <div class="text-layer container mx-auto px-6 max-w-3xl text-center">
+      <div class="glass-card p-10 md:p-16 rounded-xl border-amber-500/20">
+        <h2 class="text-xs md:text-sm tracking-[0.3em] uppercase text-amber-300 mb-8"></h2>
+
+        <p class="text-xl md:text-2xl text-slate-200 mb-8 font-light">
+          "The mistake most startups make is trying to be 'seen.' <br>
+          <span class="text-white font-serif text-3xl md:text-4xl block mt-4 text-gradient-gold breathe">HOMEase chooses
+            to be the standard.</span>"
+        </p>
+
+        <p class="text-base md:text-lg text-slate-300 mb-10 leading-relaxed">
+          We aren't just an AI company. We are the bridge between a home that is a hazard and a home that is a
+          sanctuary. We don’t want to be 'clicked.'
+        </p>
+
+        <div class="inline-block">
+          <p class="text-2xl md:text-4xl font-serif text-white italic drop-shadow-lg">
+            We want to be the reason a family decides, <br>
+            <span class="text-amber-200 border-b border-amber-500/50 pb-1 mt-2 inline-block">'Okay, we’re going to be
+              okay.'</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-12 bg-slate-900 text-center text-slate-600 text-xs uppercase tracking-widest">
+    HOMEase // Standard of Safety
+  </footer>
+
+</body>
+
+</html>

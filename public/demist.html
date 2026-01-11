@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Coding: Scout, Plan, Build</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #020617;
+            --glass: rgba(2, 6, 23, 0.75);
+            --border: rgba(0, 243, 255, 0.3);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            margin: 0
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em
+        }
+
+        .scrolly-section {
+            position: relative;
+            min-height: 150vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px
+        }
+
+        .bg-image-container {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 0
+        }
+
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            filter: saturate(1.2) contrast(1.1)
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            margin-top: -50vh
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 4px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            margin-bottom: 4rem;
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 1s ease-out forwards;
+            position: relative;
+            overflow: hidden
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--neon-blue), var(--neon-purple))
+        }
+
+        .glitch-text {
+            position: relative;
+            color: #fff
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 2px, rgba(0, 243, 255, 0.03) 3px, rgba(0, 0, 0, 0) 4px);
+            pointer-events: none;
+            z-index: 999
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron';
+            border-radius: 99px
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border-left: 2px solid var(--neon-blue);
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            color: var(--neon-blue);
+            margin: 1rem 0;
+            font-size: 0.9rem
+        }
+
+        .hud-line {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            margin: 2rem 0
+        }
+
+        /* SVG Filter Animation */
+        @keyframes holo-flicker {
+            0% {
+                opacity: 1
+            }
+
+            95% {
+                opacity: 1
+            }
+
+            96% {
+                opacity: 0.8
+            }
+
+            97% {
+                opacity: 1
+            }
+
+            98% {
+                opacity: 0.5
+            }
+
+            100% {
+                opacity: 1
+            }
+        }
+
+        .title-effect {
+            filter: url(#hologram);
+            animation: holo-flicker 4s infinite
+        }
+    </style>
+</head>
+
+<body><!-- SVG Filters --><svg style="display: none;">
+        <defs>
+            <filter id="hologram">
+                <feTurbulence type="fractalNoise" baseFrequency="0.01 0.005" numOctaves="2" result="noise" seed="1" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg><!-- Global Overlay -->
+    <div class="scanlines"></div><!-- INTRO SECTION -->
+    <section class="scrolly-section">
+        <div class="bg-image-container"><img src="images\visual-1(28).png" class="bg-image" alt="Futuristic Data City">
+        </div>
+        <div class="content-layer">
+            <div class="glass-panel" style="animation-delay: 0.2s;">
+                <div class="mb-4"><span class="tag">#AI Agents</span> <span class="tag">#Workflow</span></div>
+                <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight title-effect"
+                    style="text-shadow: 2px 2px 0px var(--neon-purple);">Demystifying<br><span
+                        style="color:var(--neon-blue)">Agentic Coding</span></h1>
+                <div class="hud-line"></div>
+                <p class="text-lg leading-relaxed text-gray-200">Demystifying Agentic Coding: A Beginner's Guide to the
+                    Scout, Plan, Build Workflow</p>
+                <p class="mt-4">Welcome to the world of agentic AI! If you're just starting out, the term "agentic
+                    workflow" might sound like something out of a sci-fi novel, but it’s actually a very practical,
+                    structured way to get AI to do the heavy lifting for you. Think of it as a recipe or a tactical game
+                    plan.</p>
+                <p class="mt-4">Instead of just asking an AI to "write code" and hoping for the best, we give it a
+                    specific set of steps to follow. Today, we’re breaking down a powerhouse pattern called
+                    <strong>Scout, Plan, Build</strong>.
+                </p>
+            </div>
+        </div>
+    </section><!-- SCOUT SECTION -->
+    <section class="scrolly-section">
+        <div class="bg-image-container"><img src="images\visual-2(27).png" class="bg-image" alt="Surveillance Drone"
+                style="object-position: center top;"></div>
+        <div class="content-layer">
+            <div class="glass-panel">
+                <h2 class="text-3xl text-cyan-400 mb-4 flex items-center"><span class="mr-3">◉</span> The 'Scout' Step
+                </h2>
+                <h3 class="text-sm text-gray-400 mb-4">RECONNAISSANCE MISSION</h3>
+                <p class="mb-4">Imagine you're playing a high-stakes video game and you send a scout ahead to map out
+                    the terrain before committing your main forces. That’s exactly what the "Scout" step does in an
+                    agentic workflow.</p>
+                <p class="mb-4">Its primary job is to perform reconnaissance on a codebase to find all the relevant
+                    files that need to be changed to fulfill a user's request. For our dark mode toggle feature, the
+                    scout agents would search the codebase specifically for UI components and styling logic.</p>
+                <div class="code-block">> DETECTED: relevant_files.md<br>> styles.css (Variables)<br>> header.html
+                    (Switch UI)<br>> app.js (Logic)</div>
+                <p>The reason for a separate Scout step is to preserve the main agent's "context window"—think of this
+                    as its short-term memory. By delegating the simple searching to efficient agents, we free up the
+                    planner to focus on the truly difficult task.</p>
+            </div>
+        </div>
+    </section><!-- PLAN SECTION -->
+    <section class="scrolly-section">
+        <div class="bg-image-container"><img src="images\visual-3(28).png" class="bg-image" alt="Holographic Planner"
+                style="object-position: center;"></div>
+        <div class="content-layer">
+            <div class="glass-panel">
+                <h2 class="text-3xl text-purple-400 mb-4 flex items-center"><span class="mr-3">◈</span> The 'Plan' Step
+                </h2>
+                <h3 class="text-sm text-gray-400 mb-4">BLUEPRINT FOR SUCCESS</h3>
+                <p class="mb-4">If the Scout step is the recon mission, the Plan step is the "brain" of the entire
+                    operation. Its purpose is to create a detailed, step-by-step blueprint of all the actions required
+                    to complete the user's request before a single line of code is actually written.</p>
+                <p class="mb-4">The planner agent takes the user's request, the documentation for our UI library, and
+                    the scout's treasure map. It acts as a central command, synthesizing information into a single,
+                    coherent document called <code>plan.md</code>.</p>
+                <div class="code-block">> GENERATING PLAN...<br>1. Add .dark-theme to styles.css<br>2. Inject HTML
+                    toggle<br>3. Initialize event listener</div>
+                <p>By forcing the AI to plan first, we ensure that the logic is sound and that all dependencies are
+                    accounted for before the "doing" begins.</p>
+            </div>
+        </div>
+    </section><!-- BUILD SECTION -->
+    <section class="scrolly-section">
+        <div class="bg-image-container"><img src="images\visual-4(28).png" class="bg-image"
+                alt="Robotic Arm Building Chip"></div>
+        <div class="content-layer">
+            <div class="glass-panel">
+                <h2 class="text-3xl text-green-400 mb-4 flex items-center"><span class="mr-3">▣</span> The 'Build' Step
+                </h2>
+                <h3 class="text-sm text-gray-400 mb-4">BRINGING THE PLAN TO LIFE</h3>
+                <p class="mb-4">The Build step represents the "hands" of the operation. This is where the well-laid
+                    plans are finally put into action. A dedicated "builder" agent takes the <code>plan.md</code> file
+                    and meticulously carries out its instructions.</p>
+                <p class="mb-4">This step introduces a powerful technique called a "higher order prompt." Think of this
+                    like a relay race: we are giving our agent a prompt (the plan) that was created by another agent.
+                    The final output is a modified codebase that successfully accomplishes the user's original request.
+                </p>
+            </div>
+        </div>
+    </section><!-- CONCLUSION -->
+    <footer class="py-20 bg-slate-900 relative z-20">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2
+                class="text-3xl md:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 title-effect">
+                Your AI Assembly Line</h2>
+            <p class="text-lg text-gray-300 mb-10 leading-relaxed">Understanding the Scout, Plan, Build workflow moves
+                you away from the frustration of "one-shot" prompts toward a reliable engineering process. It mirrors a
+                professional software team: a researcher finds the data, an architect designs the solution, and a
+                developer writes the code.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 text-left">
+                <div class="border border-cyan-900 p-4 rounded bg-slate-800">
+                    <h4 class="text-cyan-400 font-bold mb-2">Scout</h4>
+                    <p class="text-sm text-gray-400">Reconnaissance. Finds the files.<br><strong>Output:</strong>
+                        relevant_files.md</p>
+                </div>
+                <div class="border border-purple-900 p-4 rounded bg-slate-800">
+                    <h4 class="text-purple-400 font-bold mb-2">Plan</h4>
+                    <p class="text-sm text-gray-400">Strategy. Designs the solution.<br><strong>Output:</strong> plan.md
+                    </p>
+                </div>
+                <div class="border border-green-900 p-4 rounded bg-slate-800">
+                    <h4 class="text-green-400 font-bold mb-2">Build</h4>
+                    <p class="text-sm text-gray-400">Execution. Writes the code.<br><strong>Output:</strong> Modified
+                        codebase</p>
+                </div>
+            </div>
+            <p class="text-gray-400 italic">Now that you have the blueprint, it's time to start building your own AI
+                assembly line!</p>
+            <div class="mt-8">
+                <div class="flex flex-wrap justify-center gap-2"><span class="tag">#AgenticWorkflow</span><span
+                        class="tag">#SoftwareDevelopment</span><span class="tag">#Automation</span><span class="tag">#AI
+                        Engineering</span></div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
