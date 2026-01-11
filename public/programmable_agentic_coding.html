@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beyond the Co-pilot: Agentic Coding</title>
+  <style>
+    /* FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+    /* RESET & VARS */
+    :root {
+      --bg-void: #030304;
+      --bg-panel: #0d1117;
+      --text-primary: #e6edf3;
+      --text-muted: #8b949e;
+      --accent-claude: #7c3aed;
+      --accent-bash: #06b6d4;
+      --accent-warn: #d97706;
+      --accent-git: #f43f5e;
+      --font-mono: 'Space Mono', monospace;
+      --font-sans: 'Inter', sans-serif;
+      --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      font-size: clamp(16px, 1.5vw, 20px);
+    }
+
+    /* SVG FILTERS */
+    .svg-filters {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    /* TEXTURE OVERLAY */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 9999;
+      filter: url(#noise);
+    }
+
+    /* LAYOUT UTILS */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: 4rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* TYPOGRAPHY */
+    h1,
+    h2,
+    h3,
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      mix-blend-mode: exclusion;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin-bottom: 1.5rem;
+      color: var(--accent-bash);
+      border-left: 4px solid var(--accent-claude);
+      padding-left: 1rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      max-width: 65ch;
+      color: rgba(230, 237, 243, 0.9);
+    }
+
+    strong {
+      color: var(--accent-bash);
+      font-weight: 700;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-meta {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-warn);
+      margin-bottom: 2rem;
+      display: block;
+      border: 1px solid var(--accent-warn);
+      display: inline-block;
+      padding: 0.5rem 1rem;
+    }
+
+    .glitch-text {
+      position: relative;
+      animation: glitch-anim 3s infinite;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* IMAGES */
+    .visual-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+      z-index: -1;
+      filter: grayscale(100%) contrast(120%) brightness(60%);
+      transition: opacity 1s ease;
+    }
+
+    .img-frame {
+      position: relative;
+      width: 100%;
+      margin: 3rem 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(13, 17, 23, 0.8);
+      padding: 1rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .img-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--accent-claude);
+    }
+
+    /* CODE BLOCKS */
+    .code-window {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      margin: 2rem 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .code-header {
+      background: #161b22;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid #333;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #333;
+    }
+
+    .dot.red {
+      background: #ff5f56;
+    }
+
+    .dot.yel {
+      background: #ffbd2e;
+    }
+
+    .dot.grn {
+      background: #27c93f;
+    }
+
+    pre {
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      color: #e6edf3;
+    }
+
+    code {
+      font-family: var(--font-mono);
+    }
+
+    .cmd-prompt::before {
+      content: "$";
+      color: var(--accent-bash);
+      margin-right: 0.5rem;
+    }
+
+    .token-green {
+      color: #7ee787;
+    }
+
+    .token-blue {
+      color: #79c0ff;
+    }
+
+    .token-purp {
+      color: #d2a8ff;
+    }
+
+    .token-gray {
+      color: #8b949e;
+    }
+
+    /* CARD GRID */
+    .grid-tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-claude);
+      background: rgba(124, 58, 237, 0.05);
+    }
+
+    /* ANIMATIONS */
+    @keyframes glitch-anim {
+      0% {
+        transform: translate(0)
+      }
+
+      20% {
+        transform: translate(-2px, 2px)
+      }
+
+      40% {
+        transform: translate(-2px, -2px)
+      }
+
+      60% {
+        transform: translate(2px, 2px)
+      }
+
+      80% {
+        transform: translate(2px, -2px)
+      }
+
+      100% {
+        transform: translate(0)
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .cursor::after {
+      content: '▋';
+      animation: blink 1s step-end infinite;
+      color: var(--accent-bash);
+      margin-left: 5px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .container {
+        padding: 0 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FILTERS -->
+  <svg class="svg-filters">
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.15 0" />
+    </filter>
+  </svg>
+
+  <div class="noise-overlay"></div>
+
+  <!-- SCENE 1: INTRO -->
+  <section class="hero">
+    <img src="images\visual-1(23).png?q=80&w=1920&auto=format&fit=crop" class="visual-layer"
+      alt="Cyberpunk Human Silhouette">
+
+    <div class="container">
+      <div class="hero-meta">
+        <span class="mono">SYSTEM_MSG: PARADIGM_SHIFT_DETECTED</span>
+      </div>
+
+      <h1>
+        <span style="display:block; font-size: 0.5em; color: var(--accent-bash)">Beyond the Co-pilot:</span>
+        Mastering Programmable<br>
+        <span style="color: var(--accent-claude)">Agentic Coding</span><br>
+        with Claude Code
+      </h1>
+
+      <div class="img-frame">
+        <!-- Storyboard Image 1 embedded -->
+        <img src="images\visual-1(23).png?q=80&w=1920&auto=format&fit=crop"
+          alt="[Storyboard Image 1: Human Silhouette Orchestrating Data]">
+        <div style="padding:10px; font-family:var(--font-mono); font-size:0.7em; color:var(--text-muted);">FIG 1.0: THE
+          ORCHESTRATOR</div>
+      </div>
+
+      <p style="font-size: 1.2rem; border-left: 2px solid var(--accent-warn); padding-left: 1rem; margin-top:2rem;">
+        Meta Description<br>
+        Learn to move beyond 'vibe coding' with Claude Code. Master programmable agentic workflows, CLI automation, and
+        MCP integration to scale your engineering impact.
+      </p>
+
+      <div class="tags">
+        <span>#Claude Code</span>
+        <span>#Agentic AI</span>
+        <span>#Software Engineering</span>
+        <span>#MCP</span>
+        <span>#Automation</span>
+        <span>#Anthropic</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 2: THE EVOLUTION -->
+  <section>
+    <div class="container">
+      <h2>Transitioning from Manual Vibe Coding to Scriptable AI Infrastructure</h2>
+      <p>In the rapidly evolving landscape of generative AI, a paradigm shift is occurring that most engineers have yet
+        to fully internalize. While tools like Cursor and Windsurf have popularized 'vibe coding'—a high-level,
+        chat-based approach to software development—a deeper, more powerful capability has emerged within Anthropic’s
+        Claude Code.</p>
+
+      <p>This feature is not just an incremental improvement; it is a fundamental evolution from AI-assisted coding to
+        <strong>programmable agentic coding</strong>. Once you see the potential of treating an AI agent as a scriptable
+        module, the limitations of traditional 'co-pilots' become impossible to ignore. For over a decade, major shifts
+        in software engineering have been signaled by tools that transform our fundamental workflow. Claude Code is that
+        transformation for the agentic age. It allows engineers to step beyond simple code generation and move into the
+        realm of autonomous system orchestration. By leveraging programmable interfaces, we are scaling our impact by
+        parallelizing agentic tasks and increasing token throughput for autonomous workflows. This guide explores how to
+        harness this capability to build next-generation engineering workflows that operate with a level of autonomy and
+        precision that manual tools simply cannot match.</p>
+    </div>
+  </section>
+
+  <!-- SCENE 3: CLI POWER + IMAGE 2 -->
+  <section>
+    <img src="images\visual-2(22).png?q=80&w=1920&auto=format&fit=crop" class="visual-layer" style="opacity:0.15;"
+      alt="Code Tree Background">
+
+    <div class="container">
+      <h2>The Programmable Breakthrough: Claude Code's CLI Power</h2>
+
+      <div class="img-frame" style="transform: rotate(1deg);">
+        <!-- Storyboard Image 2 embedded -->
+        <img src="images\visual-2(22).png?q=80&w=1920&auto=format&fit=crop" alt="[Storyboard Image 2: Code Branching]">
+        <div style="padding:10px; font-family:var(--font-mono); font-size:0.7em; color:var(--text-muted);">FIG 2.0:
+          SYSTEM BRANCHING</div>
+      </div>
+
+      <p>The core of Claude Code’s power lies in its CLI-first architecture, specifically the <code>-p</code> (prompt)
+        flag. Unlike traditional IDE extensions that require manual intervention within a GUI, Claude Code is infinitely
+        programmable. This means you can invoke the agent directly from your terminal or embed it within larger scripts.
+      </p>
+
+      <div class="code-window">
+        <div class="code-header">
+          <div class="dot red"></div>
+          <div class="dot yel"></div>
+          <div class="dot grn"></div>
+          <span style="font-size:0.8rem; color:#888">terminal</span>
+        </div>
+        <pre><code class="cmd-prompt">claude -p <span class="token-green">'Refactor the error handling in all controllers'</span> --allowed-tools edit,bash</code></pre>
+      </div>
+
+      <p>This transforms the agent into a headless worker. This capability allows engineers to build reusable,
+        version-controlled workflows. Principled AI engineering is about moving away from ephemeral chat sessions and
+        toward persistent, automated engineering tasks. By passing specific tool permissions, you maintain control while
+        offloading the cognitive load of execution. This is the difference between having a conversation about code and
+        deploying a specialized agent to perform a targeted mission.</p>
+    </div>
+  </section>
+
+  <!-- SCENE 4: AGENTIC CODING + IMAGE 3 -->
+  <section style="background: radial-gradient(circle at 80% 50%, #161b22 0%, #030304 60%);">
+    <div class="container">
+      <h2>AI Coding vs. Agentic Coding: A Fundamental Shift</h2>
+
+      <div class="grid-tools">
+        <div style="flex:1;">
+          <p>To master this tool, one must distinguish between AI coding and agentic coding. AI coding is effectively a
+            single tool call: you provide context, a model, and a prompt, and the output is a code snippet or a file
+            change. It is a linear, one-shot process.</p>
+          <p>Agentic coding, however, is a superset. It involves a loop where the model has access to a 'tool belt' to
+            interact with the environment. Claude Code ships with 11 essential tools, including <code>edit</code>,
+            <code>write</code>, <code>ls</code>, <code>glob</code>, and <code>bash</code>.</p>
+        </div>
+        <div class="img-frame" style="flex:1; margin:0;">
+          <!-- Storyboard Image 3 embedded -->
+          <img src="images\visual-3(23).png?q=80&w=1920&auto=format&fit=crop"
+            alt="[Storyboard Image 3: The Agentic Toolbelt]">
+          <div style="padding:10px; font-family:var(--font-mono); font-size:0.7em; color:var(--text-muted);">FIG 3.0:
+            THE TOOLBELT</div>
+        </div>
+      </div>
+
+      <p>While edit and write cover what traditional AI tools do, the addition of file system discovery and terminal
+        execution allows the agent to act autonomously. It doesn't just suggest a change; it searches the codebase,
+        understands dependencies, runs tests to verify its work, and iterates until the task is complete. This shift
+        from 'generation' to 'execution' is the hallmark of the agentic era.</p>
+    </div>
+  </section>
+
+  <!-- SCENE 5: FOUNDATIONAL POWER -->
+  <section>
+    <div class="container">
+      <h2>The Foundational Power: The Bash Tool and Terminal Autonomy</h2>
+      <p>The Bash tool is the pivotal feature that separates Claude Code from its peers. With the ability to execute
+        arbitrary terminal commands, the agent can perform any action a human engineer can. It can run compilers,
+        execute test suites, manage Docker containers, or deploy infrastructure via Terraform.</p>
+      <p>This capability scales directly with the intelligence of the underlying model, such as Claude 3.7 Sonnet. When
+        the agent encounters an error during a build process, it doesn't just stop and ask for help; it uses the Bash
+        tool to read logs, investigate the environment, and attempt a fix. This level of terminal autonomy allows for
+        'closed-loop' engineering, where the agent is responsible for the entire lifecycle of a change, from
+        implementation to verification. It turns the terminal into a playground for autonomous problem-solving.</p>
+    </div>
+  </section>
+
+  <!-- SCENE 6: MCP & EXTENSION -->
+  <section>
+    <div class="container">
+      <h2>Extending Reality with MCP Servers</h2>
+      <div class="glass-card">
+        <p>Beyond its built-in capabilities, Claude Code is extensible through the Model Context Protocol (MCP). MCP
+          servers allow you to connect the agent to external data sources and applications, effectively expanding its
+          'tool belt' to include your entire stack.</p>
+        <br>
+        <p>For instance, by connecting a Notion MCP server, you can allow Claude Code to read project specifications
+          directly from your documentation. A sophisticated workflow might involve the agent reading a Notion page,
+          analyzing the requirements, and then executing the implementation across the codebase. This bridges the gap
+          between high-level planning and low-level execution. You are no longer copy-pasting requirements into a chat
+          box; you are providing the agent with direct access to your 'second brain.' This integration enables a level
+          of context-awareness that makes the agent a true partner in the engineering process, capable of checking off
+          tasks in Notion as they are completed in the code.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 7: SCALING & GHOSTS + IMAGE 4 -->
+  <section>
+    <img src="images\visual-4(21).png?q=80&w=1920&auto=format&fit=crop" class="visual-layer" style="opacity:0.2"
+      alt="Ghost Agents Background">
+
+    <div class="container">
+      <h2>Scaling Impact through Parallel Orchestration</h2>
+      <p>The ultimate goal of using programmable agents is to scale your impact by parallelizing agentic tasks. In the
+        generative AI age, your productivity is no longer limited by your typing speed or your ability to keep a complex
+        system in your head; it is limited by how much compute you can effectively direct.</p>
+
+      <div class="img-frame" style="border-color: var(--accent-bash); box-shadow: 0 0 30px rgba(6, 182, 212, 0.2);">
+        <!-- Storyboard Image 4 embedded -->
+        <img src="images\visual-4(21).png?q=80&w=1920&auto=format&fit=crop"
+          alt="[Storyboard Image 4: Ghost Agents in Digital City]">
+        <div style="padding:10px; font-family:var(--font-mono); font-size:0.7em; color:var(--text-muted);">FIG 4.0:
+          MULTI-AGENT ORCHESTRATION</div>
+      </div>
+
+      <p>Claude Code facilitates this through sub-agent orchestration. You can launch multiple instances of Claude Code
+        to handle different parts of a project in parallel. One instance might focus on writing unit tests, while
+        another refactors a legacy module, and a third performs a security audit. This 'agentic architecture' allows for
+        self-organizing workflows where agents can even launch their own sub-agents to perform specific sub-tasks. We
+        are moving toward a future where powerful agents are self-replicating and self-organizing, allowing a single
+        engineer to oversee a fleet of autonomous workers.</p>
+    </div>
+  </section>
+
+  <!-- SCENE 8: REUSABLE WORKFLOWS -->
+  <section>
+    <div class="container">
+      <h2>Building Reusable Engineering Workflows</h2>
+      <p>The practical application of these concepts involves embedding Claude Code into your existing automation
+        scripts. Whether you prefer Python, JavaScript, or Shell scripting, you can use Claude Code as a library for
+        engineering tasks.</p>
+      <p>Consider a Python script that uses the <code>subprocess</code> module to call Claude Code for automated DevOps
+        work:</p>
+
+      <div class="code-window">
+        <div class="code-header">
+          <span class="dot red"></span>
+          <span style="font-size:0.8rem; color:#888">automate_feature.py</span>
+        </div>
+        <pre><code class="cursor">
+<span class="token-purp">import</span> subprocess
+
+<span class="token-blue">def</span> <span class="token-green">automate_feature</span>(prompt):
+    <span class="token-gray"># Invoking Claude Code as a scriptable module</span>
+    cmd = [<span class="token-green">'claude'</span>, <span class="token-green">'-p'</span>, prompt, <span class="token-green">'--allowed-tools'</span>, <span class="token-green">'edit,bash,create'</span>]
+    subprocess.run(cmd)
+
+<span class="token-gray"># Example: Create a new branch and implementation autonomously</span>
+automate_feature(<span class="token-green">'git checkout -b feat/api; create api.ts; commit changes'</span>)</code></pre>
+      </div>
+
+      <p>By internalizing the agent into your scripts, you can create reusable assets that are shared across your team.
+        This moves engineering work from manual 'vibe' sessions into version-controlled, repeatable processes. You can
+        automate infrastructure updates, documentation generation, and complex refactors across dozens of repositories
+        simultaneously, achieving asymmetric results that were previously impossible.</p>
+    </div>
+  </section>
+
+  <!-- SCENE 9: CONCLUSION -->
+  <section style="justify-content: flex-end; padding-bottom: 8rem;">
+    <div class="container">
+      <h2 style="color: var(--accent-warn); border-color: var(--accent-warn);">Conclusion</h2>
+      <p>The transition from AI coding to agentic coding is not just a trend; it is the endgame for modern software
+        engineering. AI coding was a transitory phase that taught us how to interact with LLMs, but agentic coding is
+        where the real value is unlocked. By treating Claude Code as a programmable, tool-enabled agent, you can scale
+        your compute and your impact far beyond the constraints of manual development.</p>
+
+      <p
+        style="font-size: 1.25rem; font-family: var(--font-mono); color: var(--text-primary); border: 1px solid var(--accent-bash); padding: 2rem; margin-top: 2rem; background: rgba(6, 182, 212, 0.05);">
+        As Claude Code moves out of research preview, the opportunity to leverage these autonomous workflows will become
+        the standard for high-performing engineering teams. The mission is clear: move away from simple code generation
+        and toward building living, agentic software. Stay focused, keep your engineering brain engaged, and keep
+        building for the future.
+      </p>
+    </div>
+  </section>
+
+</body>
+
+</html>
