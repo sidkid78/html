@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ending the Exile</title>
+    <style>
+        :root {
+            --bg-paper: #f4f1ea;
+            --text-ink: #1a1a1a;
+            --accent-alert: #d03e3e;
+            --accent-tech: #2a9d8f;
+            --accent-warm: #e9c46a;
+            --font-serif: "Georgia", "Times New Roman", serif;
+            --font-sans: "Helvetica Neue", "Segoe UI", sans-serif
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: var(--font-sans);
+            color: var(--text-ink);
+            padding: 20px
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 480px;
+            height: 85vh;
+            background: var(--bg-paper);
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column
+        }
+
+        .svg-defs {
+            position: absolute;
+            width: 0;
+            height: 0
+        }
+
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+
+        .scroll-content::-webkit-scrollbar {
+            display: none
+        }
+
+        /* TYPOGRAPHY */
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 2.8rem;
+            line-height: 0.9;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            border-bottom: 4px solid var(--text-ink);
+            padding-bottom: 10px
+        }
+
+        h2 {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            background: var(--text-ink);
+            color: var(--bg-paper);
+            padding: 2px 6px
+        }
+
+        h3 {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            line-height: 1;
+            margin-bottom: 0.8rem;
+            color: var(--text-ink)
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+            text-align: justify
+        }
+
+        strong {
+            font-weight: 800
+        }
+
+        /* VISUAL LAYERS */
+        .hero-section {
+            position: relative;
+            padding: 30px 20px;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            border-bottom: 1px solid var(--text-ink)
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('./../images/scene-1 (55).jpg?se=2025-02-14T03%3A24%3A50Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D42d3c5f2-491b-417c-a454-e4c19207e3a9.webp&sig=i2T2h4UvT1Nn5%2BhK4qZ28J0c10%2Bd4pM1f5L%2B1N48RjI%3D');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.9;
+            z-index: 0;
+            mix-blend-mode: normal
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2
+        }
+
+        .red-accent {
+            color: var(--accent-alert)
+        }
+
+        .section-bureaucracy {
+            background: #e8e8e8;
+            padding: 40px 20px;
+            position: relative
+        }
+
+        .bureau-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            filter: grayscale(100%) contrast(1.2) url(#noise);
+            border: 1px solid #000
+        }
+
+        .section-tech {
+            background: #0a0a0a;
+            color: #fff;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .section-tech h3,
+        .section-tech h2,
+        .section-tech p {
+            position: relative;
+            z-index: 2;
+            color: #eee
+        }
+
+        .tech-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('./../images/scene-3 (50).jpg?se=2025-02-14T03%3A24%3A50Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D2ec18413-404f-4d37-975c-3f2dfa1fdfa6.webp&sig=6Yl4o1Q%2B8O0F4g8R6tG2WqY3N%2BDwJ1W86%2BCX7p%2Bv9x0%3D');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+            filter: url(#chromatic)
+        }
+
+        .tech-highlight {
+            color: var(--accent-tech)
+        }
+
+        .section-mission {
+            background: var(--bg-paper);
+            padding: 40px 20px;
+            position: relative
+        }
+
+        .mission-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            margin: 20px 0;
+            overflow: hidden
+        }
+
+        .mission-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: url(#warmth)
+        }
+
+        .quote-box {
+            border-left: 4px solid var(--accent-warm);
+            padding-left: 15px;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.1rem;
+            margin: 20px 0
+        }
+
+        .footer {
+            background: var(--text-ink);
+            color: var(--bg-paper);
+            padding: 30px 20px;
+            text-align: center
+        }
+
+        .btn-scroll {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--text-ink);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            animation: bounce 2s infinite;
+            pointer-events: none
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0)
+            }
+
+            40% {
+                transform: translateY(-10px)
+            }
+
+            60% {
+                transform: translateY(-5px)
+            }
+        }
+
+        /* FILTERS CLASSES */
+        .glitch-text {
+            position: relative;
+            display: inline-block
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a
+        }
+
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip-path: inset(44% 0 61% 0);
+            animation: glitch-anim 2s infinite linear alternate-reverse
+        }
+
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip-path: inset(58% 0 43% 0);
+            animation: glitch-anim 2s infinite linear alternate-reverse
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip-path: inset(10% 0 90% 0)
+            }
+
+            20% {
+                clip-path: inset(80% 0 10% 0)
+            }
+
+            40% {
+                clip-path: inset(40% 0 50% 0)
+            }
+
+            60% {
+                clip-path: inset(20% 0 70% 0)
+            }
+
+            80% {
+                clip-path: inset(60% 0 30% 0)
+            }
+
+            100% {
+                clip-path: inset(5% 0 95% 0)
+            }
+        }
+    </style>
+</head>
+
+<body><!-- SVG FILTERS --><svg class="svg-defs">
+        <defs><!-- Filter 1: Halftone Distress for 'Tragedy' -->
+            <filter id="halftone">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -13" in="noise"
+                    result="monoNoise" />
+                <feComposite operator="in" in="SourceGraphic" in2="monoNoise" result="composite" />
+                <feColorMatrix type="saturate" values="0" in="composite" />
+            </filter><!-- Filter 2: Paper Noise for 'Bureaucracy' -->
+            <filter id="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" />
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.2" />
+                </feComponentTransfer>
+                <feComposite operator="over" in2="SourceGraphic" />
+            </filter><!-- Filter 3: Chromatic Aberration for 'Tech' -->
+            <filter id="chromatic">
+                <feOffset in="SourceGraphic" dx="-3" dy="0" result="left" />
+                <feOffset in="SourceGraphic" dx="3" dy="0" result="right" />
+                <feComponentTransfer>
+                    <feFuncR type="identity" />
+                    <feFuncG type="discrete" tableValues="0 1" />
+                    <feFuncB type="discrete" tableValues="0 1" />
+                </feComponentTransfer>
+                <feMerge>
+                    <feMergeNode in="left" />
+                    <feMergeNode in="right" />
+                </feMerge>
+            </filter><!-- Filter 4: Warmth & Softness for 'Mission' -->
+            <filter id="warmth">
+                <feColorMatrix type="matrix" values="1.1 0 0 0 0  0 1.05 0 0 0  0 0 0.9 0 0  0 0 0 1 0" />
+                <feGaussianBlur stdDeviation="0.5" />
+            </filter>
+        </defs>
+    </svg>
+    <div class="card-container">
+        <div class="scroll-content"><!-- HEADER / TRAGEDY -->
+            <section class="hero-section">
+                <div class="hero-bg"></div>
+                <div class="hero-content">
+                    <h1>Ending<br>the Exile</h1>
+                    <p
+                        style="font-family:var(--font-serif); font-style:italic; border-left:3px solid var(--accent-alert); padding-left:15px;">
+                        Why the Greatest Threat to Aging is the House Itself</p>
+                </div>
+            </section><!-- SECTION 1: TRAGEDY -->
+            <section class="section-bureaucracy">
+                <h3>The Tragedy of the "Last Trip"</h3>
+                <p>Every year, millions of older Americans take a "last trip" out of their front door. It isn't a
+                    vacation or a planned move. It’s an ambulance ride. The cause isn't a virus or a disease—it’s a rug
+                    that slipped, a stair that was too steep, or a bathroom that turned into a trap.</p>
+                <p>In that moment, a lifetime of independence vanishes. The home, once a sanctuary of memories, becomes
+                    the catalyst for exile to an institutional bed. This isn't just a "demographic shift." It is a
+                    silent, nationwide eviction of our elders.</p><img
+                    src="./../images/scene-2 (58).jpg?se=2025-02-14T03%3A24%3A50Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D0c8728d7-d7e7-49f3-80f4-d5760bd8b030.webp&sig=G06lWjQd2T0c09j7h0Rk026nS0v%2Bd7l%2B%2B%2Bz0Z57y/u0%3D"
+                    class="bureau-img" alt="Clipboard Bureaucracy">
+                <h3>The Blind Spot in Our Care</h3>
+                <p>We spend billions on heart monitors and medications, yet we ignore the "Built Environment"—the very
+                    stage upon which the drama of aging is played.</p>
+                <p>The current system for fixing this is broken. We rely on manual, subjective "walk-throughs" that are
+                    too slow, too inconsistent, and too hard for families to visualize. By the time a traditional home
+                    audit is filed, the fall has often already happened. We are fighting a 21st-century crisis with
+                    19th-century clipboards.</p>
+            </section><!-- SECTION 2: TECHNOLOGY -->
+            <section class="section-tech">
+                <div class="tech-bg"></div>
+                <h3 class="glitch-text" data-text="Seeing the Unseen">Seeing the Unseen</h3>
+                <p>We believe that aging in place is a fundamental right, not a luxury of the lucky. To protect that
+                    right, we’ve built <strong>HOMEase AI</strong>. We aren't just "scanning rooms"; we are deploying a
+                    digital guardian. By merging the clinical brilliance of Occupational Therapy with the predictive
+                    power of Augmented Reality, we reveal the invisible predators in a home.</p>
+                <p>Our technology doesn't just measure a doorway; it visualizes a future where that doorway isn't a
+                    barrier. It turns a "clinical recommendation" into a "visual promise." When a daughter can
+                    <em>see</em> the ramp on her phone before it's built, the fear of the unknown vanishes. Hesitation
+                    turns into action.
+                </p>
+            </section><!-- SECTION 3: MISSION -->
+            <section class="section-mission">
+                <h3>10 Million More Nights at Home</h3>
+                <div class="mission-img-wrap"><img
+                        src="./../images/scene-4 (51).jpg?se=2025-02-14T03%3A24%3A50Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D5e661623-1d0b-46e3-ae8e-3604f2f9c470.webp&sig=9YfU%2BA%2BbSg9r/VlYfC8eO/uH3R0gW0v%2B3O/J%2B/R/y/8%3D"
+                        class="mission-img" alt="Happy Couple"></div>
+                <p>For the clinician, this isn't about "efficiency metrics." It’s about <strong>liberation.</strong>
+                    It’s about being 3.5x faster so you can save three more families before the weekend. It’s about
+                    turning your expertise into an objective shield that insurance companies cannot ignore and
+                    contractors cannot misinterpret.</p>
+                <p>We are aligning with federal mandates like HUD’s OAHMP not just for "compliance," but for
+                    <strong>scale.</strong> We are building the infrastructure for a world where "Home" remains "Home"
+                    until the very end.
+                </p>
+                <div class="quote-box">"The frontier of healthcare isn't in a lab. It’s in the hallway, the kitchen, and
+                    the bathroom."</div>
+                <h3>The Choice</h3>
+                <p>We can continue to react to the "broken hip" in the ER, or we can proactively engineer the "safe
+                    home." We can accept the "Age-in-Place Paradox," or we can solve it. It’s time to use the technology
+                    in our pockets to protect the people in our hearts.</p>
+            </section>
+            <footer class="footer"><small>© HOMEase AI Editorial</small></footer>
+        </div>
+        <div class="btn-scroll">↓</div>
+    </div>
+</body>
+
+</html>

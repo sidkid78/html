@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR-Driven Audits</title>
+  <style>
+    :root {
+      --bg-color: #050a0f;
+      --text-primary: #e0f7fa;
+      --text-secondary: #90a4ae;
+      --accent-cyan: #00e5ff;
+      --accent-dim: rgba(0, 229, 255, 0.2);
+      --alert-orange: #ff6d00;
+      --grid-color: rgba(0, 229, 255, 0.05);
+      --font-head: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-mono: 'Courier New', Courier, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      font-family: var(--font-head);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* SCROLL SNAP CONTAINER */
+    .carousel {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      height: 100%;
+      width: 100%;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* SLIDE STRUCTURE */
+    .slide {
+      flex: 0 0 100%;
+      height: 100%;
+      scroll-snap-align: start;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr auto;
+      padding: 2rem;
+      border-right: 1px solid var(--accent-dim);
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 40px 40px;
+      overflow-y: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1,
+    h2,
+    h3 {
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px var(--accent-dim);
+    }
+
+    h2 {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--alert-orange);
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--alert-orange);
+      display: inline-block;
+      padding-bottom: 0.2rem;
+    }
+
+    p {
+      font-size: clamp(1rem, 1.2vw, 1.4rem);
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      max-width: 65ch;
+    }
+
+    .meta {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent-cyan);
+      opacity: 0.7;
+      margin-bottom: 2rem;
+    }
+
+    .hashtags {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* IMAGES & HUD */
+    .img-container {
+      position: relative;
+      width: 100%;
+      height: 40vh;
+      margin: 1rem 0;
+      overflow: hidden;
+      border: 1px solid var(--accent-dim);
+    }
+
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(40%) contrast(120%) sepia(20%) hue-rotate(180deg) saturate(200%);
+      mix-blend-mode: luminosity;
+    }
+
+    /* Use base styles for the image itself but overlay pseudo elements for HUD */
+    .hud-frame {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 1px dashed var(--accent-cyan);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .hud-frame::before,
+    .hud-frame::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: var(--accent-cyan);
+      border-style: solid;
+      transition: all 0.5s ease;
+    }
+
+    .hud-frame::before {
+      top: -1px;
+      left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+
+    .hud-frame::after {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-cyan);
+      opacity: 0.5;
+      animation: scan 3s linear infinite;
+      z-index: 3;
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    @keyframes scan {
+      0% {
+        top: 0%;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* SPECIFIC LAYOUTS */
+    .content-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .list-item {
+      border-left: 2px solid var(--alert-orange);
+      padding-left: 1rem;
+    }
+
+    .list-item h3 {
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* SVG FILTERS */
+    .glitch-text {
+      position: relative;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-color);
+    }
+
+    .glitch-text::before {
+      left: 2px;
+      text-shadow: -1px 0 red;
+      clip: rect(24px, 550px, 90px, 0);
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    }
+
+    .glitch-text::after {
+      left: -2px;
+      text-shadow: -1px 0 blue;
+      clip: rect(85px, 550px, 140px, 0);
+      animation: glitch-anim 2.5s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim {
+      0% {
+        clip: rect(10px, 9999px, 30px, 0);
+      }
+
+      20% {
+        clip: rect(80px, 9999px, 100px, 0);
+      }
+
+      100% {
+        clip: rect(5px, 9999px, 80px, 0);
+      }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% {
+        clip: rect(60px, 9999px, 90px, 0);
+      }
+
+      20% {
+        clip: rect(10px, 9999px, 50px, 0);
+      }
+
+      100% {
+        clip: rect(90px, 9999px, 140px, 0);
+      }
+    }
+
+    /* UTILITIES */
+    .highlight {
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+
+    .data-block {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      border: 1px solid var(--accent-dim);
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      margin-top: auto;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .slide {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .img-container {
+        height: 30vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <svg style="display: none;">
+    <defs>
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.1" />
+        </feComponentTransfer>
+        <feComposite operator="in" in2="SourceGraphic" result="monoNoise" />
+        <feBlend in="SourceGraphic" in2="monoNoise" mode="screen" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="carousel">
+
+    <!-- SLIDE 1: INTRO -->
+    <article class="slide">
+      <div class="content-wrap">
+        <div class="meta">SYSTEM READY // DATE: 2024 // STATUS: ONLINE</div>
+        <div class="img-container" style="height: 50vh; margin-bottom: 2rem;">
+          <img src="./../images/visual-1 (25).png" alt="User Image 1"
+            style="filter: url(#noise) sepia(100%) hue-rotate(170deg);">
+          <!-- Note: In a real environment, the src above would be dynamically replaced with the uploaded asset. Using visual approximation style. -->
+          <div class="hud-frame"></div>
+          <div class="scan-line"></div>
+        </div>
+        <h1 class="glitch-text" data-text="The New Frontier in Fall Prevention">The New Frontier in Fall Prevention</h1>
+        <h2>AR-Driven Audits for Safer Aging in Place</h2>
+        <p>Discover how smartphone-based AR and AI are revolutionizing home safety audits, providing a proactive
+          approach to fall prevention and supporting aging in place.</p>
+        <div class="hashtags">
+          <span>#FallPrevention</span>
+          <span>#AugmentedReality</span>
+          <span>#AgingInPlace</span>
+          <span>#HealthTech</span>
+          <span>#HomeSafety</span>
+          <span>#Geriatrics</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- SLIDE 2: CONTEXT -->
+    <article class="slide">
+      <div class="content-wrap">
+        <h2>INTRODUCTION // PUBLIC HEALTH CHALLENGE</h2>
+        <p>The United States is currently navigating a profound public health challenge. This crisis is unfolding not
+          within the sterile corridors of hospitals, but within the private walls of our homes. By 2030, the population
+          of adults aged 65 and older is projected to swell to over 71 million, marking an unprecedented demographic
+          shift.</p>
+        <p>The overwhelming majority of these individuals—between 75% and 87%—express a deep-seated desire to 'age in
+          place,' maintaining their independence within their own communities. However, this aspiration is colliding
+          with a harsh structural reality: our national housing stock is fundamentally ill-equipped for an aging
+          population.</p>
+        <div class="data-block">
+          > SYSTEM WARNING: STRUCTURAL DEFICIT DETECTED<br>
+          > TARGET POPULATION: > 71 MILLION<br>
+          > HOUSING READINESS: CRITICAL FAILURE
+        </div>
+      </div>
+    </article>
+
+    <!-- SLIDE 3: PARADOX -->
+    <article class="slide">
+      <div class="content-wrap">
+        <h2>THE AGING-IN-PLACE PARADOX</h2>
+        <p>This is not merely a series of isolated domestic accidents, but a systemic failure of our built environment.
+          Falls have become the leading catalyst for injury and loss of functional independence. To address this, we
+          must move beyond reactive care.</p>
+        <div class="list-grid">
+          <div class="list-item">
+            <h3>DEMOGRAPHIC FORCE</h3>
+            <p>By 2030, one in five Americans will be of retirement age.</p>
+          </div>
+          <div class="list-item">
+            <h3>UNIVERSAL PREFERENCE</h3>
+            <p>Driven by emotional attachment and high costs of institutional care.</p>
+          </div>
+          <div class="list-item">
+            <h3>STRUCTURAL DEFICIT</h3>
+            <p style="color: var(--alert-orange);">96.5% of U.S. homes lack basic accessibility features. Only 3.5% are
+              'aging-ready'.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SLIDE 4: TECHNOLOGY SHIFT -->
+    <article class="slide">
+      <div class="content-wrap">
+        <h2>A TECHNOLOGY-DRIVEN PARADIGM SHIFT</h2>
+        <div class="img-container">
+          <img src="./../images/visual-2 (24).png" alt="User Image 2" style="filter: url(#noise);">
+          <div class="hud-frame"></div>
+          <div class="scan-line" style="animation-duration: 2s;"></div>
+        </div>
+        <p>The AR-Powered Audit uses smartphone-based Augmented Reality coupled with AI to transform assessment into a
+          precise digital workflow.</p>
+        <div class="list-grid">
+          <div class="list-item">
+            <h3>DATA CAPTURE</h3>
+            <p>3D scan capturing precise spatial data.</p>
+          </div>
+          <div class="list-item">
+            <h3>AI ANALYSIS</h3>
+            <p>Platform automatically flags risks based on ADA guidelines.</p>
+          </div>
+          <div class="list-item">
+            <h3>VISUALIZATION</h3>
+            <p>Project 'after' images directly into user’s view.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SLIDE 5: LIMITATIONS -->
+    <article class="slide">
+      <div class="content-wrap">
+        <h2>LIMITATIONS OF TRADITIONAL ASSESSMENTS</h2>
+        <p>For decades, the gold standard has been in-person assessment by OTs. However, manual approaches face inherent
+          challenges:</p>
+        <br>
+        <ul style="list-style: none; padding-left: 0;">
+          <li style="margin-bottom: 1rem; border-left: 2px solid var(--text-secondary); padding-left: 1rem;"><strong
+              class="highlight">Subjectivity:</strong> Manual measurements vary between assessors.</li>
+          <li style="margin-bottom: 1rem; border-left: 2px solid var(--text-secondary); padding-left: 1rem;"><strong
+              class="highlight">Time Intensity:</strong> Manual auditing is a bottleneck.</li>
+          <li style="margin-bottom: 1rem; border-left: 2px solid var(--text-secondary); padding-left: 1rem;"><strong
+              class="highlight">Visualization Gap:</strong> Homeowners struggle to visualize abstract recommendations.
+          </li>
+          <li style="margin-bottom: 1rem; border-left: 2px solid var(--text-secondary); padding-left: 1rem;"><strong
+              class="highlight">Fragmented Workflow:</strong> Handoff errors create new hazards.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- SLIDE 6: CLINICAL BENEFITS -->
+    <article class="slide">
+      <div class="content-wrap">
+        <h2>CLINICAL BENEFITS: EMPOWERING THE CAPACITY ENHANCER</h2>
+        <div class="img-container">
+          <img src="./../images/visual-3 (25).png" alt="User Image 3" style="filter: contrast(110%);">
+          <div class="hud-frame"></div>
+        </div>
+        <p>For health professionals, AR-audit technology is a capacity enhancer. By automating rote tasks, OTs and PTs
+          focus on person-centered care.</p>
+        <div class="list-grid">
+          <div class="list-item">
+            <h3>Efficiency</h3>
+            <p>Serve more patients.</p>
+          </div>
+          <div class="list-item">
+            <h3>Evidence</h3>
+            <p>Defensible records for insurance.</p>
+          </div>
+          <div class="list-item">
+            <h3>Adherence</h3>
+            <p>'Showing' rather than 'telling' overcomes barriers.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SLIDE 7: CASE STUDY -->
+    <article class="slide">
+      <div class="content-wrap">
+        <h2>CASE STUDY: ALIGNING WITH MANDATES</h2>
+        <div class="img-container">
+          <img src="./../images/visual-4 (23).png" alt="User Image 4">
+          <div class="hud-frame"></div>
+        </div>
+        <p>The utility of AR-driven audits is apparent in federal initiatives like the HUD Older Adults Home
+          Modification Program (OAHMP). AR technology enhances every step: from the initial standardized digital
+          foundation to the precise 'after' comparison during inspection.</p>
+        <div class="data-block">
+          > COMPLIANCE CHECK: PASSED<br>
+          > PROTOCOL: OAHMP / HUD<br>
+          > STATUS: OPTIMIZED
+        </div>
+      </div>
+    </article>
+
+    <!-- SLIDE 8: CONCLUSION -->
+    <article class="slide">
+      <div class="content-wrap" style="text-align: center; align-items: center;">
+        <h2 style="width: 100%; border-bottom: none; font-size: 1.5rem; margin-bottom: 2rem;">CONCLUSION</h2>
+        <p style="font-size: 1.5rem; max-width: 800px; color: var(--text-primary);">"The challenge of ensuring safe
+          housing for an aging America is immense, but the convergence of AR and AI offers a scalable solution."</p>
+        <p>By transforming the home safety audit from a subjective, manual exercise into a data-driven digital workflow,
+          we can bridge the gap between the desire to age in place and the environmental realities that often prevent
+          it.</p>
+        <p style="margin-top: 2rem; color: var(--accent-cyan);">Ultimately, this is about leveraging innovation to
+          ensure that every American can age with safety, independence, and dignity in the place they call home.</p>
+        <div style="margin-top: 4rem; opacity: 0.5; font-size: 0.8rem; font-family: var(--font-mono);">END TRANSMISSION
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+</body>
+
+</html>
