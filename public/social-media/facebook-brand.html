@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase AI Kinetic Art</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --warm-bg: #F5F0E6;
+      --tech-teal: #64FFDA;
+      --deep-charcoal: #1A202C;
+      --glass-surface: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+      background-color: var(--deep-charcoal);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      color: #fff;
+    }
+
+    /* Typography Overrides */
+    .font-serif {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* SVG Filters */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.07;
+      filter: url(#noise);
+    }
+
+    /* Animation Utilities */
+    .fade-in-up {
+      animation: fadeInUp 1.2s ease-out forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .delay-300 {
+      animation-delay: 0.3s;
+    }
+
+    .delay-600 {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scrolly-section {
+      height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      scroll-snap-align: start;
+    }
+
+    .parallax-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+      transition: transform 0.5s ease-out;
+      filter: brightness(0.7);
+    }
+
+    /* Text Glassmorphism */
+    .glass-card {
+      background: var(--glass-surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    /* Specific text effects */
+    .highlight-tech {
+      color: var(--tech-teal);
+      text-shadow: 0 0 10px rgba(100, 255, 218, 0.4);
+    }
+
+    .quote-mark {
+      font-family: 'Playfair Display', serif;
+      font-size: 6rem;
+      line-height: 0;
+      opacity: 0.3;
+      color: var(--tech-teal);
+    }
+
+    /* Scroll Snap Container */
+    .snap-container {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition -->
+  <svg class="hidden">
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </svg>
+
+  <!-- Grain Overlay -->
+  <div class="noise-overlay"></div>
+
+  <div class="snap-container">
+
+    <!-- SCENE 1: The Human Connection -->
+    <section class="scrolly-section">
+      <!-- Img 1: Daughter and Father in Kitchen -->
+      <div class="parallax-bg"
+        style="background-image: url('./../images/scene-1 (52).jpg?q=80&w=2070&auto=format&fit=crop');"></div>
+      <div class="relative z-10 max-w-4xl px-6 text-center glass-card p-10 rounded-xl mx-4 fade-in-up">
+        <h1 class="font-serif text-4xl md:text-6xl leading-tight mb-4">
+          Proactive Care for Those Who <span class="italic text-amber-100">Cared for You.</span>
+        </h1>
+      </div>
+    </section>
+
+    <!-- SCENE 2: The Statistic (Warm Living Room) -->
+    <section class="scrolly-section">
+      <!-- Img 2: Living Room with subtle light -->
+      <div class="parallax-bg"
+        style="background-image: url('./../images/scene-2 (55).jpg?q=80&w=2070&auto=format&fit=crop');"></div>
+      <div class="relative z-10 w-full max-w-6xl px-6 flex justify-start">
+        <div class="glass-card p-8 md:p-12 rounded-r-3xl border-l-0 fade-in-up md:w-1/2">
+          <span class="quote-mark block mb-8">“</span>
+          <p class="font-serif text-5xl md:text-7xl font-bold text-amber-50 mb-4">
+            87%
+          </p>
+          <p class="text-xl md:text-3xl font-light tracking-wide leading-relaxed">
+            of seniors want to age at home.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 3: The Solution (Tech Interface) -->
+    <section class="scrolly-section bg-gray-900">
+      <!-- Img 3: Wall Panel / Tech -->
+      <div class="parallax-bg"
+        style="background-image: url('https://images.unsplash.com/photo-1558002038-1091a1661116?q=80&w=2070&auto=format&fit=crop'); filter: grayscale(100%) brightness(0.4);">
+      </div>
+      <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-7xl px-6 w-full">
+        <div class="order-2 md:order-1">
+          <!-- Conceptual frame for the user's interface image -->
+          <div
+            class="rounded-2xl overflow-hidden shadow-2xl border border-gray-700 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+            <img src="./../images/scene-3 (47).jpg?q=80&w=2070&auto=format&fit=crop" alt="Smart Home Interface"
+              class="w-full h-auto opacity-90">
+          </div>
+        </div>
+        <div class="order-1 md:order-2 glass-card rounded-xl p-8 md:p-12 fade-in-up">
+          <p class="text-2xl md:text-3xl leading-relaxed font-light mb-6">
+            We help you make that a reality <span
+              class="font-semibold text-red-200 line-through decoration-red-400">without</span> the stress of
+            traditional construction.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 4: Brand Mission (Hands/Network) -->
+    <section class="scrolly-section">
+      <!-- Img 4: Hands with network overlay -->
+      <div class="parallax-bg"
+        style="background-image: url('./../images/scene-4 (48).jpg?q=80&w=2070&auto=format&fit=crop');"></div>
+      <!-- Overlay gradient to make text pop -->
+      <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent z-0"></div>
+
+      <div class="relative z-10 text-center max-w-5xl px-4">
+        <h2 class="text-4xl md:text-6xl font-serif font-bold mb-4 fade-in-up tracking-tight">
+          HOMEase <span class="highlight-tech">AI</span>
+        </h2>
+        <div class="h-1 w-24 bg-white mx-auto mb-8 rounded-full opacity-50"></div>
+        <p class="text-xl md:text-3xl font-light fade-in-up delay-300 max-w-3xl mx-auto">
+          Empowering independence through technology.
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 5: Footer / Hashtags -->
+    <section class="scrolly-section bg-black text-white h-[50vh]">
+      <div class="text-center space-y-8 fade-in-up">
+        <p class="text-2xl font-serif italic tracking-wider text-amber-200">Follow Our Mission</p>
+        <div class="flex flex-wrap justify-center gap-4 text-sm md:text-lg font-mono tracking-widest text-gray-400">
+          <span class="hover:text-white transition-colors cursor-pointer">#FamilyFirst</span>
+          <span class="hover:text-white transition-colors cursor-pointer">#AgingAtHome</span>
+          <span class="hover:text-white transition-colors cursor-pointer">#SmartHome</span>
+          <span class="hover:text-white transition-colors cursor-pointer">#PeaceOfMind</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+
+</html>

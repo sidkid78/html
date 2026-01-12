@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safety Scan AR</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg: #050505;
+      --text: #e0e0e0;
+      --accent-cyan: #00f3ff;
+      --accent-red: #ff2a2a;
+      --scan-line-color: rgba(0, 243, 255, 0.2);
+      --font-ui: 'Inter', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+    }
+
+    /* RESET & UTILS */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      overflow-x: hidden;
+      font-size: clamp(16px, 2vw, 22px);
+      line-height: 1.6;
+    }
+
+    /* IMAGES (Using Placeholders based on descriptions for immediate rendering) */
+    /* Image 2: AI Grid Background */
+    .bg-grid-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop');
+      /* Tech Grid Placeholder */
+      background-size: cover;
+      background-position: center;
+      opacity: 0.3;
+      mix-blend-mode: color-dodge;
+      filter: grayscale(100%) contrast(1.2) url(#hud-noise);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* GRID OVERLAY */
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* TYPOGRAPHY */
+    h1,
+    h2,
+    h3 {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .mono {
+      font-family: var(--font-code);
+      letter-spacing: -0.05em;
+      font-size: 0.8em;
+    }
+
+    .highlight {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    .danger {
+      color: var(--accent-red);
+    }
+
+    /* SECTION 1: HEADER & HERO */
+    .meta-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      font-family: var(--font-code);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      opacity: 0.6;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-section {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5vw;
+      position: relative;
+    }
+
+    .headline {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.9;
+      max-width: 15ch;
+      margin-bottom: 2rem;
+      position: relative;
+      mix-blend-mode: screen;
+    }
+
+    /* SVG FILTER ANIMATION CLASS */
+    .glitch-text {
+      filter: url(#glitch);
+      display: inline-block;
+    }
+
+    .scan-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-code);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      padding: 1rem 2rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: 700;
+      background: rgba(0, 243, 255, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scan-btn:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 30px var(--accent-cyan);
+    }
+
+    .scan-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      animation: shine 3s infinite;
+    }
+
+    /* SECTION 2: THE PROBLEM (SCROLLYTELLING) */
+    .story-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      padding: 5vw;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Image 1: Storyboard Woman */
+    .device-mockup {
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      transform: perspective(1000px) rotateY(10deg);
+      transition: transform 0.5s ease;
+    }
+
+    .device-mockup:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+
+    .device-mockup img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: sepia(20%) contrast(1.1);
+    }
+
+    /* Overlay Markers mimicking AR */
+    .ar-marker {
+      position: absolute;
+      border: 2px solid var(--accent-red);
+      width: 20%;
+      height: 15%;
+      top: 40%;
+      left: 30%;
+      box-shadow: 0 0 10px var(--accent-red);
+      animation: pulse-border 2s infinite;
+    }
+
+    .ar-marker::after {
+      content: 'RISK DETECTED';
+      position: absolute;
+      top: -20px;
+      left: 0;
+      background: var(--accent-red);
+      color: white;
+      font-size: 0.6rem;
+      padding: 2px 4px;
+      font-family: var(--font-code);
+    }
+
+    .text-content {
+      max-width: 50ch;
+    }
+
+    .text-content p {
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+    }
+
+    /* SECTION 3: CTA & FOOTER */
+    .cta-section {
+      text-align: center;
+      padding: 10vh 5vw;
+      background: linear-gradient(to top, #000, transparent);
+      position: relative;
+      z-index: 10;
+    }
+
+    .hashtags {
+      margin-top: 4rem;
+      white-space: nowrap;
+      overflow: hidden;
+      font-family: var(--font-code);
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.9rem;
+    }
+
+    .ticker-wrap {
+      display: inline-block;
+      animation: ticker 20s linear infinite;
+    }
+
+    /* ANIMATIONS */
+    @keyframes shine {
+      100% {
+        left: 100%;
+      }
+    }
+
+    @keyframes pulse-border {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes ticker {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    @keyframes scan-sweep {
+      0% {
+        top: -10vh;
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        top: 110vh;
+        opacity: 0;
+      }
+    }
+
+    /* THE SCANNER LINE */
+    .scanner-beam {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 50px 5px var(--accent-cyan);
+      opacity: 0;
+      z-index: 99;
+      animation: scan-sweep 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .story-section {
+        grid-template-columns: 1fr;
+      }
+
+      .headline {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS -->
+  <svg style="height:0; width:0; position:absolute;">
+    <defs>
+      <!-- Glitch Filter -->
+      <filter id="glitch">
+        <feTurbulence type="fractalNoise" baseFrequency="0.01 0.4" numOctaves="3" result="warp" />
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="30" in="SourceGraphic" in2="warp" />
+      </filter>
+      <!-- Noise Texture -->
+      <filter id="hud-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- BACKGROUND LAYERS -->
+  <div class="bg-grid-layer"></div>
+  <div class="grid-overlay"></div>
+  <div class="scanner-beam"></div>
+
+  <!-- UI META HEADER -->
+  <div class="meta-header">
+  </div>
+
+  <main>
+    <!-- SECTION 1: HERO -->
+    <section class="hero-section">
+      <h1 class="headline">
+        Is Mom's Home
+        <span class="highlight" style="display:block">Actually Safe?</span>
+      </h1>
+
+      <p class="mono" style="margin-bottom: 30px; border-left: 2px solid var(--accent-cyan); padding-left: 20px;">
+        // SYSTEM READY<br>
+        Scan it in 2 Minutes.
+      </p>
+
+      <div>
+        <a href="#" class="scan-btn">Initiate Scan &rarr;</a>
+      </div>
+    </section>
+
+    <!-- SECTION 2: PROBLEM AWARENESS -->
+    <section class="story-section">
+      <div class="text-content">
+        <p class="mono" style="color: var(--accent-red); margin-bottom: 0.5rem;">WARNING: HAZARD DETECTED</p>
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem;">Don't wait for a <span
+            class="danger glitch-text">fall</span> to happen.</h2>
+
+        <p>Our AI-powered AR tool identifies safety risks in your parents' home in seconds. Get a professional-grade
+          safety report and connect with vetted Killeen contractors today.</p>
+      </div>
+
+      <!-- Image Integration: Using placeholder that matches the 'Storyboard' Description -->
+      <div class="device-mockup">
+        <!-- AR Marker Overlay -->
+        <div class="ar-marker"></div>
+        <div class="ar-marker" style="top: 70%; left: 50%; width: 30%; border-color: orange;"></div>
+
+        <img src="./../images/download (12).png?q=80&w=2070&auto=format&fit=crop"
+          alt="Scanner Viewfinder - Senior Home Safety" />
+      </div>
+    </section>
+
+    <!-- SECTION 3: FINAL CALL -->
+    <section class="cta-section">
+      <h2 style="font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 2rem;">Get My Free Scan</h2>
+      <a href="#" class="scan-btn" style="font-size: 1.2rem; background: var(--accent-cyan); color: black;">Start
+        Analysis</a>
+
+      <div class="hashtags">
+        <div class="ticker-wrap">
+          <span>##KilleenTX #AgingInPlace #HomeSafety #BellCounty #CaregiverSupport &nbsp;&nbsp; // &nbsp;&nbsp;
+            ##KilleenTX #AgingInPlace #HomeSafety #BellCounty #CaregiverSupport</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</body>
+
+</html>
