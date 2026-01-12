@@ -1,0 +1,305 @@
+instagram
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Austin Oasis Experience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom Fonts & Base Settings */
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Montserrat:wght@300;400;600&display=swap');
+
+    :root {
+      --dark-olive: #2C332B;
+      --warm-sand: #E8E4DC;
+      --clay: #BFA598;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--dark-olive);
+      color: var(--warm-sand);
+      overflow: hidden;
+    }
+
+    /* Carousel Container */
+    .carousel {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      height: 100vh;
+      width: 100vw;
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE 10+ */
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+      /* Chrome/Safari */
+    }
+
+    /* Individual Panels */
+    .panel {
+      flex: 0 0 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Text Styling */
+    h1,
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .editorial-text {
+      background: rgba(44, 51, 43, 0.85);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      padding: 2rem;
+      max-width: 80%;
+      border-left: 4px solid var(--clay);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease-out;
+      z-index: 10;
+    }
+
+    /* Animation Trigger Class */
+    .active .editorial-text {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* SVG Filters */
+    .filter-grain {
+      filter: url(#grain-filter) grayscale(0.8) contrast(1.2);
+    }
+
+    .filter-anxiety {
+      filter: url(#chromatic-aberration);
+    }
+
+    .filter-bloom {
+      filter: brightness(1.1) contrast(1.05);
+    }
+
+    /* Background Images */
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      transition: transform 10s ease;
+    }
+
+    .active .bg-img {
+      transform: scale(1.05);
+    }
+
+    /* Navigation Dots */
+    .nav-dots {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      z-index: 50;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .dot.active-dot {
+      background: var(--warm-sand);
+    }
+
+    /* Input Styling for Slide 5 */
+    .poll-input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--warm-sand);
+      color: white;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      width: 100%;
+      padding: 0.5rem;
+      outline: none;
+    }
+
+    .poll-input::placeholder {
+      color: rgba(232, 228, 220, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Grain/Distress Filter for Slide 1 -->
+      <filter id="grain-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.4" />
+        </feComponentTransfer>
+        <feComposite operator="over" in2="SourceGraphic" />
+      </filter>
+
+      <!-- Chromatic Aberration for Slide 2 -->
+      <filter id="chromatic-aberration">
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" in="SourceGraphic"
+          result="red" />
+        <feOffset in="red" dx="2" dy="0" result="red_offset" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" in="SourceGraphic"
+          result="green" />
+        <feOffset in="green" dx="-2" dy="0" result="green_offset" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" in="SourceGraphic"
+          result="blue" />
+        <feBlend mode="screen" in="red_offset" in2="green_offset" result="blend1" />
+        <feBlend mode="screen" in="blend1" in2="blue" result="final" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="carousel" id="carousel">
+
+    <!-- SLIDE 1: The Hook -->
+    <div class="panel" id="slide-1">
+      <img src="../images/scene-1 (53).jpg" class="bg-img filter-grain" alt="Grainy Bathtub">
+      <div class="editorial-text">
+        <h1 class="text-4xl mb-4 italic font-light"></h1>
+        <p class="text-lg leading-relaxed">
+          "For most people, this is a bathtub. For a senior in Austin, it’s a 14-inch mountain they’re afraid to climb
+          alone."
+        </p>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: The Tension -->
+    <div class="panel" id="slide-2" style="background: #1a202c;">
+      <!-- Using CSS to create a clinical grid background -->
+      <div class="absolute inset-0 opacity-20"
+        style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+      <div class="editorial-text filter-anxiety" style="border-color: #718096;">
+        <h1 class="text-4xl mb-4 text-gray-300">The Tension</h1>
+        <p class="text-xl mb-4 text-white font-bold tracking-widest uppercase">OLD AGE STIGMA</p>
+        <p class="text-lg leading-relaxed">
+          "Safety shouldn't feel like a hospital room. You spent 30 years making this house a home. Why should it start
+          feeling like a clinic now?"
+        </p>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: The Reveal -->
+    <div class="panel" id="slide-3">
+      <img src="../images/scene-2 (56).jpg" class="bg-img filter-bloom" alt="Luxury Shower">
+      <div class="editorial-text">
+        <h1 class="text-4xl mb-4 text-yellow-100"></h1>
+        <p class="text-lg leading-relaxed">
+          "We don't build bathrooms. We build Independence. This is the Austin Oasis: Where 'Safety' is invisible, and
+          'Style' is non-negotiable."
+        </p>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: The Austin Touch -->
+    <div class="panel" id="slide-4">
+      <img src="../images/scene-3 (48).jpg" class="bg-img" alt="Austin Details">
+      <div class="editorial-text">
+        <h1 class="text-4xl mb-4">The Austin Touch</h1>
+        <p class="text-lg leading-relaxed">
+          "Crafted for the Austin lifestyle. Because you deserve to age in place with the same soul and style that
+          brought you to this city in the first place."
+        </p>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: The Call to Mission -->
+    <div class="panel" id="slide-5">
+      <img src="..images/scene-4 (49).jpg" class="bg-img" alt="Peace of Mind">
+      <div class="editorial-text text-center" style="background: rgba(44, 51, 43, 0.9); width: 90%;">
+        <h1 class="text-3xl mb-4"></h1>
+        <p class="text-lg leading-relaxed mb-8">
+          "Stop worrying about the 'what if' and start enjoying the 'right now.' Your home is your sanctuary again."
+        </p>
+        <div class="text-left mt-6">
+          <label class="block text-sm uppercase tracking-widest text-gray-400 mb-2">Your Vision</label>
+          <p class="text-xl italic font-serif mb-4">"What would 100% peace of mind feel like for your family?"</p>
+          <input type="text" class="poll-input" placeholder="Type your answer here...">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation Dots -->
+  <div class="nav-dots" id="navDots">
+    <div class="dot active-dot" onclick="scrollToPanel(0)"></div>
+    <div class="dot" onclick="scrollToPanel(1)"></div>
+    <div class="dot" onclick="scrollToPanel(2)"></div>
+    <div class="dot" onclick="scrollToPanel(3)"></div>
+    <div class="dot" onclick="scrollToPanel(4)"></div>
+  </div>
+
+  <script>
+    const carousel = document.getElementById('carousel');
+    const panels = document.querySelectorAll('.panel');
+    const dots = document.querySelectorAll('.dot');
+
+    // Scroll Snap Observer to update UI
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Add 'active' class to panel for text animations
+          entry.target.classList.add('active');
+
+          // Update Dots
+          const index = Array.from(panels).indexOf(entry.target);
+          dots.forEach(dot => dot.classList.remove('active-dot'));
+          if (dots[index]) dots[index].classList.add('active-dot');
+        }
+      });
+    }, { threshold: 0.5 });
+
+    panels.forEach(panel => observer.observe(panel));
+
+    // Smooth Scroll Function
+    function scrollToPanel(index) {
+      panels[index].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initialize first panel animation
+    setTimeout(() => {
+      panels[0].classList.add('active');
+    }, 100);
+  </script>
+
+</body>
+
+</html>
