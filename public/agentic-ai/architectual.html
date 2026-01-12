@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architectural Evolution: Scaling HOMEase | AI</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --text-primary: #e0e0e0;
+      --text-secondary: #9ca3af;
+      --accent-cyan: #00f3ff;
+      --accent-green: #3ecf8e;
+      --accent-orange: #ff7043;
+      --code-bg: #111;
+      --font-mono: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+      --font-sans: system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem
+    }
+
+    /* SVG Filters */
+    .svg-filters {
+      position: fixed;
+      height: 0;
+      width: 0
+    }
+
+    .texture-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.07;
+      filter: url(#noise)
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: -0.05em
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      line-height: 0.9;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, #fff, var(--text-secondary));
+      -webkit-background-clip: text;
+      color: transparent
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: var(--accent-cyan);
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--accent-cyan);
+      padding-left: 1rem
+    }
+
+    p {
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      margin-bottom: 1.5rem;
+      max-width: 65ch
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-green)
+    }
+
+    .tag {
+      border: 1px solid var(--accent-green);
+      padding: 0.2em 0.8em
+    }
+
+    /* Code Blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      border: 1px solid #333;
+      margin: 2rem 0;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5)
+    }
+
+    pre::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green))
+    }
+
+    code {
+      color: #a5b3ce
+    }
+
+    .keyword {
+      color: #c678dd
+    }
+
+    .string {
+      color: #98c379
+    }
+
+    .comment {
+      color: #5c6370;
+      font-style: italic
+    }
+
+    /* Layout Sections */
+    section {
+      position: relative;
+      padding: 6rem 0;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center
+    }
+
+    .full-screen-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.3;
+      filter: grayscale(80%) contrast(120%)
+    }
+
+    .sticky-wrapper {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem
+    }
+
+    @media (min-width: 900px) {
+      .sticky-wrapper {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .sticky-content {
+        position: sticky;
+        top: 20vh;
+        height: fit-content
+      }
+    }
+
+    /* Specific Styling */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 1px solid #333;
+      padding-top: 10vh
+    }
+
+    .hero-meta {
+      font-family: var(--font-mono);
+      color: var(--accent-orange);
+      margin-bottom: 1rem
+    }
+
+    .glass-card {
+      background: rgba(20, 20, 20, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 12px
+    }
+
+    .accent-text {
+      color: var(--accent-green)
+    }
+
+    .glitch-container {
+      position: relative
+    }
+
+    .glitch-container::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100px;
+      height: 4px;
+      background: var(--accent-cyan)
+    }
+
+    /* Image Styles */
+    .visual-anchor {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      transition: transform 0.5s ease
+    }
+
+    .visual-anchor.ar-home {
+      filter: sepia(20%) hue-rotate(180deg)
+    }
+
+    .visual-anchor.shield {
+      filter: drop-shadow(0 0 15px var(--accent-green));
+      mix-blend-mode: lighten
+    }
+
+    .visual-anchor.cyber {
+      mix-blend-mode: screen;
+      opacity: 0.8
+    }
+
+    .visual-anchor.map {
+      transform: perspective(1000px) rotateX(20deg) rotateZ(-5deg);
+      box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.8);
+      border: 1px solid var(--accent-orange)
+    }
+
+    /* Animations */
+    @keyframes scanline {
+      0% {
+        background-position: 0% 0%
+      }
+
+      100% {
+        background-position: 0% 100%
+      }
+    }
+
+    footer {
+      padding: 4rem 0;
+      text-align: center;
+      border-top: 1px solid #333;
+      font-family: var(--font-mono);
+      opacity: 0.6
+    }
+
+    /* Utility Classes (moved from inline styles) */
+    .bg-dark-alt {
+      background: #0a0a0a;
+    }
+
+    .hero-bg-1 {
+      background: url('../images/visual-1(241).png') no-repeat center center;
+      background-size: cover;
+    }
+
+    .hero-bg-2 {
+      background: url('../images/visual-3(241).png') no-repeat center center;
+      background-size: cover;
+      opacity: 0.15;
+    }
+
+    .flex-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .grid-gap {
+      display: grid;
+      gap: 4rem;
+    }
+  </style>
+</head>
+
+<body><svg class="svg-filters">
+    <defs>
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" />
+      </filter>
+    </defs>
+  </svg>
+  <div class="texture-overlay"></div>
+  <main>
+    <section class="hero">
+      <div class="full-screen-bg hero-bg-1">
+      </div>
+      <div class="container">
+        <div class="hero-meta">A technical deep dive into scaling HOMEase | AI using Next.js 15 and Supabase...</div>
+        <div class="tags"><span class="tag">#Next.js 15</span><span class="tag">#Supabase</span><span class="tag">#AI
+            Engineering</span><span class="tag">#PostgreSQL</span><span class="tag">#System Architecture</span><span
+            class="tag">#SaaS Development</span></div>
+        <h1>Architectural Evolution:<br>Scaling HOMEase | AI<br>with Next.js 15 and Supabase</h1>
+        <div class="glass-card">
+          <p>In the rapidly evolving landscape of AI-driven platforms, the architectural foundation of an application
+            determines its eventual success or failure in production. For HOMEase | AI, a platform dedicated to
+            transforming home accessibility through augmented reality and intelligent contractor matching, the initial
+            reliance on a fragmented Google Cloud and Firebase stack introduced significant 'glue code'
+            overhead—primarily for manual data synchronization between NoSQL and external authentication providers—and
+            operational friction.</p>
+          <p>This technical blueprint details the strategic migration to a unified ecosystem centered on Next.js 15 and
+            Supabase. By consolidating frontend logic, server-side orchestration, and relational data management into a
+            cohesive framework, we eliminate the latency of inter-service networking overhead and the complexity of
+            managing disparate systems. This transition is a fundamental shift toward developer velocity and system
+            integrity, leveraging PostgreSQL for geospatial intelligence, Supabase Edge Functions for asynchronous AI
+            orchestration, and the Next.js App Router for a high-performance, server-rendered experience.</p>
+        </div>
+      </div>
+    </section>
+    <section id="pivot">
+      <div class="container sticky-wrapper">
+        <div class="sticky-content">
+          <h2>1. The Strategic Pivot: Full-Stack Consolidation</h2>
+          <p>The decision to migrate from a legacy GCP/Firebase infrastructure to a unified Next.js 15 and Supabase
+            stack was driven by the need for architectural simplicity. In the previous iteration, developers were forced
+            to manage complex IAM roles and bridge the gap between NoSQL (Firestore) and relational requirements.</p>
+          <p>By moving to Vercel and Supabase, we achieve a 'single source of truth'. Next.js 15, with its App Router
+            and Server Actions, allows us to treat the backend as a seamless extension of our frontend components, while
+            Supabase provides a robust PostgreSQL engine that handles everything from identity management to geospatial
+            queries. This consolidation reduces the surface area for bugs and significantly accelerates the deployment
+            of core AI and AR features.</p>
+        </div>
+        <div class="visual-content"><img src="../images/visual-1(241).png" alt="AR Visualization"
+            class="visual-anchor ar-home"></div>
+      </div>
+    </section>
+    <section id="data-model" class="bg-dark-alt">
+      <div class="container sticky-wrapper">
+        <div class="visual-content"><img src="../images/visual-2(231).png" alt="Security Shield"
+            class="visual-anchor shield"></div>
+        <div class="sticky-content">
+          <h2>2. Data Modeling and RLS-First Security Architecture</h2>
+          <p>At the heart of HOMEase is a relational data model designed for multi-tenant isolation. Unlike NoSQL
+            alternatives, PostgreSQL allows us to enforce complex relationships between homeowners, projects, and
+            contractors. Security is baked into the database layer via Row Level Security (RLS), ensuring data isolation
+            at the engine level.</p>
+          <pre><code><span class="comment">-- Example: Enforcing Project Access via RLS</span>
+<span class="keyword">ALTER TABLE</span> projects ENABLE ROW LEVEL SECURITY;
+
+<span class="keyword">CREATE POLICY</span> "Homeowners can access their own projects" 
+<span class="keyword">ON</span> projects 
+<span class="keyword">FOR ALL</span> 
+<span class="keyword">USING</span> (auth.uid() = homeowner_id);
+
+<span class="keyword">CREATE POLICY</span> "Contractors can view matched projects" 
+<span class="keyword">ON</span> projects 
+<span class="keyword">FOR SELECT</span> 
+<span class="keyword">USING</span> (
+  <span class="keyword">EXISTS</span> (
+    <span class="keyword">SELECT</span> 1 <span class="keyword">FROM</span> project_matches 
+    <span class="keyword">WHERE</span> project_matches.project_id = projects.id 
+    <span class="keyword">AND</span> project_matches.contractor_id = auth.uid()
+  )
+);</code></pre>
+          <p>The schema utilizes a profiles table extending auth.users, an ar_assessments table for AR data, and
+            project_matches to manage the marketplace logic. This ensures that as the platform grows, data remains
+            consistent and queryable.</p>
+        </div>
+      </div>
+    </section>
+    <section id="ai-pipeline">
+      <div class="full-screen-bg hero-bg-2">
+      </div>
+      <div class="container">
+        <h2>3. Asynchronous AI Pipeline: Orchestrating Gemini and Fal.ai</h2>
+        <p>The HOMEase experience relies on heavy-duty AI processing. We implemented a non-blocking asynchronous
+          pipeline using Supabase Edge Functions. To minimize cold-start latency, we migrated from standard Node.js
+          environments to Deno-based Edge Functions, which provide near-instant execution at the edge.</p>
+        <pre><code><span class="comment">// Supabase Edge Function: Orchestrating AI Analysis</span>
+<span class="comment">// Using Deno-based runtime for lower cold-start latency</span>
+<span class="keyword">import</span> { createClient } <span class="keyword">from</span> <span class="string">'https://esm.sh/@supabase/supabase-js@2'</span>;
+
+<span class="keyword">export const</span> processAssessment = <span class="keyword">async</span> (projectId: string, images: string[]) => {
+  <span class="keyword">const</span> supabase = createClient(Deno.env.get(<span class="string">'SUPABASE_URL'</span>), Deno.env.get(<span class="string">'SUPABASE_SERVICE_ROLE_KEY'</span>));
+  
+  <span class="comment">// 1. Update status to 'processing'</span>
+  <span class="keyword">await</span> supabase.from(<span class="string">'ar_assessments'</span>).update({ status: <span class="string">'processing'</span> }).eq(<span class="string">'project_id'</span>, projectId);
+
+  <span class="comment">// 2. Call Google Gemini for Hazard Analysis</span>
+  <span class="keyword">const</span> hazardReport = <span class="keyword">await</span> analyzeWithGemini(images);
+
+  <span class="comment">// 3. Call Fal.ai for Visual Prototyping</span>
+  <span class="keyword">const</span> visualization = <span class="keyword">await</span> generatePrototypes(images, hazardReport);
+
+  <span class="comment">// 4. Persist and trigger Realtime notification</span>
+  <span class="keyword">await</span> supabase.from(<span class="string">'ar_assessments'</span>).update({
+    report: hazardReport,
+    visuals: visualization,
+    status: <span class="string">'completed'</span>
+  }).eq(<span class="string">'project_id'</span>, projectId);
+};</code></pre>
+      </div>
+    </section>
+    <section id="system-overview">
+      <div class="container">
+        <div class="glass-card">
+          <h2>4. System Overview: From Analysis to Action</h2>
+          <p>The true power of the HOMEase architecture lies in the transition from raw data to actionable insights.
+            Once the AI pipeline completes its analysis of a home's accessibility needs, the system must immediately
+            translate these findings into a commercial opportunity. This bridge connects the unstructured data generated
+            by Gemini and Fal.ai with our structured marketplace, triggering the geospatial matching engine to find the
+            most qualified local professionals to execute the recommended modifications.</p>
+        </div>
+      </div>
+    </section>
+    <section id="geospatial">
+      <div class="container sticky-wrapper">
+        <div class="sticky-content">
+          <h2>5. Geospatial Intelligence with PostGIS</h2>
+          <p>Connecting homeowners with the right contractors requires precise geospatial calculations. HOMEase utilizes
+            the PostGIS extension within Supabase to perform high-performance spatial queries. Contractors define their
+            service areas as polygons, and projects are represented as points. We use the ST_Contains function to
+            identify all contractors whose service area encompasses a specific project location, providing much higher
+            accuracy than simple radius-based matching.</p>
+        </div>
+        <div class="visual-content flex-center"><img src="../images/visual-4(222).png" alt="Geospatial Map"
+            class="visual-anchor map"></div>
+      </div>
+    </section>
+    <section id="finance-ops">
+      <div class="container grid-gap">
+        <div>
+          <h2>6. Financial Infrastructure: Stripe Connect Integration</h2>
+          <p>Monetization is handled through a multi-party financial flow powered by Stripe Connect. This allows the
+            platform to facilitate payments while automatically deducting a platform fee. We utilize Stripe's Express
+            accounts for contractor onboarding, ensuring KYC compliance. The integration is managed via a centralized
+            webhook handler in a Supabase Edge Function, ensuring project statuses and payment records are synchronized
+            in real-time.</p>
+        </div>
+        <div>
+          <h2>7. DevOps and the Vercel Deployment Pipeline</h2>
+          <p>To maintain high code quality, we employ a CI/CD pipeline using GitHub Actions and Vercel. Every pull
+            request triggers a preview deployment and automated tests, including Vitest for unit testing. Environment
+            variables are managed securely through Vercel, with separate configurations for staging and production. This
+            ensures that infrastructure changes—such as database migrations or updated Edge Functions—are validated
+            before reaching production.</p>
+        </div>
+      </div>
+    </section>
+    <footer>
+      <div class="container">
+        <h2>Conclusion</h2>
+        <p>The transition to a Next.js 15 and Supabase architecture provides HOMEase | AI with the technical foundation
+          necessary to scale. By leveraging serverless edge computing, relational data integrity, and advanced
+          geospatial capabilities, we have built a system that is performant, secure, and developer-friendly. This
+          unified stack allows our team to focus on AI and AR innovation rather than managing infrastructure, keeping
+          HOMEase at the forefront of the home accessibility industry.</p>
+      </div>
+    </footer>
+  </main>
+</body>
+
+</html>
