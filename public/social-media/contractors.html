@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase AI - Scrollytelling</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --c-void: #0f172a;
+      --c-ink: #020617;
+      --c-paper: #f8fafc;
+      --c-blueprint: #2563eb;
+      --c-gold: #d97706;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--c-ink);
+      color: var(--c-paper);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Scrollytelling Container */
+    .scroller {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .section {
+      height: 100vh;
+      width: 100vw;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+    }
+
+    /* Typography Classes */
+    .font-serif-display {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .font-tech {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.1em;
+    }
+
+    /* Background Image Handling */
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      transition: transform 3s ease-out;
+      will-change: transform;
+    }
+
+    /* Animation States */
+    .section:hover .bg-img {
+      transform: scale(1.05);
+    }
+
+    /* Text Elements */
+    .text-layer {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      padding: 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease-out forwards;
+      animation-delay: 0.3s;
+      mix-blend-mode: overlay;
+    }
+
+    .text-solid {
+      mix-blend-mode: normal;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Custom SVG Filters Classes */
+    .filter-grit {
+      filter: url(#paperGrit) contrast(1.2) sepia(0.3);
+    }
+
+    .filter-rain {
+      filter: url(#rainWindow) brightness(0.7) blur(0.5px);
+    }
+
+    .filter-blueprint {
+      filter: url(#blueprintGrid) grayscale(1) brightness(0.8) sepia(1) hue-rotate(180deg) saturate(3);
+    }
+
+    .filter-dream {
+      filter: url(#softGlow) contrast(1.1) saturate(1.2);
+    }
+
+    /* Utility Overlay Gradients */
+    .vignette {
+      background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.8) 90%);
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .noise-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 0.15;
+      pointer-events: none;
+      filter: url(#staticNoise);
+    }
+
+    /* Specific Typography Styles */
+    .quote-highlight {
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      padding: 0.5rem 0;
+      border-left: 2px solid var(--c-gold);
+      padding-left: 1rem;
+    }
+
+    .highlight-tech {
+      color: #60a5fa;
+      text-shadow: 0 0 10px rgba(37, 99, 235, 0.8);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition Block -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Filter 1: Static Noise for texture -->
+      <filter id="staticNoise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+
+      <!-- Filter 2: Rain/Glass Distortion -->
+      <filter id="rainWindow">
+        <feTurbulence type="turbulence" baseFrequency="0.005 0.05" numOctaves="2" result="turbulence" />
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="15" xChannelSelector="R" yChannelSelector="G" />
+        <feGaussianBlur stdDeviation="0.5" />
+      </filter>
+
+      <!-- Filter 3: Paper Grit/Distress -->
+      <filter id="paperGrit">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
+        <feDiffuseLighting in="noise" lighting-color="#fff" surfaceScale="2">
+          <feDistantLight azimuth="45" elevation="60" />
+        </feDiffuseLighting>
+        <feComposite operator="in" in2="SourceGraphic" />
+        <feBlend mode="multiply" in2="SourceGraphic" />
+      </filter>
+
+      <!-- Filter 4: Soft Dream Glow -->
+      <filter id="softGlow">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+
+      <!-- Filter 5: Blueprint Grid Simulation -->
+      <filter id="blueprintGrid">
+        <feTurbulence baseFrequency="0.01" numOctaves="0" type="fractalNoise" result="noise" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" in="noise" result="grid" />
+        <feComposite operator="in" in="SourceGraphic" in2="grid" />
+      </filter>
+    </defs>
+  </svg>
+
+  <main class="scroller">
+
+    <!-- SCENE 1: The Struggle (Contractor at desk) -->
+    <section class="section bg-slate-900">
+      <img src="./../images/scene-1 (56).jpg" alt="Contractor looking tired at desk" class="bg-img filter-grit">
+      <div class="vignette"></div>
+      <div class="noise-overlay"></div>
+      <div class="text-layer text-center">
+        <h1 class="font-serif-display text-4xl md:text-6xl mb-6 font-bold leading-tight text-solid">
+          For years, I watched accessibility contractors...
+        </h1>
+        <p class="text-xl md:text-2xl font-light text-gray-300 italic">
+          – the unsung heroes who transform lives – battle an invisible enemy.
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 2: The Physical Toll -->
+    <section class="section bg-stone-900">
+      <div class="vignette"></div>
+      <div class="text-layer flex flex-col items-start justify-center h-full max-w-4xl mx-auto px-6">
+        <p class="font-serif-display text-3xl md:text-5xl mb-12 leading-tight text-solid">
+          I saw the <span class="text-red-400 opacity-90">ache in their backs</span>, bent over clipboards, trying to
+          eyeball complex home layouts.
+        </p>
+        <p class="text-lg md:text-xl text-gray-300 font-light max-w-2xl border-l-4 border-red-900 pl-6">
+          I felt the sting of their frustration as endless phone calls led to dead ends, and "qualified leads" turned
+          out to be nothing but tire-kickers, draining precious hours and hope.
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 3: The Rain/Low Point (Sleeping in car) -->
+    <section class="section bg-blue-950">
+      <img src="./../images/scene-2 (59).jpg" alt="Man sleeping in car in rain" class="bg-img filter-rain">
+      <div class="vignette" style="background: radial-gradient(circle, transparent 40%, #020617 100%);"></div>
+      <div class="text-layer w-full md:w-1/2 ml-auto px-8 md:px-20 text-right">
+        <p class="text-2xl md:text-4xl font-serif-display mb-8 text-blue-100 text-solid">
+          Their days were a blur of driving, estimating, chasing...
+        </p>
+        <p class="text-lg text-blue-200 font-light leading-relaxed mb-8">
+          ...and the deafening silence of promising deals that just... vanished, swallowed by the <span
+            class="font-bold">black hole</span> of manual follow-ups and fragmented data.
+        </p>
+        <p class="text-base text-gray-400 mt-12 border-r-2 border-blue-500 pr-4">
+          They weren't just losing sales; they were losing time – time they could have spent with family, time they
+          could have spent doing the vital work of making homes safe and accessible.
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 4: The Exhaustion -->
+    <section class="section bg-black">
+      <div
+        class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMTAxMDE1Ii8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMzMzMiLz4KPC9zdmc+')] opacity-20">
+      </div>
+      <div class="text-layer text-center max-w-5xl">
+        <h2 class="text-3xl md:text-5xl font-serif-display text-gray-400 mb-8">
+          I saw the exhaustion etched on their faces.
+        </h2>
+        <p class="text-xl md:text-2xl font-light text-gray-500">
+          Knowing their dedication to helping others was constantly undermined by the sheer, soul-crushing inefficiency
+          of "how things have always been done."
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 5: The Turn (Blueprints/Tech) -->
+    <section class="section bg-indigo-950">
+      <img src="./../images/scene-3 (51).jpg" alt="Tablet showing digital blueprints" class="bg-img filter-blueprint">
+      <div class="absolute inset-0 bg-blue-900/60 mix-blend-multiply"></div>
+      <div class="text-layer w-full px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div class="md:col-start-2">
+          <h3 class="font-tech text-3xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg text-solid">
+            This wasn't just about finding leads; it was about <span class="text-cyan-400">liberating</span> them.
+          </h3>
+          <p class="text-lg text-cyan-100 mb-6">
+            It was about giving them the <span class="font-bold uppercase tracking-widest">armor</span> they needed to
+            fight back against the spreadsheets, the guesswork, the endless chase.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 6: The Solution (Hero) -->
+    <section class="section bg-slate-950">
+      <div class="absolute inset-0 flex items-center justify-center">
+        <!-- Abstract tech grid background -->
+        <div class="w-full h-full"
+          style="background-image: radial-gradient(#1e3a8a 1px, transparent 1px); background-size: 40px 40px; opacity: 0.2;">
+        </div>
+      </div>
+      <div class="text-layer text-center z-20">
+        <p class="text-xl tracking-[0.3em] uppercase text-gray-500 mb-4">That's why we built</p>
+        <h1
+          class="text-6xl md:text-9xl font-tech font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-white to-cyan-400 mb-8 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+          HOMEase AI
+        </h1>
+        <p class="text-2xl md:text-3xl font-light text-white max-w-4xl mx-auto leading-relaxed">
+          It's not just software; it's a declaration of war against wasted effort and lost potential.
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 7: The Vision -->
+    <section class="section bg-gray-900">
+      <div class="text-layer max-w-6xl mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <p class="text-xl md:text-2xl leading-relaxed text-gray-300 mb-6">
+              Imagine seeing a home's accessibility needs with <span class="text-white font-bold">surgical
+                precision</span> before you even step foot inside, crafting a quote that's not just accurate, but
+              unassailable.
+            </p>
+          </div>
+          <div class="border-l border-gray-700 pl-8">
+            <p class="text-lg text-gray-400">
+              Picture a world where every lead is genuinely ready, where follow-ups happen like clockwork, and your
+              business intelligence isn't a guess, but a <span class="text-yellow-200 glow">guiding light</span>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 8: Empowerment (Contractor with Senior) -->
+    <section class="section bg-amber-950">
+      <img src="./../images/scene-4 (52).jpg" alt="Contractor talking to senior" class="bg-img filter-dream">
+      <div class="absolute inset-0 bg-gradient-to-t from-amber-950 via-transparent to-transparent opacity-90"></div>
+      <div class="text-layer text-center">
+        <h2 class="font-serif-display text-3xl md:text-5xl text-amber-100 mb-8 text-solid">
+          We exist to empower those who empower others.
+        </h2>
+        <p class="text-xl text-amber-200 font-light max-w-3xl mx-auto mb-12 drop-shadow-md">
+          We believe that the vital work of accessibility contractors should be a force of unstoppable good, unburdened
+          by archaic processes.
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 9: Outro -->
+    <section class="section bg-gray-900">
+      <div class="text-layer text-center">
+        <div class="inline-block mb-6 p-4 border border-blue-500/30 rounded-lg bg-blue-900/10 backdrop-blur-sm">
+          <span class="font-tech text-2xl md:text-3xl text-blue-300">With HOMEase AI</span>
+        </div>
+        <p class="text-2xl md:text-4xl font-serif-display leading-tight text-white mb-4">
+          We don't just help you grow your business;
+        </p>
+        <p
+          class="text-3xl md:text-5xl font-serif-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-amber-200 to-amber-600">
+          we help you reclaim your purpose,
+        </p>
+        <p class="mt-8 text-lg uppercase tracking-widest text-gray-500">
+          one perfectly accessible home at a time.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+
+</html>

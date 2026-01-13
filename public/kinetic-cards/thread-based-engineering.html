@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thread-Based Engineering</title>
+  <style>
+    :root {
+      --c-neon: #00f3ff;
+      --c-dark: #050505;
+      --c-panel: rgba(10, 10, 15, 0.85);
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-sans: system-ui, -apple-system, sans-serif;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--c-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: var(--font-sans);
+      color: white;
+    }
+
+    /* --- LAYOUT --- */
+    .card-container {
+      position: relative;
+      width: 90vw;
+      height: 90vh;
+      max-width: 600px;
+      max-height: 850px;
+      background: #000;
+      box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      border: 1px solid #333;
+    }
+
+    /* --- BACKGROUND LAYERS --- */
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.6;
+      filter: grayscale(80%) contrast(120%) sepia(20%) hue-rotate(180deg);
+      transition: opacity 2s ease;
+    }
+
+    .bg-layer img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .texture-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0.35;
+      filter: url(#noise-grain);
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: repeating-linear-gradient(to bottom,
+          transparent 0px,
+          transparent 2px,
+          rgba(0, 243, 255, 0.05) 3px);
+      pointer-events: none;
+    }
+
+    /* --- CONTENT LAYOUT --- */
+    .header {
+      z-index: 10;
+      padding: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+    }
+
+    .main-content {
+      z-index: 10;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .footer {
+      z-index: 10;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--c-panel);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* --- TYPOGRAPHY & ELEMENTS --- */
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 0.9;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      margin: 0;
+      filter: url(#chromatic);
+      animation: flicker 4s infinite alternate;
+    }
+
+    .sub-head {
+      font-family: var(--font-mono);
+      color: var(--c-neon);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .hero-graphic {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      opacity: 0.5;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      filter: drop-shadow(0 0 10px var(--c-neon));
+    }
+
+    .framework-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: auto;
+    }
+
+    .stat-box {
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      background: rgba(0, 20, 30, 0.6);
+      padding: 1rem;
+      font-family: var(--font-mono);
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+      color: #888;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-val {
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .quote-block {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      border-left: 2px solid var(--c-neon);
+      padding-left: 1rem;
+      color: #ddd;
+      text-shadow: 0 1px 2px black;
+      max-width: 80%;
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes flicker {
+      0% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      2% {
+        opacity: 0.8;
+        transform: translateX(1px);
+      }
+
+      4% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* --- UTILS --- */
+    .tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border: 1px solid #555;
+      font-size: 0.6rem;
+      margin-right: 5px;
+      border-radius: 2px;
+    }
+
+    .blink {
+      animation: flicker 2s infinite;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS -->
+  <svg style="display: none;">
+    <defs>
+      <!-- GRAIN FILTER -->
+      <filter id="noise-grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncR type="linear" slope="3" intercept="-1" />
+          <feFuncG type="linear" slope="3" intercept="-1" />
+          <feFuncB type="linear" slope="3" intercept="-1" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- CHROMATIC ABERRATION -->
+      <filter id="chromatic">
+        <feOffset in="SourceGraphic" dx="-2" dy="0" result="left" />
+        <feOffset in="SourceGraphic" dx="2" dy="0" result="right" />
+        <feMerge>
+          <feMergeNode in="left" />
+          <feMergeNode in="right" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+        <feColorMatrix type="matrix" values="
+          1 0 0 0 0
+          0 0.2 0 0 0
+          0 0 1 0 0
+          0 0 0 1 0 " />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="card-container">
+    <!-- Backgrounds -->
+    <div class="bg-layer">
+      <img src="./../images/visual-1 (27).png" alt="Engineer Background">
+    </div>
+    <div class="texture-overlay"></div>
+    <div class="scanlines"></div>
+
+    <!-- Orchestrator Graphic Overlay -->
+    <img src="./../images/visual-4 (25).png" class="hero-graphic" alt="Orchestrator">
+
+    <!-- Header Section -->
+    <header class="header">
+      <span class="sub-head">A Senior Framework for the Age of Agents</span>
+      <h1>Thread-Based<br>Engineering</h1>
+      <div style="margin-top: 1rem;">
+        <span class="tag">#AI Engineering</span>
+        <span class="tag">#Agentic Workflows</span>
+      </div>
+    </header>
+
+    <!-- Main Body -->
+    <section class="main-content">
+      <div class="quote-block">
+        "The solution is not simply to prompt more, but to adopt a new mental framework for measuring progress."
+      </div>
+
+      <div class="framework-grid">
+        <div class="stat-box">
+          <span class="stat-label">Mode: Concurrent</span>
+          <div class="stat-val">P-THREADS</div>
+          <div style="font-size: 0.6rem; color:#aaa; margin-top:5px;">Parallel Execution</div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Target: Autonomy</span>
+          <div class="stat-val" style="color: var(--c-neon)">Z-THREADS</div>
+          <div style="font-size: 0.6rem; color:#aaa; margin-top:5px;">Zero-Touch Loop</div>
+        </div>
+        <div class="stat-box" style="grid-column: span 2; border-color: rgba(255,255,255,0.1);">
+          <span class="stat-label">Core Metric</span>
+          <div class="stat-val">Move from 'Vibe Coder' to 'Senior Engineer'</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>
+        <span class="stat-label">STATUS</span>
+        <span class="blink" style="color: var(--c-neon); font-family: var(--font-mono); font-size: 0.8rem;">● SYSTEMS
+          ONLINE</span>
+      </div>
+      <div style="text-align: right;">
+        <span class="stat-label">UNIT OF WORK</span>
+        <span style="font-family: var(--font-mono); font-size: 0.8rem;">PROMPT > TOOL > REVIEW</span>
+      </div>
+    </footer>
+  </div>
+
+</body>
+
+</html>
