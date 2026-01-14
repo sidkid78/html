@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Killeen Home Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --c-midnight: #0f172a;
+            --c-cream: #fdfbf7;
+            --c-amber: #d97706;
+            --c-text: #333333;
+            --c-text-light: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: var(--c-cream);
+            color: var(--c-text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- SVG FILTERS & TEXTURES --- */
+        .texture-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0.15;
+            filter: url(#grain);
+            mix-blend-mode: multiply;
+        }
+
+        .soft-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* --- SCROLL SNAP LAYOUT --- */
+        .scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        /* --- TYPOGRAPHY STYLES --- */
+        h1,
+        h2,
+        h3,
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .text-shadow {
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes slowZoom {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.15);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(255, 165, 0, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 165, 0, 0.5);
+            }
+        }
+
+        .anim-zoom {
+            animation: slowZoom 20s infinite alternate linear;
+        }
+
+        .anim-entry {
+            animation: fadeInUp 1.2s ease-out forwards;
+            opacity: 0;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.6s;
+        }
+
+        .delay-3 {
+            animation-delay: 1s;
+        }
+
+        /* --- CUSTOM COMPONENTS --- */
+        .polaroid {
+            background: #fff;
+            padding: 1rem;
+            padding-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.02);
+            z-index: 10;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .safety-glow-text {
+            color: var(--c-amber);
+            text-shadow: 0 0 15px rgba(217, 119, 6, 0.6);
+        }
+
+        /* --- RESPONSIVE IMAGE HANDLERS --- */
+        .bg-cover-image {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG FILTERS -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+                <feColorMatrix type="saturate" values="0" result="desatNoise" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.5" />
+                </feComponentTransfer>
+                <feBlend mode="overlay" in="SourceGraphic" result="grained" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="texture-overlay"></div>
+
+    <div class="scroll-container">
+
+        <!-- SECTION 1: THE HOOK (Midnight Blue Theme) -->
+        <section class="bg-slate-900 text-white">
+            <div class="absolute inset-0 z-0 overflow-hidden">
+                <!-- Image 1: Dark room, phone -->
+                <img src="./../images/scene-1 (58).jpg" alt="Hand reaching for phone at night"
+                    class="bg-cover-image anim-zoom opacity-60">
+                <div class="absolute inset-0 bg-slate-900/60 mix-blend-multiply"></div>
+            </div>
+
+            <div class="relative z-10 max-w-4xl w-full text-center px-6">
+                <p class="text-xs tracking-[0.2em] uppercase mb-4 opacity-70 anim-entry"></p>
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-8 serif text-shadow anim-entry delay-1">
+                    Because the <span class="italic font-light text-amber-200">"I hope they're okay"</span> feeling
+                    shouldn't be your full-time job.
+                </h1>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE PROBLEM & THE SHIFT (Dual Panel) -->
+        <section class="bg-slate-100 text-slate-800">
+            <div class="grid md:grid-cols-2 gap-12 max-w-6xl w-full items-center z-10">
+                <!-- Text Side -->
+                <div class="space-y-6 px-6 order-2 md:order-1">
+                    <p class="text-lg md:text-xl font-light leading-relaxed anim-entry">
+                        "You worry every time the phone rings late at night. You wonder if today is the day a simple rug
+                        or a dark hallway changes everything for your Mom.
+                    </p>
+                    <hr class="w-16 border-amber-500 border-2 rounded anim-entry delay-1">
+                    <p class="text-md md:text-lg font-medium text-slate-600 anim-entry delay-2">
+                        In Killeen, we believe 'Home' should be the safest place on earth—not a place of hidden risks.
+                    </p>
+                </div>
+
+                <!-- Image Side: Collage of Fixes -->
+                <div
+                    class="relative h-[50vh] w-full order-1 md:order-2 flex items-center justify-center anim-entry delay-1">
+                    <!-- Image 3: Handrail -->
+                    <div class="polaroid absolute top-0 left-4 w-3/4 max-w-xs rotate-[-3deg] z-10">
+                        <img src="./../images/scene-3 (53).jpg" alt="Installing safety rail"
+                            class="w-full h-auto shadow-inner grayscale hover:grayscale-0 transition duration-700">
+                    </div>
+                    <!-- Image 2: Assessment -->
+                    <div class="polaroid absolute bottom-4 right-4 w-3/4 max-w-xs rotate-[3deg] z-20">
+                        <img src="./../images/scene-2 (61).jpg" alt="Home assessment"
+                            class="w-full h-auto shadow-inner sepia-[0.3]">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE SOLUTION (Parallax + Overlay) -->
+        <section class="bg-amber-50">
+            <!-- Background Parallax hint using CSS attachment is tricky on mobile, sticking to fixed position div -->
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-t from-amber-50 via-white to-transparent z-10"></div>
+                <!-- Blurred version of Image 4 for atmosphere -->
+                <img src="./../images/scene-4 (54).jpg" class="w-full h-full object-cover blur-sm opacity-30"
+                    title="Blurred Image">
+            </div>
+
+            <div class="relative z-20 max-w-3xl w-full text-center p-8 glass-panel rounded-xl mx-4">
+                <h2 class="text-3xl md:text-5xl mb-6 serif text-slate-900">
+                    Our HOMEase assessment doesn't just give you a 'scorecard';
+                </h2>
+                <p class="text-xl text-slate-700 mb-8 leading-relaxed">
+                    it gives you the power to keep her in the home she loves for years longer.
+                </p>
+                <p class="text-2xl font-bold serif safety-glow-text">
+                    Stop guessing. Start protecting.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: THE VISION (Warm, Emotional Payoff) -->
+        <section class="relative">
+            <div class="absolute inset-0 z-0">
+                <!-- Image 4: Elderly parent laughing (The Hero Shot) -->
+                <img src="./../images/scene-4 (54).jpg" alt="Elderly parent laughing in armchair"
+                    class="bg-cover-image object-center">
+                <div class="soft-vignette"></div>
+                <!-- Warm overlay for the 'safety glow' -->
+                <div class="absolute inset-0 bg-amber-500/10 mix-blend-soft-light animate-[glowPulse_4s_infinite]">
+                </div>
+            </div>
+
+            <div
+                class="relative z-20 max-w-4xl mx-auto text-center text-white px-4 flex flex-col items-center justify-end pb-24 h-full">
+                <p class="text-shadow text-xl md:text-2xl font-light italic mb-8 anim-entry" </p>
+
+                <h2 class="text-shadow text-3xl md:text-5xl font-bold serif mb-6 anim-entry delay-1">
+                    See exactly how to bridge the gap between 'aging' and 'aging in place' with dignity.
+                </h2>
+
+                <button
+                    class="mt-8 px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-bold text-lg tracking-wide rounded-full shadow-lg transform transition hover:scale-105 hover:shadow-amber-500/50 anim-entry delay-2">
+                    [Protect My Parent’s Home]
+                </button>
+            </div>
+        </section>
+
+    </div>
+</body>
+
+</html>
