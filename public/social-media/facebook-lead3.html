@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe at Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --paper: #fdf6e3;
+            --ink: #2c241b;
+            --ink-light: #5d4d3d;
+            --accent: #c25e00;
+            --safe: #2a7a7a;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: 'Lato', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- SVG FILTERS & TEXTURES --- */
+        .texture-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.4;
+            mix-blend-mode: multiply;
+        }
+
+        /* Vintage Photo Effect */
+        .photo-frame {
+            position: relative;
+            padding: 10px 10px 30px 10px;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transform: rotate(-1deg);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .photo-frame:hover {
+            transform: rotate(0deg) scale(1.01);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .photo-frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+            filter: sepia(20%) contrast(1.1);
+        }
+
+        /* Risk/Glitch Effect for the Rug */
+        .risk-img {
+            filter: url(#chromatic aberration);
+        }
+
+        /* Ink Bleed Text */
+        .ink-text {
+            filter: url(#ink-bleed);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-enter {
+            animation: fadeUp 1.2s ease-out forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.5s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.8s;
+        }
+
+        /* Custom Grid Layouts */
+        .magazine-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media(min-width: 768px) {
+            .magazine-grid {
+                grid-template-columns: 1.2fr 0.8fr;
+                align-items: center;
+            }
+
+            .reverse-grid {
+                grid-template-columns: 0.8fr 1.2fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- SVG FILTERS DEFINITION -->
+    <svg class="hidden">
+        <defs>
+            <!-- Paper Texture Filter -->
+            <filter id="paper-grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+                <feColorMatrix type="saturate" values="0" in="noise" result="monoNoise" />
+                <feComponentTransfer in="monoNoise">
+                    <feFuncA type="linear" slope="0.5" />
+                </feComponentTransfer>
+            </filter>
+
+            <!-- Ink Bleed for Text -->
+            <filter id="ink-bleed">
+                <feMorphology operator="dilate" radius="0.4" in="SourceAlpha" result="thicken" />
+                <feGaussianBlur stdDeviation="0.5" in="thicken" result="blurred" />
+                <feComposite operator="in" in="SourceGraphic" in2="blurred" />
+            </filter>
+
+            <!-- Chromatic Aberration (The Threat) -->
+            <filter id="chromatic">
+                <feOffset in="SourceGraphic" dx="-2" dy="0" result="left" />
+                <feOffset in="SourceGraphic" dx="2" dy="0" result="right" />
+                <feMerge>
+                    <feMergeNode in="left" />
+                    <feMergeNode in="right" />
+                </feMerge>
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Paper Texture Overlay -->
+    <div class="texture-overlay"
+        style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmaWx0ZXIgaWQ9Im4iPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ0cmFuc3BhcmVudCIvPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNuKSIgb3BhY2l0eT0iMC4yIi8+PC9zdmc+');">
+    </div>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 md:py-20 relative z-10 space-y-24">
+
+        <!-- SECTION 1: HERO (Memory) -->
+        <section class="magazine-grid">
+            <div class="order-2 md:order-1">
+                <div class="photo-frame animate-enter">
+                    <!-- Image 1: Grandma Baking -->
+                    <img src="./../images/scene-1 (61).jpg?q=80&w=1000&auto=format&fit=crop"
+                        alt="Grandmother and child baking together" class="aspect-[4/3] object-cover">
+                </div>
+                <p class="font-handwriting text-center mt-4 text-sm text-gray-500 italic">Preserving moments that
+                    matter.</p>
+            </div>
+            <div class="order-1 md:order-2 space-y-6 text-center md:text-left animate-enter delay-1">
+                <span class="uppercase tracking-[0.2em] text-xs font-bold text-accent"></span>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif text-ink leading-tight ink-text">
+                    Because Her Best Memories Shouldn't Be Threatened by a <span
+                        class="italic text-accent decoration-2 underline decoration-wavy underline-offset-4">Loose
+                        Rug.</span>
+                </h1>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE PROBLEM (The Risk) -->
+        <section class="magazine-grid reverse-grid">
+            <div class="space-y-6 md:pr-10 animate-enter delay-2">
+                <h2 class="text-2xl md:text-3xl font-serif text-ink-light border-l-4 border-accent pl-4">
+                    A home is more than four walls; it’s a lifetime of independence.
+                </h2>
+                <p class="text-lg leading-relaxed text-gray-700">
+                    But for many Killeen families, the place we love most hides the risks we see least.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-700">
+                    We don’t just deliver 'data.' We provide the roadmap to keep your parents where they belong: safe,
+                    at home, and in control.
+                </p>
+            </div>
+            <div class="relative animate-enter delay-2">
+                <!-- Image 2: The Rug (Risk) -->
+                <div class="photo-frame rotate-1">
+                    <img src="./../images/scene-2 (65).jpg?q=80&w=1000&auto=format&fit=crop"
+                        alt="Loose rug on hardwood floor"
+                        class="aspect-square object-cover risk-img grayscale-[30%] hover:grayscale-0 transition-all duration-500">
+                    <div class="absolute inset-0 ring-1 ring-inset ring-black/10 pointer-events-none"></div>
+                </div>
+                <div
+                    class="absolute -bottom-6 -right-6 bg-red-800 text-white p-4 font-serif text-xl italic shadow-xl rounded-sm transform rotate-3">
+                    Don’t wait for a fall.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE SOLUTION & CTA (The Roadmap) -->
+        <section
+            class="bg-white/60 p-8 md:p-12 rounded-sm shadow-sm border border-stone-200 relative overflow-hidden animate-enter delay-3">
+            <!-- Abstract decorative circle -->
+            <div
+                class="absolute -top-24 -left-24 w-64 h-64 bg-accent/10 rounded-full mix-blend-multiply filter blur-3xl">
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center relative">
+                <div class="space-y-6">
+                    <!-- Image 3: Smart Home Roadmap -->
+                    <div class="photo-frame transform -rotate-2 w-3/4 mx-auto md:w-full">
+                        <img src="./../images/scene-3 (56).jpg?q=80&w=1000&auto=format&fit=crop"
+                            alt="Hands holding tablet with safety checklist" class="aspect-video object-cover">
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-2xl font-serif text-safe mb-2">The Safe at Home Roadmap</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Don't wait for a fall to start the conversation. Equip yourself with the knowledge to
+                            identify hazards before they change everything.
+                        </p>
+                    </div>
+
+                    <!-- Image 4: Community Workshop embedded in CTA area -->
+                    <div class="group relative cursor-pointer">
+                        <div class="absolute inset-0 bg-accent transform translate-x-2 translate-y-2 rounded-sm"></div>
+                        <div
+                            class="relative bg-white border-2 border-ink p-1 flex flex-col md:flex-row items-center gap-4 hover:-translate-y-1 hover:-translate-x-1 transition-transform duration-200">
+                            <img src="./../images/scene-4 (57).jpg?q=80&w=400&auto=format&fit=crop"
+                                alt="Senior community workshop"
+                                class="w-full md:w-32 h-24 object-cover grayscale group-hover:grayscale-0 transition-all">
+                            <div class="p-4 text-center md:text-left">
+                                <p class="font-bold text-ink text-lg mb-1">Join our 'Safe at Home' Community Workshop
+                                </p>
+                                <span class="text-xs uppercase tracking-widest text-accent font-bold">Reserve Your Spot
+                                    &rarr;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center pt-12 pb-6 border-t border-stone-300/50">
+            <p class="font-serif italic text-stone-500">Facebook Lead Generation • Killeen Families</p>
+        </footer>
+
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sovereignty of Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --midnight: #020617;
+      --anxiety: #1e293b;
+      --alert: #7f1d1d;
+      --hope: #fff7ed;
+      --brand: #0f766e;
+      --text-body: #334155;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--midnight);
+      overflow-x: hidden;
+      margin: 0;
+      color: var(--hope);
+    }
+
+    h1,
+    h2,
+    h3,
+    .serif {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* SVG FILTERS */
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.15;
+      filter: url(#grain);
+      mix-blend-mode: overlay;
+    }
+
+    /* SCROLL SCENES */
+    .scene {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      z-index: 10;
+    }
+
+    .sticky-visual {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .sticky-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease-out;
+    }
+
+    .content-card {
+      background: rgba(2, 6, 23, 0.75);
+      backdrop-filter: blur(12px);
+      padding: 2rem;
+      max-width: 600px;
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+      margin: 2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeUp 1s forwards;
+      animation-timeline: view();
+      animation-range: entry 10% cover 30%;
+    }
+
+    .light-theme .content-card {
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--text-body);
+      border-left: 4px solid var(--brand);
+    }
+
+    .title-hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at center, #1e293b 0%, #000 100%);
+    }
+
+    .title-hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.9;
+      background: linear-gradient(to bottom, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.02em;
+      animation: glowText 3s ease-in-out infinite alternate;
+    }
+
+    /* SPECIAL TYPOGRAPHY FX */
+    .highlight {
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    .anxiety-text {
+      text-shadow: 2px 0px 4px rgba(255, 0, 0, 0.3);
+    }
+
+    /* UTILS */
+    @keyframes fadeUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes glowText {
+      from {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+
+      to {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    /* IMAGE LAYERS */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTER DEFINITIONS -->
+  <svg style="display: none;">
+    <defs>
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+      <filter id="distort">
+        <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence" />
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="grain-overlay"></div>
+
+  <!-- HERO -->
+  <header class="title-hero" id="hero-section">
+    <h1 class="serif tracking-tighter">"The Sovereignty<br>of Home"</h1>
+    <p class="mt-4 text-slate-400 text-sm tracking-widest uppercase">A HOMEase Narrative</p>
+
+    <!-- Audio Player -->
+    <div class="mt-8">
+      <audio id="hero-audio" controls autoplay class="opacity-80 hover:opacity-100 transition-opacity">
+        <source src="../audio/download (39).wav" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </header>
+
+  <!-- ACT 1: FEAR -->
+  <section class="relative" id="act1-section">
+    <div class="sticky-visual">
+      <!-- Image 1: Phone -->
+      <img src="./../images/scene-1 (63).jpg?q=80&w=2574&auto=format&fit=crop" alt="Dark room phone notification">
+      <div class="vignette"></div>
+    </div>
+
+    <div class="scene">
+      <div class="content-card">
+        <h2 class="serif text-3xl mb-4 text-slate-100">The Midnight Phone Call</h2>
+        <p class="text-lg leading-relaxed text-slate-300 mb-4">
+          There is a sound every adult child fears. It's the <span class="text-red-300 font-semibold">2:00 AM ring of a
+            telephone</span>—the one that shatters the silence and changes your family's history forever.
+        </p>
+        <p class="text-lg leading-relaxed text-slate-300">
+          Usually, it starts with a trip to the bathroom or a dimly lit staircase. It ends in an ER waiting room, a
+          fractured hip, and the heartbreaking realization that Mom or Dad can never go back to the home they love. This
+          is the <strong class="text-white">"Crisis Gap"</strong>—a brutal, preventable transition where independence is
+          traded for a hospital bed because of a rug, a shadow, or a stairwell.
+        </p>
+
+        <!-- Audio Player for ACT 1 -->
+        <div class="mt-6">
+          <audio id="act1-audio" controls class="w-full opacity-80 hover:opacity-100 transition-opacity">
+            <source src="../audio/download (41).wav" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 2: THE PROBLEM -->
+  <section class="relative" id="act2-section">
+    <div class="sticky-visual">
+      <!-- Image 2: Stairs -->
+      <img src="./../images/scene-2 (68).jpg?q=80&w=2574&auto=format&fit=crop" alt="Old dusty staircase"
+        style="filter: sepia(0.5) contrast(1.2);">
+      <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+
+    <div class="scene">
+      <div class="content-card">
+        <h2 class="serif text-3xl mb-4 text-orange-100">The Invisible Thieves</h2>
+        <p class="text-lg leading-relaxed text-slate-200 mb-4">
+          At HOMEase, we believe the current eldercare system is a failure. It waits for the tragedy to happen before it
+          offers help. It relies on expensive, high-pressure contractors who see your parent's home as a construction
+          site rather than a sanctuary.
+        </p>
+        <p class="text-lg leading-relaxed text-slate-200">
+          Most homes were built for 30-year-olds. As we age, these architectural choices become <span
+            class="italic font-serif text-2xl">invisible thieves</span>, slowly stealing the mobility and confidence of
+          the people we love. We are not here to sell you a remodel. We are here to protect a legacy.
+        </p>
+
+        <!-- Audio Player for ACT 2 -->
+        <div class="mt-6">
+          <audio id="act2-audio" controls class="w-full opacity-80 hover:opacity-100 transition-opacity">
+            <source src="../audio/download (42).wav" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 3: THE SOLUTION -->
+  <section class="relative light-theme" id="act3-section">
+    <div class="sticky-visual">
+      <!-- Image 3: Tech Split -->
+      <img src="./../images/scene-3 (59).jpg?q=80&w=2670&auto=format&fit=crop" alt="Caregiver using tablet technology"
+        style="object-position: top;">
+      <div class="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>
+    </div>
+
+    <div class="scene">
+      <div class="content-card">
+        <h2 class="serif text-3xl mb-2 text-teal-800">A 5-Minute Shield Against the Unknown</h2>
+        <p class="text-base leading-relaxed text-slate-700 mb-6">
+          We founded HOMEase with a single, obsessive mission: <strong>To make "The Phone Call" a relic of the
+            past.</strong>
+        </p>
+        <div class="bg-white/50 p-4 border-l-2 border-teal-600 mb-6 italic text-slate-600">
+          No invasive home visits. No high-pressure sales pitches. Just five minutes of your time to identify the
+          "High-Risk Zones"—the bathroom, the stairs, the entryways—where 80% of life-altering falls occur.
+        </div>
+
+        <h3 class="serif text-2xl mb-2 text-teal-800">The Caregiver’s Compass</h3>
+        <p class="text-base leading-relaxed text-slate-700">
+          For those of you living hundreds of miles away, we know the "Quiet Anxiety" you carry. You wonder if the
+          stairs are too steep or if the tub is too slick, but you don't want to overstep and strip your parents of
+          their autonomy.
+        </p>
+        <p class="text-base leading-relaxed text-slate-700 mt-4">
+          HOMEase is your remote diagnostic tool. It’s a way to collaborate, not dictate. It transforms "I’m worried
+          about you" into "I’ve empowered you." By providing low-cost, DIY "Practical Fixes," we give you a roadmap to
+          safety that costs less than a single night in a care facility.
+        </p>
+
+        <!-- Audio Player for ACT 3 -->
+        <div class="mt-6">
+          <audio id="act3-audio" controls class="w-full opacity-80 hover:opacity-100 transition-opacity">
+            <source src="../audio/download (44).wav" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 4: THE PROMISE -->
+  <section class="relative" id="act4-section">
+    <div class="sticky-visual">
+      <!-- Image 4: Happy Couple -->
+      <img src="./../images/scene-4 (58).jpg?q=80&w=2574&auto=format&fit=crop"
+        alt="Senior couple holding hands on couch">
+      <div class="absolute inset-0 bg-gradient-to-t from-amber-900/90 via-amber-900/40 to-transparent"></div>
+    </div>
+
+    <div class="scene">
+      <div class="content-card"
+        style="background: rgba(255,251,235,0.95); border-left: 4px solid #d97706; color: #451a03;">
+        <h2 class="serif text-3xl mb-4 text-amber-800">Join the Movement for Proactive Aging</h2>
+        <p class="text-lg leading-relaxed mb-4">
+          We are currently in our Pilot Phase, and we aren't looking for "customers"—we are looking for partners in this
+          movement. We are offering this assessment for free because we believe safety shouldn't be a luxury, and "aging
+          in place" shouldn't be a gamble.
+        </p>
+        <p class="text-lg leading-relaxed mb-8">
+          The "Crisis Gap" ends here. We are dismantling the barriers to information so that families can act with
+          clarity instead of panic.
+        </p>
+
+        <div class="text-center mt-8 pt-8 border-t border-amber-200">
+          <p class="serif text-2xl italic leading-tight text-amber-900">
+            Because "Home" isn't just a building. <br>It’s where your story lives. <br><span
+              class="not-italic font-bold text-amber-700">Let’s make sure it stays that way.</span>
+          </p>
+        </div>
+
+        <!-- Audio Player for ACT 4 -->
+        <div class="mt-6">
+          <audio id="act4-audio" controls class="w-full opacity-80 hover:opacity-100 transition-opacity">
+            <source src="../audio/download (45).wav" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-12 bg-slate-900 text-center text-slate-500 text-xs uppercase tracking-widest">
+    © HOMEase 2026
+  </footer>
+
+  <!-- Audio Auto-Scroll Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Custom smooth scroll function with slower speed and callback
+      function smoothScrollTo(element, callback) {
+        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2 - element.offsetHeight / 2);
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        const duration = 2000; // 2 seconds for slower scroll
+        let start = null;
+
+        function animation(currentTime) {
+          if (start === null) start = currentTime;
+          const timeElapsed = currentTime - start;
+          const progress = Math.min(timeElapsed / duration, 1);
+
+          // Easing function for smooth deceleration
+          const easeInOutCubic = progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+          window.scrollTo(0, startPosition + distance * easeInOutCubic);
+
+          if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+          } else if (callback) {
+            callback();
+          }
+        }
+
+        requestAnimationFrame(animation);
+      }
+
+      // Hero audio auto-scroll to ACT 1
+      const heroAudio = document.getElementById('hero-audio');
+      const act1Card = document.querySelector('#act1-section .content-card');
+      const act1Audio = document.getElementById('act1-audio');
+
+      if (heroAudio && act1Card) {
+        heroAudio.addEventListener('ended', function () {
+          smoothScrollTo(act1Card, function () {
+            if (act1Audio) {
+              act1Audio.play();
+            }
+          });
+        });
+      }
+
+      // ACT 1 audio auto-scroll to ACT 2
+      const act2Card = document.querySelector('#act2-section .content-card');
+      const act2Audio = document.getElementById('act2-audio');
+
+      if (act1Audio && act2Card) {
+        act1Audio.addEventListener('ended', function () {
+          smoothScrollTo(act2Card, function () {
+            if (act2Audio) {
+              act2Audio.play();
+            }
+          });
+        });
+      }
+
+      // ACT 2 audio auto-scroll to ACT 3
+      const act3Card = document.querySelector('#act3-section .content-card');
+      const act3Audio = document.getElementById('act3-audio');
+
+      if (act2Audio && act3Card) {
+        act2Audio.addEventListener('ended', function () {
+          smoothScrollTo(act3Card, function () {
+            if (act3Audio) {
+              act3Audio.play();
+            }
+          });
+        });
+      }
+
+      // ACT 3 audio auto-scroll to ACT 4
+      const act4Card = document.querySelector('#act4-section .content-card');
+      const act4Audio = document.getElementById('act4-audio');
+
+      if (act3Audio && act4Card) {
+        act3Audio.addEventListener('ended', function () {
+          smoothScrollTo(act4Card, function () {
+            if (act4Audio) {
+              act4Audio.play();
+            }
+          });
+        });
+      }
+    });
+  </script>
+
+</body>
+
+</html>

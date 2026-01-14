@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invisible Threat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;600&family=Roboto+Mono:wght@400;700&display=swap');
+
+        :root {
+            --color-danger: #ff1a1a;
+            --color-safe: #00d2ff;
+            --color-text: #f0f0f0;
+            --color-bg: #050505;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Roboto Mono', monospace;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        h1,
+        h2 {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+
+        /* UTILS */
+        .mix-diff {
+            mix-blend-mode: difference;
+        }
+
+        .mix-overlay {
+            mix-blend-mode: overlay;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ANIMATIONS */
+        @keyframes scanline {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        .scanner-bar {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--color-danger);
+            box-shadow: 0 0 15px var(--color-danger), 0 0 30px var(--color-danger);
+            animation: scanline 4s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes pulse-red {
+
+            0%,
+            100% {
+                box-shadow: inset 0 0 50px rgba(255, 0, 0, 0.1);
+            }
+
+            50% {
+                box-shadow: inset 0 0 150px rgba(255, 0, 0, 0.3);
+            }
+        }
+
+        .danger-zone {
+            animation: pulse-red 3s infinite;
+        }
+
+        /* SVG FILTER CLASSES */
+        .glitch-text {
+            filter: url(#displacement);
+        }
+
+        .thermal-vision {
+            filter: url(#thermal);
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.07;
+            z-index: 50;
+            filter: url(#noise);
+        }
+
+        /* GRID DECOR */
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(0, 210, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle, black 40%, transparent 80%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG FILTERS -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
+        <defs>
+            <!-- DISTORTION MAP -->
+            <filter id="displacement">
+                <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" />
+            </filter>
+
+            <!-- NOISE GRAIN -->
+            <filter id="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+                <feColorMatrix type="saturate" values="0" />
+            </filter>
+
+            <!-- THERMAL HEATMAP -->
+            <filter id="thermal">
+                <feColorMatrix type="matrix" values="
+                    0.33 0.33 0.33 0 0
+                    0.33 0.33 0.33 0 0
+                    0.33 0.33 0.33 0 0
+                    0 0 0 1 0 " result="grayscale" />
+                <feComponentTransfer>
+                    <feFuncR type="table" tableValues="0 0 1 1" />
+                    <feFuncG type="table" tableValues="0 1 1 0" />
+                    <feFuncB type="table" tableValues="1 0 0 0" />
+                </feComponentTransfer>
+            </filter>
+
+            <!-- SHIELD GLOW -->
+            <filter id="shield-glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- GLOBAL NOISE TEXTURE -->
+    <div class="noise-overlay"></div>
+
+    <!-- HERO / HOOK -->
+    <section class="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden danger-zone">
+        <div class="absolute inset-0 z-0">
+            <!-- AI MOOD IMAGE -->
+            <img src="https://i.imgur.com/gK9qZ9g.jpg"
+                class="w-full h-full object-cover opacity-60 mix-blend-luminosity" alt="Dark hallway mood">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+            <div class="scanner-bar"></div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl px-6 text-center">
+            <div
+                class="text-xs text-red-500 tracking-[0.3em] mb-4 uppercase border border-red-900 inline-block px-3 py-1 bg-black/50">
+            </div>
+            <h1
+                class="text-5xl md:text-8xl font-bold mb-6 glitch-text text-white drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]">
+                What You Can’t See <br> <span class="text-red-600">Can Change Your Family’s Life Forever.</span>
+            </h1>
+        </div>
+    </section>
+
+    <!-- THE THREAT (SCROLLING GRID) -->
+    <section class="relative min-h-screen flex flex-col md:flex-row bg-[#0a0a0a]">
+        <!-- LEFT: EMOTIONAL HOOK -->
+        <div class="w-full md:w-1/2 relative h-[50vh] md:h-screen sticky top-0 border-r border-gray-800">
+            <img src="./../images/scene-2 (67).jpg?q=80&w=1000&auto=format&fit=crop"
+                class="w-full h-full object-cover filter contrast-125 grayscale" alt="Senior in dark room">
+            <div class="absolute inset-0 bg-blue-900/20 mix-blend-overlay"></div>
+            <!-- OVERLAY GRID -->
+            <div class="absolute inset-0 grid-bg opacity-50"></div>
+            <div class="absolute bottom-10 left-10 max-w-xs">
+                <h2 class="text-4xl text-white font-bold mb-2">THE HIDDEN DANGER</h2>
+            </div>
+        </div>
+
+        <!-- RIGHT: COPY & FACTS -->
+        <div class="w-full md:w-1/2 flex flex-col justify-center px-8 py-20 md:px-20 space-y-20">
+            <div class="space-y-6">
+                <div class="w-12 h-1 bg-red-600 mb-4"></div>
+                <p class="text-2xl md:text-3xl font-light leading-relaxed text-gray-300">
+                    "In Bell County, home accidents are the <strong class="text-red-500">#1 reason seniors lose their
+                        independence</strong>."
+                </p>
+                <p class="text-xl text-gray-500 font-mono">
+                    // SYSTEM ALERT: FALL_RISK_DETECTED
+                </p>
+            </div>
+
+            <!-- SPLIT SCREEN VISUALIZATION -->
+            <div class="relative w-full aspect-video border border-gray-700 rounded-lg overflow-hidden group">
+                <img src="./../images/scene-1 (62).jpg?q=80&w=1000&auto=format&fit=crop"
+                    class="w-full h-full object-cover" alt="Split screen heatmap">
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-red-900/30 mix-blend-multiply">
+                </div>
+                <div class="absolute bottom-4 left-4 bg-black/80 px-2 py-1 text-xs text-white border border-white/20">
+                    FIG 1.0: HEAT MAP ANALYSIS
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-lg md:text-xl leading-relaxed text-gray-400">
+                    Most are 100% preventable. We’ve <span class="text-blue-400 italic font-serif">obsessed over the
+                        science</span> of home safety so you don’t have to stay up at night worrying.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE SOLUTION (GLASSMORPHISM) -->
+    <section class="relative min-h-screen flex items-center justify-center py-20">
+        <div class="absolute inset-0 overflow-hidden">
+            <!-- Background Parallax Image -->
+            <img src="https://i.imgur.com/J3qRk5g.jpg" class="w-full h-full object-cover blur-sm scale-105"
+                alt="Safety Shield">
+            <div class="absolute inset-0 bg-black/70"></div>
+        </div>
+
+        <div
+            class="relative z-10 max-w-5xl w-full mx-6 grid md:grid-cols-2 gap-12 items-center glass-panel p-8 md:p-12 rounded-2xl">
+            <!-- IMAGE IN CARD -->
+            <div class="relative overflow-hidden rounded-lg shadow-2xl border border-blue-500/30">
+                <img src="./../images/scene-3 (58).jpg?q=80&w=1000&auto=format&fit=crop"
+                    class="w-full h-full object-cover" alt="Tablet Shield">
+                <div
+                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-blue-500/30 rounded-full blur-xl">
+                </div>
+            </div>
+
+            <!-- TEXT CONTENT -->
+            <div class="space-y-8">
+                <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-white filter"
+                    style="filter: url(#shield-glow)">
+                    IT'S A SHIELD.
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-200 font-light border-l-4 border-blue-500 pl-6">
+                    "It’s not just a report—it’s a shield for the people you love."
+                </p>
+
+                <div class="pt-6">
+                    <button
+                        class="group relative px-8 py-4 bg-transparent overflow-hidden rounded-none border border-blue-500 text-blue-500 font-bold tracking-widest uppercase transition-all hover:bg-blue-600 hover:text-white hover:shadow-[0_0_20px_rgba(0,210,255,0.6)]">
+                        <span class="relative z-10">Secure Your Peace of Mind</span>
+                        <div
+                            class="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 mix-blend-overlay">
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
