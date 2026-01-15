@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invisible Hazard Shield</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto+Mono:wght@300;400;700&display=swap');
+
+    :root {
+      --c-warn: #ff3300;
+      --c-dark: #050505;
+      --c-light: #f0f0f0;
+      --c-dim: #333333;
+      --c-safe: #2e8b57;
+    }
+
+    body {
+      background-color: var(--c-dark);
+      color: var(--c-light);
+      font-family: 'Roboto Mono', monospace;
+      overflow: hidden;
+    }
+
+    /* Typography Overrides */
+    h1,
+    h2,
+    h3 {
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Utility Classes */
+    .text-shadow-warn {
+      text-shadow: 2px 2px 0px rgba(255, 51, 0, 0.4), -1px -1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .vignette {
+      background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.9) 90%);
+      pointer-events: none;
+    }
+
+    .scanline {
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3));
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    /* Animations */
+    @keyframes flicker {
+      0% {
+        opacity: 0.9;
+      }
+
+      5% {
+        opacity: 0.5;
+      }
+
+      10% {
+        opacity: 0.9;
+      }
+
+      50% {
+        opacity: 0.9;
+      }
+
+      55% {
+        opacity: 0.3;
+      }
+
+      60% {
+        opacity: 0.9;
+      }
+
+      100% {
+        opacity: 0.9;
+      }
+    }
+
+    @keyframes pulse-red {
+      0% {
+        text-shadow: 0 0 5px var(--c-warn);
+        color: white;
+      }
+
+      50% {
+        text-shadow: 0 0 20px var(--c-warn), 0 0 10px var(--c-warn);
+        color: var(--c-warn);
+      }
+
+      100% {
+        text-shadow: 0 0 5px var(--c-warn);
+        color: white;
+      }
+    }
+
+    @keyframes reveal-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-flicker {
+      animation: flicker 4s infinite;
+    }
+
+    .animate-pulse-warn {
+      animation: pulse-red 2s infinite ease-in-out;
+    }
+
+    .animate-reveal {
+      animation: reveal-up 1s ease-out forwards;
+      opacity: 0;
+    }
+
+    .delay-1 {
+      animation-delay: 0.5s;
+    }
+
+    .delay-2 {
+      animation-delay: 1.0s;
+    }
+
+    .delay-3 {
+      animation-delay: 1.5s;
+    }
+
+    /* SVG Filters */
+    .filter-grain {
+      filter: url(#grain) contrast(1.2) brightness(0.9);
+    }
+
+    .filter-glitch {
+      filter: url(#chromatic);
+    }
+
+    .filter-blur {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Definitions -->
+  <svg class="hidden">
+    <defs>
+      <!-- Film Grain Texture -->
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+        <feColorMatrix type="saturate" values="0" in="noise" result="monoNoise" />
+        <feComposite operator="in" in="monoNoise" in2="SourceGraphic" result="composite" />
+        <feBlend mode="overlay" in="composite" in2="SourceGraphic" />
+      </filter>
+
+      <!-- Chromatic Aberration / Glitch -->
+      <filter id="chromatic">
+        <feOffset in="SourceGraphic" dx="-2" dy="0" result="left" />
+        <feOffset in="SourceGraphic" dx="2" dy="0" result="right" />
+        <feColorMatrix type="matrix" in="left" values="
+        1 0 0 0 0 
+        0 0 0 0 0 
+        0 0 0 0 0 
+        0 0 0 1 0" result="red" />
+        <feColorMatrix type="matrix" in="right" values="
+        0 0 0 0 0 
+        0 1 0 0 0 
+        0 0 1 0 0 
+        0 0 0 1 0" result="cyan" />
+        <feBlend mode="screen" in="red" in2="cyan" result="colorSplit" />
+        <feBlend mode="normal" in="colorSplit" in2="SourceGraphic" operator="over" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Scrollytelling Container -->
+  <main class="h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth relative">
+
+    <!-- FIXED OVERLAYS -->
+    <div class="fixed inset-0 pointer-events-none z-50 scanline mix-blend-overlay opacity-30"></div>
+    <div class="fixed inset-0 pointer-events-none z-40 vignette"></div>
+
+    <!-- SLIDE 1: The Hook -->
+    <section class="h-screen w-full snap-center relative flex items-end pb-20 justify-center overflow-hidden bg-black">
+      <!-- Image 1: Toy/Rug -->
+      <img src="./../images/scene-1 (67).jpg?q=80&w=1974&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover opacity-60 filter-grain" alt="Toy on floor in dark hallway">
+
+      <div class="relative z-10 text-center max-w-2xl px-6">
+        <div class="inline-block bg-black/80 px-2 py-1 mb-4 border border-[var(--c-warn)] animate-flicker">
+          <p class="text-[var(--c-warn)] text-xs font-bold tracking-widest uppercase">WARNING: HAZARD DETECTED</p>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-bold leading-none mb-4 animate-reveal">
+          This isn't <br><span class="text-[var(--c-light)] italic opacity-70">'clutter.'</span>
+        </h1>
+        <h2 class="text-4xl md:text-6xl font-bold text-[var(--c-warn)] uppercase animate-reveal delay-1 filter-glitch">
+          It’s a tripwire.
+        </h2>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: The Reality (Stats) -->
+    <section
+      class="h-screen w-full snap-center relative flex flex-col justify-center items-start px-6 md:px-20 overflow-hidden bg-gray-900">
+      <!-- Image 2: Dark Hallway -->
+      <img src="./../images/scene-2 (72).jpg?q=80&w=2070&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover opacity-40 filter-grain scale-110"
+        style="filter: grayscale(100%) contrast(1.5);" alt="Dark hallway">
+
+      <div class="relative z-10 max-w-xl space-y-8">
+        <div class="border-l-4 border-[var(--c-warn)] pl-6 bg-black/50 backdrop-blur-sm p-4 animate-reveal">
+          <p class="text-lg md:text-2xl font-light leading-relaxed">
+            Last year, thousands of <span class="font-bold">Bell County</span> neighbors ended up in the ER because of a
+            <span class="italic">'normal'</span> hallway.
+          </p>
+        </div>
+
+        <div class="space-y-4 animate-reveal delay-1">
+          <p class="text-md text-gray-300 font-mono border-b border-gray-700 pb-2">INCIDENT REPORT:</p>
+          <p class="text-xl md:text-2xl font-bold">
+            We’ve become blind to the things that want to hurt us.
+          </p>
+          <p class="text-lg">
+            We call it 'life,' but at <span class="text-[var(--c-warn)] font-bold">HOMEase | AI</span>, we call it a
+            <span class="filter-glitch inline-block text-[var(--c-warn)]">TRAGEDY</span> waiting for a timestamp.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: The Identification (Specific Hazards) -->
+    <section class="h-screen w-full snap-center relative flex items-center justify-center overflow-hidden bg-black">
+      <!-- Image 3: Flashlight Beam -->
+      <img src="./../images/scene-3 (61).jpg?q=80&w=2070&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover opacity-70 filter-grain" alt="Flashlight illuminating floor">
+
+      <div class="absolute inset-0 bg-black/60"></div>
+
+      <div class="relative z-10 grid gap-12 text-center">
+        <div class="animate-reveal delay-1 group">
+          <h3
+            class="text-3xl md:text-5xl font-bold mb-2 group-hover:text-[var(--c-warn)] transition-colors duration-300">
+            That loose rug?
+          </h3>
+          <p
+            class="text-xl md:text-3xl text-[var(--c-warn)] font-mono bg-black/80 inline-block px-4 py-1 skew-x-[-10deg] filter-glitch">
+            THAT'S A BROKEN HIP.
+          </p>
+        </div>
+
+        <div class="animate-reveal delay-3 group">
+          <h3
+            class="text-3xl md:text-5xl font-bold mb-2 group-hover:text-[var(--c-warn)] transition-colors duration-300">
+            That shadowed corner?
+          </h3>
+          <p
+            class="text-xl md:text-3xl text-[var(--c-warn)] font-mono bg-black/80 inline-block px-4 py-1 skew-x-[-10deg] filter-glitch">
+            THAT'S A FALL.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: The Mission & Call to Action -->
+    <section
+      class="h-screen w-full snap-center relative flex flex-col justify-between pt-20 pb-10 px-6 overflow-hidden bg-gray-800">
+      <!-- Image 4: Phone/Cozy Room -->
+      <img src="./../images/scene-4 (59).jpg?q=80&w=2070&auto=format&fit=crop"
+        class="absolute inset-0 w-full h-full object-cover opacity-30" alt="Safe home environment with phone">
+
+      <!-- Mission Statement -->
+      <div class="relative z-10 max-w-3xl mx-auto text-center space-y-6">
+        <p class="text-lg md:text-2xl font-light animate-reveal">
+          We aren't here to help you 'tidy up.' We are on a mission to make sure your home is actually the
+          <span class="text-[var(--c-safe)] font-bold italic">sanctuary</span> you think it is.
+        </p>
+        <p class="text-sm md:text-base font-mono text-gray-400 tracking-widest uppercase animate-reveal delay-1">
+          // HUNTING HAZARDS IN KILLEEN UNTIL EVERY FLOOR IS A SAFE FLOOR
+        </p>
+      </div>
+
+      <!-- Poll Sticker Interaction Simulation -->
+      <div
+        class="relative z-10 mx-auto my-auto animate-reveal delay-2 transform rotate-2 hover:rotate-0 transition-transform duration-500 cursor-pointer">
+        <div class="bg-white text-black p-4 rounded-xl shadow-2xl max-w-xs text-center border-4 border-[var(--c-dark)]">
+          <p class="text-xs font-bold uppercase text-gray-500 mb-2">POLL</p>
+          <div class="flex flex-col gap-2">
+            <div class="bg-[var(--c-warn)] text-white py-2 px-4 rounded font-bold text-lg">
+              INVISIBLE HAZARD
+            </div>
+            <div class="bg-gray-200 text-gray-400 py-1 px-4 rounded text-sm">
+              OR
+            </div>
+            <div class="bg-black text-white py-2 px-4 rounded font-bold text-lg">
+              TOTAL TRAP?
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="relative z-10 text-center animate-reveal delay-3 mb-10">
+        <h2 class="text-3xl md:text-5xl font-bold mb-4">
+          Stop walking past the danger.
+        </h2>
+        <div
+          class="inline-block bg-[var(--c-safe)]/90 backdrop-blur text-white px-8 py-4 rounded-full shadow-[0_0_20px_rgba(46,139,87,0.5)] hover:scale-105 transition-transform">
+          <p class="font-mono font-bold text-lg">
+            DM us 'SHIELD'
+          </p>
+          <p class="text-xs mt-1 opacity-90">
+            For our 5-point 'Invisible Hazard' checklist.
+          </p>
+        </div>
+        <p class="mt-4 text-sm opacity-70">No cost. We just want you safe.</p>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+
+</html>

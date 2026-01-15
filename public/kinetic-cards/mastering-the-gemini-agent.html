@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mastering Gemini Agent</title>
+  <style>
+    :root {
+      --bg-color: #030508;
+      --text-main: #cdd6f4;
+      --text-dim: #9399b2;
+      --accent-cyan: #00f3ff;
+      --accent-purple: #cba6f7;
+      --accent-green: #a6e3a1;
+      --accent-red: #f38ba8;
+      --glass-bg: rgba(10, 15, 30, 0.75);
+      --glass-border: rgba(0, 243, 255, 0.2);
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    /* --- SVG FILTERS & TEXTURES --- */
+    .texture-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 998;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 4px, 6px 100%;
+    }
+
+    /* --- LAYOUT --- */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    header,
+    section {
+      margin-bottom: 8rem;
+      position: relative;
+    }
+
+    /* --- TYPOGRAPHY --- */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 0.9;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      border-bottom: 1px solid var(--accent-cyan);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      color: var(--accent-purple);
+      margin: 1.5rem 0 1rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      color: var(--text-dim);
+      max-width: 65ch;
+    }
+
+    strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    /* --- HERO SECTION --- */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 2px solid var(--accent-cyan);
+    }
+
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: url('./../images/visual-1 (29).png?se=2025-02-14T18%3A05%3A22Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D7f332617-47b1-4c62-811c-c236f06a4b56.webp&sig=uF8qWqB4l9y6E%2BD74jV1aL1fDq%2Ba2m4gN6T9243X5O8%3D');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.6) blur(2px) sepia(0.2);
+    }
+
+    .meta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-green);
+      border: 1px solid var(--accent-green);
+      padding: 0.25rem 0.5rem;
+      background: rgba(166, 227, 161, 0.1);
+    }
+
+    /* --- GLASS CARD COMPONENT --- */
+    .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      padding: 2rem;
+      margin: 2rem 0;
+      border-radius: 4px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 10px;
+      height: 10px;
+      border-top: 2px solid var(--accent-cyan);
+      border-left: 2px solid var(--accent-cyan);
+    }
+
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 10px;
+      height: 10px;
+      border-bottom: 2px solid var(--accent-cyan);
+      border-right: 2px solid var(--accent-cyan);
+    }
+
+    /* --- CODE TERMINAL --- */
+    .terminal {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: #c9d1d9;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .terminal-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 24px;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .red {
+      background: #ff5f56;
+    }
+
+    .yellow {
+      background: #ffbd2e;
+    }
+
+    .green {
+      background: #27c93f;
+    }
+
+    .terminal-content {
+      margin-top: 1rem;
+    }
+
+    .cmd {
+      color: var(--accent-green);
+    }
+
+    .arg {
+      color: var(--accent-purple);
+    }
+
+    .comment {
+      color: #8b949e;
+      font-style: italic;
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    /* --- SECTIONS WITH BACKGROUNDS --- */
+    .bg-section {
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      z-index: -1;
+      filter: brightness(0.4) saturate(0.8);
+    }
+
+    /* --- SPECIFIC IMAGES --- */
+    .sec-workflow .bg-image {
+      background-image: url('./../images/visual-2 (28).png');
+    }
+
+    .sec-infinite .bg-image {
+      background-image: url('./../images/visual-3 (29).png');
+    }
+
+    .sec-health .bg-image {
+      background-image: url('./../images/visual-4 (27).png');
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes typeIn {
+      from {
+        width: 0;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .cursor::after {
+      content: '_';
+      animation: blink 1s step-end infinite;
+      color: var(--accent-cyan);
+    }
+
+    .grid-cols-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 2rem;
+      }
+    }
+
+    /* --- UTILS --- */
+    .glow-text {
+      color: #fff;
+      text-shadow: 0 0 5px var(--accent-cyan), 0 0 10px var(--accent-cyan);
+    }
+
+    .highlight {
+      background: rgba(0, 243, 255, 0.1);
+      color: var(--accent-cyan);
+      padding: 0.1em 0.3em;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="texture-overlay"></div>
+  <div class="scanlines"></div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <h1 class="glitch">Mastering the<br>Gemini Agent</h1>
+      <p style="font-size: 1.2rem; color: #fff;">A Comprehensive Guide to Programmable AI Coding</p>
+      <div class="meta-tags">
+        <span class="tag">#AI Coding</span>
+        <span class="tag">#Gemini Agent</span>
+        <span class="tag">#LLM</span>
+        <span class="tag">#Software Development</span>
+        <span class="tag">#Automation</span>
+        <span class="tag">#DevOps</span>
+        <span class="tag">#Programming</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="container">
+    <div class="glass-card">
+      <p>
+        The landscape of software development is shifting from manual coding to <span class="highlight">'agentic'
+          workflows</span>, where AI doesn't just suggest snippets but actively manages project lifecycles. Enter the
+        <strong>Gemini Agent</strong>, a programmable AI coding assistant designed to bridge the gap between Large
+        Language Models (LLMs) and your local file system.
+      </p>
+      <p>
+        For many developers, the transition from a simple chat interface to an autonomous agent can feel daunting. There
+        is a natural fear of an AI 'hallucinating' and overwriting critical source code or creating a chaotic directory
+        structure.
+      </p>
+      <p>
+        However, the Gemini Agent is built with a <strong>'safety-first' philosophy</strong>, utilizing a structured
+        workflow that separates planning from execution. By understanding the core mechanics of the
+        Prime-Architect-Editor pattern, developers can harness the power of Gemini to automate repetitive tasks,
+        refactor legacy code, and generate complex components with unprecedented speed.
+      </p>
+      <p>
+        This guide will walk you through the essential commands, the interactive environment, and the strategic mindset
+        required to turn this CLI tool into your most productive pair programmer.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 1: ENV SETUP -->
+  <div class="container">
+    <h2>1. Environment Setup & Workspace Management</h2>
+    <p>Before diving into code generation, it is essential to understand the agent's operational boundaries. The Gemini
+      Agent operates within a dedicated <span class="highlight">agent_workspace</span>. This directory serves as a
+      temporary staging area and isolation layer, ensuring that AI-generated changes are manageable and do not interfere
+      with your root project until explicitly instructed.</p>
+
+    <p>To ensure performance and cost-efficiency, the workspace is subject to specific constraints: a default limit of
+      5MB per file and a 500-file scan limit.</p>
+
+    <h3>Configuration and Thinking Levels</h3>
+    <p>Configuration is handled via the CLI, allowing you to swap models or adjust the 'thinking' level (LOW, MEDIUM, or
+      HIGH) based on the complexity of the task. For architectural decisions, HIGH thinking is preferred, while LOW
+      thinking suffices for simple documentation tasks.</p>
+
+    <div class="terminal">
+      <div class="terminal-header">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="terminal-content">
+        <span class="comment"># Initialize the project environment</span>
+        <div class="line"><span class="cmd">gemini</span> <span class="arg">init</span></div>
+        <br>
+        <span class="comment"># Check current configuration</span>
+        <div class="line"><span class="cmd">gemini-agent</span> <span class="arg">config show</span></div>
+        <br>
+        <span class="comment"># Update the model to the latest preview</span>
+        <div class="line"><span class="cmd">gemini-agent</span> <span class="arg">config set model gemini-1.5-pro</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>The Interactive Environment</h3>
+    <p>The interactive shell (gemini-agent -i) provides a stateful session where the agent maintains context across
+      multiple prompts.</p>
+
+    <div class="terminal">
+      <div class="terminal-header">
+        <div class="dot red"></div>
+      </div>
+      <div class="terminal-content">
+        <span class="comment"># Start the interactive agent</span>
+        <div class="line"><span class="cmd">gemini-agent</span> <span class="arg">-i</span></div>
+        <br>
+        <span class="comment"># Quick tips within the shell</span>
+        <div class="line">ga&gt; <span class="cmd">/help</span></div>
+        <div class="line">ga&gt; <span class="cmd">/cheatsheet</span><span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: CORE WORKFLOW -->
+  <div class="bg-section sec-workflow">
+    <div class="bg-image"></div>
+    <div class="container">
+      <h2 class="glow-text">2. The Core Workflow: Prime, Architect, and Editor</h2>
+      <div class="glass-card">
+        <p>The most critical concept to master is the <strong>'Prime-Architect-Editor'</strong> workflow. This
+          three-step process is the safety net that prevents the AI from making unvetted changes to your code.</p>
+      </div>
+
+      <div class="grid-cols-2">
+        <!-- STEP 1 -->
+        <div class="glass-card">
+          <h3>Step 1: Priming the Context</h3>
+          <p>Before the agent can help you, it needs to understand what you are building. The <span
+              class="highlight">/prime</span> command indexes specific files to build the agent's context window.</p>
+          <div class="terminal">
+            <div class="terminal-content">
+              <div class="line">ga&gt; <span class="cmd">/prime</span> <span
+                  class="arg">files=README.md,src/main.ts,package.json</span></div>
+            </div>
+          </div>
+          <p style="font-size:0.9rem">By 'priming' the agent, you are essentially giving it a guided tour of your
+            project's architecture. This ensures that the agent understands your naming conventions, dependencies, and
+            existing logic.</p>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="glass-card">
+          <h3>Step 2: The Architect (Plan Mode)</h3>
+          <p>Instead of asking the agent to 'write the code now,' you use <span class="highlight">/architect</span>.
+            This command triggers 'Plan Mode.' The agent analyzes the task and generates a 'Spec' file—a detailed
+            Markdown document stored in specs/ that outlines every file it intends to create or modify.</p>
+          <div class="terminal">
+            <div class="terminal-content">
+              <div class="line">ga&gt; <span class="cmd">/architect</span> <span class="arg">task="Add a JWT-based
+                  authentication system"</span></div>
+            </div>
+          </div>
+          <p style="font-size:0.9rem">In Plan Mode, the agent is read-only. It cannot touch your source code. This is
+            your opportunity to review the logic.</p>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="glass-card" style="margin-top:0">
+        <h3>Step 3: The Editor (Execution)</h3>
+        <p>Once you are satisfied with the plan, you invoke the <span class="highlight">/editor</span>. This is the only
+          stage where the agent gains write access to your files to fulfill the specific instructions in the spec.</p>
+        <div class="terminal">
+          <div class="terminal-content">
+            <div class="line">ga&gt; <span class="cmd">/editor</span> <span class="arg">spec=specs/auth_plan.md</span>
+            </div>
+          </div>
+        </div>
+        <p>This separation of concerns ensures that no code is written without a prior, human-approved blueprint.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: INFINITE -->
+  <div class="bg-section sec-infinite">
+    <div class="bg-image"></div>
+    <div class="container">
+      <h2 class="glow-text">3. Higher-Order Automation with /infinite</h2>
+      <div class="glass-card" style="background: rgba(0,0,0,0.85);">
+        <p>One of the most powerful features of the Gemini Agent is its ability to handle 'Higher-Order Prompts' through
+          the <span class="highlight">/infinite</span> command. This is designed for tasks that require variation or
+          repetitive generation, such as A/B testing UI components or creating multiple versions of an algorithm for
+          benchmarking.</p>
+
+        <p>For example, if you need to generate five different designs for a landing page hero section, you would first
+          create a base spec file in the specs/ directory. Then, you run the infinite loop:</p>
+
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+          <div class="terminal-content">
+            <div class="line">ga&gt; <span class="cmd">/infinite</span> <span class="arg">spec_file=specs/hero_design.md
+                count=5</span></div>
+          </div>
+        </div>
+
+        <p>The agent will iterate five times, producing unique variations (e.g., hero_1, hero_2, etc.). To maintain the
+          'safety-first' boundary, all generated variations are placed within the agent_workspace/ for review before
+          being merged into the project root. This capability is a game-changer for rapid prototyping.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: CODEBASE HEALTH -->
+  <div class="bg-section sec-health">
+    <div class="bg-image"></div>
+    <div class="container">
+      <h2 class="glow-text">4. Codebase Health: Analysis, Testing, and Refactoring</h2>
+      <div class="glass-card" style="background: rgba(0,0,0,0.8);">
+        <p>Beyond feature creation, the Gemini Agent acts as a sophisticated diagnostic tool. The <span
+            class="highlight">/analyze</span> command provides a deep-dive report on your codebase, identifying
+          technical debt, circular dependencies, or security vulnerabilities.</p>
+
+        <div class="terminal">
+          <div class="terminal-content">
+            <div class="line">ga&gt; <span class="cmd">/analyze</span> <span class="arg">target=src/
+                output_file=analysis.md</span></div>
+          </div>
+        </div>
+
+        <h3>Testing and Refactoring</h3>
+        <p>When it comes to refactoring legacy code, the agent follows a strict safety protocol. Using /refactor, the
+          agent first creates a plan. To ensure the refactor doesn't break existing functionality, you can use the /test
+          command to automatically generate unit tests for the target code before the refactor begins.</p>
+
+        <div class="terminal">
+          <div class="terminal-content">
+            <span class="comment"># 1. Generate tests for the old code</span>
+            <div class="line">ga&gt; <span class="cmd">/test</span> <span class="arg">target=src/legacy_module.js</span>
+            </div>
+            <br>
+            <span class="comment"># 2. Plan the refactor</span>
+            <div class="line">ga&gt; <span class="cmd">/refactor</span> <span class="arg">target=src/legacy_module.js
+                focus=performance</span></div>
+            <br>
+            <span class="comment"># 3. Execute the refactor after reviewing the spec</span>
+            <div class="line">ga&gt; <span class="cmd">/editor</span> <span
+                class="arg">spec=specs/refactor_plan.md</span></div>
+          </div>
+        </div>
+        <p>This workflow allows you to modernize your codebase with the confidence that you have a test suite catching
+          any regressions introduced by the AI.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="container" style="text-align: center; margin-bottom: 6rem;">
+    <h2 style="border: none;">Conclusion</h2>
+    <div class="glass-card">
+      <p style="margin: 0 auto; font-size: 1.1rem;">
+        The Gemini Agent represents a significant leap forward in AI-assisted development. By moving away from the
+        'chat-and-copy-paste' method toward a structured Prime-Architect-Editor workflow, you gain the benefits of AI
+        automation without sacrificing the safety and quality of your codebase.
+      </p>
+      <br>
+      <p style="margin: 0 auto; font-size: 1.1rem;">
+        Whether you are using the interactive mode to explore a new project or utilizing the /infinite command to
+        generate component variations, the key to success lies in the planning phase. Treat the agent as a highly
+        capable but literal-minded junior developer: give it clear context, review its plans meticulously, and use its
+        diagnostic tools to keep your codebase healthy. As you become more comfortable with these commands, you will
+        find that the Gemini Agent doesn't just write code for you—it scales your ability to build complex, robust
+        software.
+      </p>
+    </div>
+    <footer style="margin-top: 4rem; color: #555; font-size: 0.8rem; font-family: var(--font-mono);">
+      SYSTEM_END_OF_FILE // GEMINI AGENT MANUAL
+    </footer>
+  </div>
+
+</body>
+
+</html>
