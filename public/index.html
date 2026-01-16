@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homease | AI - File Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0a0a;
+            --neon-cyan: #00f3ff;
+            --card-bg: rgba(20, 20, 25, 0.9);
+            --grid-color: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+
+        .folder-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .folder-card:hover {
+            border-color: var(--neon-cyan);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.15);
+        }
+
+        .folder-card:hover .folder-thumb {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .folder-thumb {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+            filter: brightness(0.8);
+        }
+
+        .file-card {
+            background: rgba(15, 15, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .file-card:hover {
+            border-color: rgba(0, 243, 255, 0.5);
+            background: rgba(20, 25, 35, 0.9);
+        }
+
+        .file-thumb {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .file-card:hover .file-thumb {
+            transform: scale(1.03);
+        }
+
+        .mono {
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        .glow {
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+
+        .tag {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 2px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            color: var(--neon-cyan);
+        }
+
+        .folder-section {
+            display: none;
+        }
+
+        .folder-section.active {
+            display: block;
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+
+    <!-- Header -->
+    <header class="border-b border-white/10 py-6 px-8 backdrop-blur-sm bg-black/50 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">
+                    <span class="text-white">HOMEASE</span> <span class="text-cyan-400">|</span> <span
+                        class="text-gray-400">AI</span>
+                </h1>
+                <p class="text-xs text-gray-500 mono mt-1">FILE GALLERY // 108 FILES ACROSS 5 CATEGORIES</p>
+            </div>
+            <a href="#" onclick="showHome()" class="text-sm text-cyan-400 hover:underline mono">← ALL FOLDERS</a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <!-- HOME VIEW: Folder Cards -->
+        <section id="home-view">
+            <h2 class="text-3xl font-bold mb-2 glow">Project Categories</h2>
+            <p class="text-gray-500 mb-8">Click a folder to explore its contents</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Agentic AI -->
+                <div class="folder-card rounded-lg cursor-pointer" onclick="showFolder('agentic-ai')">
+                    <img src="images/scene-1 (72).jpg" alt="Agentic AI" class="folder-thumb">
+                    <div class="p-5">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">🤖</span>
+                            <h3 class="text-xl font-bold">Agentic AI</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Technical documentation and guides for AI agent
+                            architectures</p>
+                        <div class="flex items-center justify-between">
+                            <span class="tag">13 FILES</span>
+                            <span class="text-xs text-gray-500 mono">agentic-ai/</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kinetic Cards -->
+                <div class="folder-card rounded-lg cursor-pointer" onclick="showFolder('kinetic-cards')">
+                    <img src="kinetic-cards/scene-1 (74).jpg" alt="Kinetic Cards" class="folder-thumb">
+                    <div class="p-5">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">🎴</span>
+                            <h3 class="text-xl font-bold">Kinetic Cards</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Interactive scrolling card experiences and UI experiments
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="tag">14 FILES</span>
+                            <span class="text-xs text-gray-500 mono">kinetic-cards/</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Misc -->
+                <div class="folder-card rounded-lg cursor-pointer" onclick="showFolder('misc')">
+                    <img src="images/scene-4 (62).jpg" alt="Misc" class="folder-thumb">
+                    <div class="p-5">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">🔧</span>
+                            <h3 class="text-xl font-bold">Misc</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">CTO profiles, tooling docs, and experimental pages</p>
+                        <div class="flex items-center justify-between">
+                            <span class="tag">10 FILES</span>
+                            <span class="text-xs text-gray-500 mono">misc/</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="folder-card rounded-lg cursor-pointer" onclick="showFolder('social-media')">
+                    <img src="images/visual-1 (25).png" alt="Social Media" class="folder-thumb">
+                    <div class="p-5">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">📱</span>
+                            <h3 class="text-xl font-bold">Social Media</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Instagram, Facebook, LinkedIn, TikTok marketing pages</p>
+                        <div class="flex items-center justify-between">
+                            <span class="tag">37 FILES</span>
+                            <span class="text-xs text-gray-500 mono">social-media/</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Senior Care -->
+                <div class="folder-card rounded-lg cursor-pointer" onclick="showFolder('senior-care')">
+                    <img src="images/scene-3 (55).jpg" alt="Senior Care" class="folder-thumb">
+                    <div class="p-5">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">🏠</span>
+                            <h3 class="text-xl font-bold">Senior Care</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">Aging-in-place campaigns, caregiver resources, healthcare
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="tag">34 FILES</span>
+                            <span class="text-xs text-gray-500 mono">senior-care/</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- AGENTIC AI FOLDER -->
+        <section id="folder-agentic-ai" class="folder-section">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">🤖</span>
+                <div>
+                    <h2 class="text-2xl font-bold">Agentic AI</h2>
+                    <p class="text-sm text-gray-500">Technical documentation for AI agent systems</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <a href="agentic-ai/agentic-engineering.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (68).jpg" class="file-thumb" alt="Agentic Engineering">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Agentic Engineering</p>
+                        <p class="text-xs text-gray-500 mono">agentic-engineering.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/agentic-mastery.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (71).jpg" class="file-thumb" alt="Agentic Mastery">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Agentic Mastery</p>
+                        <p class="text-xs text-gray-500 mono">agentic-mastery.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/architecting.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (76).jpg" class="file-thumb" alt="Architecting">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Architecting</p>
+                        <p class="text-xs text-gray-500 mono">architecting.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/architecting-for-agents.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (77).jpg" class="file-thumb" alt="Architecting For Agents">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Architecting For Agents</p>
+                        <p class="text-xs text-gray-500 mono">architecting-for-agents.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/architectual.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (62).jpg" class="file-thumb" alt="Architectual">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Architectual</p>
+                        <p class="text-xs text-gray-500 mono">architectual.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/codebase-directories.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (63).jpg" class="file-thumb" alt="Codebase Directories">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Codebase Directories</p>
+                        <p class="text-xs text-gray-500 mono">codebase-directories.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/plan_mode.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (64).jpg" class="file-thumb" alt="Plan Mode">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Plan Mode</p>
+                        <p class="text-xs text-gray-500 mono">plan_mode.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/programmable_agentic_coding.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-4 (60).jpg" class="file-thumb" alt="Programmable Agentic Coding">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Programmable Agentic Coding</p>
+                        <p class="text-xs text-gray-500 mono">programmable_agentic_coding.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/scaling-engineering.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-4 (61).jpg" class="file-thumb" alt="Scaling Engineering">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Scaling Engineering</p>
+                        <p class="text-xs text-gray-500 mono">scaling-engineering.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/scaling-your-impact.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (75).jpg" class="file-thumb" alt="Scaling Your Impact">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Scaling Your Impact</p>
+                        <p class="text-xs text-gray-500 mono">scaling-your-impact.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/singularity.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (73).jpg" class="file-thumb" alt="Singularity">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Singularity</p>
+                        <p class="text-xs text-gray-500 mono">singularity.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/team-rules.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (75).jpg" class="file-thumb" alt="Team Rules">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Team Rules</p>
+                        <p class="text-xs text-gray-500 mono">team-rules.html</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/time.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (66).jpg" class="file-thumb" alt="Time">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Time</p>
+                        <p class="text-xs text-gray-500 mono">time.html</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- KINETIC CARDS FOLDER -->
+        <section id="folder-kinetic-cards" class="folder-section">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">🎴</span>
+                <div>
+                    <h2 class="text-2xl font-bold">Kinetic Cards</h2>
+                    <p class="text-sm text-gray-500">Interactive scrolling experiences and UI experiments</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <a href="kinetic-cards/ceo1.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/generated-image-1 (4).jpg" class="file-thumb" alt="CEO Profile">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CEO Profile</p>
+                        <p class="text-xs text-gray-500 mono">ceo1.html</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/mastering-the-gemini-agent.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (72).jpg" class="file-thumb" alt="Mastering Gemini Agent">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Mastering Gemini Agent</p>
+                        <p class="text-xs text-gray-500 mono">mastering-the-gemini-agent.html</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/thread.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (79).jpg" class="file-thumb" alt="Thread">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Thread</p>
+                        <p class="text-xs text-gray-500 mono">thread.html</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/thread-based-engineering.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (68).jpg" class="file-thumb" alt="Thread-Based Engineering">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Thread-Based Engineering</p>
+                        <p class="text-xs text-gray-500 mono">thread-based-engineering.html</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/listen-and-fix2.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-4 (63).jpg" class="file-thumb" alt="Listen and Fix">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Listen and Fix</p>
+                        <p class="text-xs text-gray-500 mono">listen-and-fix2.html</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- MISC FOLDER -->
+        <section id="folder-misc" class="folder-section">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">🔧</span>
+                <div>
+                    <h2 class="text-2xl font-bold">Misc</h2>
+                    <p class="text-sm text-gray-500">CTO profiles, tooling docs, and experimental pages</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <a href="misc/cto.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-4 (62).jpg" class="file-thumb" alt="CTO Profile">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CTO Profile</p>
+                        <p class="text-xs text-gray-500 mono">cto.html</p>
+                    </div>
+                </a>
+                <a href="misc/tooling.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (75).jpg" class="file-thumb" alt="Tooling">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Tooling</p>
+                        <p class="text-xs text-gray-500 mono">tooling.html</p>
+                    </div>
+                </a>
+                <a href="misc/ukg.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (76).jpg" class="file-thumb" alt="UKG">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">UKG</p>
+                        <p class="text-xs text-gray-500 mono">ukg.html</p>
+                    </div>
+                </a>
+                <a href="misc/virologist.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (55).jpg" class="file-thumb" alt="Virologist">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Virologist</p>
+                        <p class="text-xs text-gray-500 mono">virologist.html</p>
+                    </div>
+                </a>
+                <a href="misc/demist.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (60).jpg" class="file-thumb" alt="Demist">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Demist</p>
+                        <p class="text-xs text-gray-500 mono">demist.html</p>
+                    </div>
+                </a>
+                <a href="misc/dreaming.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (61).jpg" class="file-thumb" alt="Dreaming">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dreaming</p>
+                        <p class="text-xs text-gray-500 mono">dreaming.html</p>
+                    </div>
+                </a>
+                <a href="misc/revamp.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-4 (60).jpg" class="file-thumb" alt="Revamp">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Revamp</p>
+                        <p class="text-xs text-gray-500 mono">revamp.html</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- SOCIAL MEDIA FOLDER -->
+        <section id="folder-social-media" class="folder-section">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">📱</span>
+                <div>
+                    <h2 class="text-2xl font-bold">Social Media</h2>
+                    <p class="text-sm text-gray-500">Marketing pages for Instagram, Facebook, LinkedIn, TikTok</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <a href="social-media/cto2.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/shaun  koehne profile pic.png" class="file-thumb" alt="CTO 2">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CTO Profile 2</p>
+                        <p class="text-xs text-gray-500 mono">cto2.html</p>
+                    </div>
+                </a>
+                <a href="social-media/insta-legit.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/slide-1-concept (2).png" class="file-thumb" alt="Insta Legit">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Insta Legit</p>
+                        <p class="text-xs text-gray-500 mono">insta-legit.html</p>
+                    </div>
+                </a>
+                <a href="social-media/insta-web.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/slide-2-concept (1).png" class="file-thumb" alt="Insta Web">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Insta Web</p>
+                        <p class="text-xs text-gray-500 mono">insta-web.html</p>
+                    </div>
+                </a>
+                <a href="social-media/instagram.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-1 (25).png" class="file-thumb" alt="Instagram">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Instagram</p>
+                        <p class="text-xs text-gray-500 mono">instagram.html</p>
+                    </div>
+                </a>
+                <a href="social-media/instagram1.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-2 (25).png" class="file-thumb" alt="Instagram 1">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Instagram 1</p>
+                        <p class="text-xs text-gray-500 mono">instagram1.html</p>
+                    </div>
+                </a>
+                <a href="social-media/instaremodel.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-3 (25).png" class="file-thumb" alt="Insta Remodel">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Insta Remodel</p>
+                        <p class="text-xs text-gray-500 mono">instaremodel.html</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-brand.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-4 (25).png" class="file-thumb" alt="Facebook Brand">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Brand</p>
+                        <p class="text-xs text-gray-500 mono">facebook-brand.html</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-lead.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-1 (27).png" class="file-thumb" alt="Facebook Lead">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Lead</p>
+                        <p class="text-xs text-gray-500 mono">facebook-lead.html</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-lead2.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-2 (27).png" class="file-thumb" alt="Facebook Lead 2">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Lead 2</p>
+                        <p class="text-xs text-gray-500 mono">facebook-lead2.html</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-lead3.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-3 (27).png" class="file-thumb" alt="Facebook Lead 3">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Lead 3</p>
+                        <p class="text-xs text-gray-500 mono">facebook-lead3.html</p>
+                    </div>
+                </a>
+                <a href="social-media/linkedin-brand.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-4 (27).png" class="file-thumb" alt="LinkedIn Brand">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">LinkedIn Brand</p>
+                        <p class="text-xs text-gray-500 mono">linkedin-brand.html</p>
+                    </div>
+                </a>
+                <a href="social-media/tiktok-brand-awareness.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/visual-1 (28).png" class="file-thumb" alt="TikTok Brand">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">TikTok Brand</p>
+                        <p class="text-xs text-gray-500 mono">tiktok-brand-awareness.html</p>
+                    </div>
+                </a>
+                <a href="social-media/austin-is-home.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (67).jpg" class="file-thumb" alt="Austin is Home">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Austin is Home</p>
+                        <p class="text-xs text-gray-500 mono">austin-is-home.html</p>
+                    </div>
+                </a>
+                <a href="social-media/austin-safety.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (67).jpg" class="file-thumb" alt="Austin Safety">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Austin Safety</p>
+                        <p class="text-xs text-gray-500 mono">austin-safety.html</p>
+                    </div>
+                </a>
+                <a href="social-media/dignity.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (58).jpg" class="file-thumb" alt="Dignity">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dignity</p>
+                        <p class="text-xs text-gray-500 mono">dignity.html</p>
+                    </div>
+                </a>
+                <a href="social-media/peace-of-mind.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-4 (55).jpg" class="file-thumb" alt="Peace of Mind">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Peace of Mind</p>
+                        <p class="text-xs text-gray-500 mono">peace-of-mind.html</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- SENIOR CARE FOLDER -->
+        <section id="folder-senior-care" class="folder-section">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">🏠</span>
+                <div>
+                    <h2 class="text-2xl font-bold">Senior Care</h2>
+                    <p class="text-sm text-gray-500">Aging-in-place campaigns, caregiver resources, healthcare
+                        partnerships</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <a href="senior-care/home.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (52).jpg" class="file-thumb" alt="Home">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Home</p>
+                        <p class="text-xs text-gray-500 mono">home.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/caregiver.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (53).jpg" class="file-thumb" alt="Caregiver">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Caregiver</p>
+                        <p class="text-xs text-gray-500 mono">caregiver.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/fall.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (55).jpg" class="file-thumb" alt="Fall Prevention">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Fall Prevention</p>
+                        <p class="text-xs text-gray-500 mono">fall.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/healthcare.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (56).jpg" class="file-thumb" alt="Healthcare">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Healthcare</p>
+                        <p class="text-xs text-gray-500 mono">healthcare.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/senior.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (47).jpg" class="file-thumb" alt="Senior">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Senior</p>
+                        <p class="text-xs text-gray-500 mono">senior.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/a-sanctuary.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (50).jpg" class="file-thumb" alt="A Sanctuary">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">A Sanctuary</p>
+                        <p class="text-xs text-gray-500 mono">a-sanctuary.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/a-single-step.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-4 (48).jpg" class="file-thumb" alt="A Single Step">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">A Single Step</p>
+                        <p class="text-xs text-gray-500 mono">a-single-step.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/contractor-outreach.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/contractor-pilot.png" class="file-thumb" alt="Contractor Outreach">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Contractor Outreach</p>
+                        <p class="text-xs text-gray-500 mono">contractor-outreach.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/the-sovereignty-of-home.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (55).jpg" class="file-thumb" alt="Sovereignty of Home">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Sovereignty of Home</p>
+                        <p class="text-xs text-gray-500 mono">the-sovereignty-of-home.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/never.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-1 (56).jpg" class="file-thumb" alt="Never">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Never</p>
+                        <p class="text-xs text-gray-500 mono">never.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/homies.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-2 (58).jpg" class="file-thumb" alt="Homies">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Homies</p>
+                        <p class="text-xs text-gray-500 mono">homies.html</p>
+                    </div>
+                </a>
+                <a href="senior-care/exile.html" class="file-card rounded-lg overflow-hidden block">
+                    <img src="images/scene-3 (51).jpg" class="file-thumb" alt="Exile">
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Exile</p>
+                        <p class="text-xs text-gray-500 mono">exile.html</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-8 text-center text-xs text-gray-600 mono">
+        HOMEASE | AI © 2024 — FILE GALLERY v1.0
+    </footer>
+
+    <script>
+        function showFolder(folderId) {
+            document.getElementById('home-view').style.display = 'none';
+            document.querySelectorAll('.folder-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('folder-' + folderId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showHome() {
+            document.getElementById('home-view').style.display = 'block';
+            document.querySelectorAll('.folder-section').forEach(s => s.classList.remove('active'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+
+</html>
