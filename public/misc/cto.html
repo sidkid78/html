@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homease | AI - Agentic Systems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Montserrat:wght@300;600;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --neon-cyan: #00f3ff;
+      --neon-purple: #bd00ff;
+      --tungsten: #ffae00;
+      --dark-bg: #050505;
+      --glass: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--neon-cyan);
+    }
+
+    /* Typography Classes */
+    .font-code {
+      font-family: 'Courier Prime', monospace;
+    }
+
+    .text-glow {
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    }
+
+    .text-tungsten {
+      text-shadow: 0 0 15px rgba(255, 174, 0, 0.6);
+      color: var(--tungsten);
+    }
+
+    /* SVG Filters Classes */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.07;
+      filter: url(#noise);
+    }
+
+    .glitch-hover:hover {
+      animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+      color: var(--neon-cyan);
+    }
+
+    /* Layout Utilities */
+    .scrolly-section {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Image Treatments */
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      transition: transform 0.5s ease-out;
+    }
+
+    /* Animations */
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    .scanline-bar {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: rgba(0, 243, 255, 0.3);
+      animation: scanline 4s linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1em;
+      background: var(--neon-cyan);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes glitch-anim {
+      0% {
+        transform: translate(0);
+      }
+
+      20% {
+        transform: translate(-2px, 2px);
+      }
+
+      40% {
+        transform: translate(-2px, -2px);
+      }
+
+      60% {
+        transform: translate(2px, 2px);
+      }
+
+      80% {
+        transform: translate(2px, -2px);
+      }
+
+      100% {
+        transform: translate(0);
+      }
+    }
+
+    /* Specific Section Styles */
+    .glass-panel {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .split-reveal {
+      clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
+    }
+
+    .split-reveal-2 {
+      clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition -->
+  <svg style="display: none;">
+    <defs>
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+      <filter id="chromatic">
+        <feOffset in="SourceGraphic" dx="2" dy="0" result="red" />
+        <feOffset in="SourceGraphic" dx="-2" dy="0" result="blue" />
+        <feBlend mode="screen" in="red" in2="blue" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="noise-overlay"></div>
+  <div class="scanline-bar"></div>
+
+  <!-- SECTION 1: HERO (Image 1 - Future City) -->
+  <section class="scrolly-section flex-col text-center p-8">
+    <!-- Using Unsplash as placeholder for Storyboard Image 1 (Cyberpunk Office) -->
+    <img src="../images/scene-1 (72).jpg?q=80&w=2070&auto=format&fit=crop" class="bg-img"
+      style="filter: brightness(0.4) saturate(1.2);" alt="Future Office">
+
+    <h1
+      class="text-4xl md:text-8xl font-black tracking-tighter uppercase mb-4 mix-blend-overlay opacity-80 animate-pulse">
+      Homease | AI
+    </h1>
+    <div class="border-t border-b border-cyan-400 py-4 max-w-4xl mx-auto">
+      <p class="font-code text-cyan-300 text-sm md:text-xl tracking-widest uppercase">
+        CTO @ Homease | AI | Agentic Systems Architect
+      </p>
+    </div>
+    <div
+      class="mt-12 max-w-2xl font-light text-lg md:text-2xl leading-relaxed glass-panel p-8 rounded-none border-l-4 border-cyan-500">
+      <p>"I don’t just build chatbots; I build <span class="font-bold text-white">living software</span> that builds for
+        us while we sleep."</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: TRANSITION & PHILOSOPHY (Image 2 - Glass UI) -->
+  <section class="scrolly-section relative">
+    <img src="../images/scene-2 (76).jpg?q=80&w=2070" class="bg-img" style="filter: brightness(0.3) blur(2px);"
+      alt="Glass UI">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl px-4 z-10">
+      <div class="flex flex-col justify-center space-y-6">
+        <h2
+          class="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
+          The <br>Philosophy
+        </h2>
+        <p class="font-code text-cyan-400">// Transition: Traditional AI -> Agentic Engineering</p>
+      </div>
+
+      <div class="glass-panel p-8 md:p-12 space-y-6 transform hover:scale-105 transition-transform duration-500">
+        <h3 class="text-2xl font-bold border-b border-white/20 pb-4">Spec-Driven Development</h3>
+        <p class="text-gray-200 leading-relaxed">
+          "The plan is the prompt." By implementing rigorous directories—<span class="text-cyan-300">AI Docs</span> for
+          persistent memory, <span class="text-cyan-300">Specs</span> for high-bandwidth planning, and reusable <span
+            class="text-cyan-300">Prompt Commands</span>—I enable my team to scale compute advantage without sacrificing
+          architectural integrity.
+        </p>
+        <div class="flex gap-2 font-code text-xs text-gray-400 mt-4">
+          <span class="border border-gray-600 px-2 py-1">./AI_Docs</span>
+          <span class="border border-gray-600 px-2 py-1">./Specs</span>
+          <span class="border border-gray-600 px-2 py-1">./Cmds</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: THE STACK (Image 3 - Neural Network) -->
+  <section class="scrolly-section">
+    <img src="../images/scene-3 (64).jpg?q=80&w=1974" class="bg-img" style="filter: brightness(0.5) hue-rotate(45deg);"
+      alt="Neural Network">
+
+    <div class="text-center z-10 max-w-4xl px-4">
+      <h2
+        class="text-6xl md:text-9xl font-black mb-8 text-white opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 select-none">
+        STACK
+      </h2>
+
+      <div class="relative z-20 space-y-8">
+        <h3 class="text-3xl md:text-5xl font-bold mb-4 glitch-hover">Orchestrating Complexity</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-code">
+          <div class="border border-purple-500 p-4 bg-black/50 text-purple-300">
+            &lt;LlamaIndex /&gt;
+            <p class="text-xs text-gray-400 mt-2">RAG Systems</p>
+          </div>
+          <div class="border border-white p-4 bg-black/50">
+            &lt;Next.js /&gt;
+            <p class="text-xs text-gray-400 mt-2">Framework</p>
+          </div>
+          <div class="border border-blue-500 p-4 bg-black/50 text-blue-300">
+            &lt;Google Gemini /&gt;
+            <p class="text-xs text-gray-400 mt-2">Multimodal</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE DRIVER (Image 4 - Mechanic vs Code) -->
+  <section class="scrolly-section block md:flex relative">
+    <!-- Single Split Background Image -->
+    <div class="absolute inset-0">
+      <img src="../images/scene-4 (62).jpg" class="w-full h-full object-cover"
+        style="filter: contrast(1.1) brightness(0.85);" alt="Mechanic vs Code - Shared Logic">
+      <div class="absolute inset-0 bg-black/20"></div>
+    </div>
+
+    <!-- Content Overlay -->
+    <div class="z-20 relative w-full h-full flex flex-col items-center justify-center p-6">
+      <div class="bg-black/80 border-y-2 border-white p-8 max-w-4xl mx-auto shadow-2xl backdrop-blur-sm">
+        <h2 class="text-4xl md:text-6xl font-black mb-4 uppercase tracking-tighter text-center">The Driver</h2>
+        <div class="flex flex-col md:flex-row justify-between gap-8 items-center text-sm md:text-lg font-code">
+          <div class="text-tungsten text-center md:text-left">
+            <span class="text-2xl block mb-2">⚠ 2002 Mazda</span>
+            PATS Anti-Theft Logic
+          </div>
+
+          <div class="h-px w-20 md:w-auto md:h-20 bg-white opacity-50"></div>
+
+          <div class="text-cyan-300 text-center md:text-right">
+            <span class="text-2xl block mb-2">Multi-Agent Chain ⌘</span>
+            Context-Window Overflow
+          </div>
+        </div>
+        <p class="mt-8 text-center text-gray-300 font-light">
+          "I prioritize logic, heuristics, and <span class="text-white italic font-serif">'Algorithm of Thought'</span>
+          reasoning."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: OUTRO (Image 5 - Portrait) -->
+  <section class="scrolly-section flex-col justify-end pb-20">
+    <img src="../images/generated-image-1 (3).jpg?q=80&w=1887" class="bg-img"
+      style="filter: grayscale(1) contrast(1.3) brightness(0.7);" alt="Portrait">
+
+    <div class="z-10 max-w-3xl px-6 text-center md:text-right self-end md:mr-20">
+      <p class="text-lg md:text-2xl mb-4 font-light italic opacity-80">
+        I'm here to ensure Homease | AI isn't just a tool...
+      </p>
+      <h2
+        class="text-4xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-l from-cyan-400 to-white leading-tight">
+        BUT A RELIABLE<br>
+        ENGINEERED<br>
+        ECOSYSTEM<span class="cursor"></span>
+      </h2>
+      <div class="mt-8">
+        <button
+          class="border border-white hover:bg-white hover:text-black transition-colors px-8 py-3 font-code uppercase text-sm tracking-widest">
+          Initiate Sequence
+        </button>
+      </div>
+    </div>
+  </section>
+
+</body>
+
+</html>

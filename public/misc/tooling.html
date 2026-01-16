@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Tooling Architectures</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&family=Inter:wght@200;400;600;800&display=swap');
+
+  :root {
+    --c-bg: #050505;
+    --c-text: #e0e0e0;
+    --c-mcp: #00f0ff;
+    --c-cli: #0aff00;
+    --c-script: #ffaa00;
+    --c-skill: #bd00ff;
+    --c-glass: rgba(10, 10, 10, 0.75);
+  }
+
+  body {
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+  }
+
+  /* Typography */
+  h1, h2, h3, .mono {
+    font-family: 'Fira Code', monospace;
+    letter-spacing: -0.03em;
+  }
+
+  h1 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); border-bottom: 1px solid currentColor; padding-bottom: 0.5rem; }
+  p { font-size: clamp(1rem, 1.2vw, 1.25rem); line-height: 1.6; color: #a0a0a0; margin-bottom: 1.5rem; }
+  strong { color: white; }
+
+  /* SVG Filters Classes */
+  .noise-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.07;
+    filter: url(#noiseFilter);
+  }
+
+  .scanlines {
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.5) 3px
+    );
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Animations */
+  @keyframes flicker {
+    0% { opacity: 0.9; }
+    5% { opacity: 0.5; }
+    10% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .animate-text { animation: slideUp 0.8s ease-out forwards; }
+
+  /* Utility */
+  .section-container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+    border-bottom: 1px solid #222;
+  }
+
+  .bg-image {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+    filter: grayscale(80%) contrast(120%);
+    z-index: 0;
+    transition: transform 10s ease;
+  }
+
+  .section-container:hover .bg-image {
+    transform: scale(1.05);
+  }
+
+  .glass-card {
+    position: relative;
+    z-index: 20;
+    background: var(--c-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border-left: 4px solid white;
+  }
+
+  /* Theme Variants */
+  .theme-mcp h2 { color: var(--c-mcp); text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+  .theme-mcp .glass-card { border-left-color: var(--c-mcp); }
+  
+  .theme-cli h2 { color: var(--c-cli); text-shadow: 0 0 10px rgba(10,255,0,0.5); }
+  .theme-cli .glass-card { border-left-color: var(--c-cli); }
+
+  .theme-script h2 { color: var(--c-script); text-shadow: 0 0 10px rgba(255,170,0,0.5); }
+  .theme-script .glass-card { border-left-color: var(--c-script); }
+
+  .theme-skill h2 { color: var(--c-skill); text-shadow: 0 0 10px rgba(189,0,255,0.5); }
+  .theme-skill .glass-card { border-left-color: var(--c-skill); }
+
+  /* Comparison Table */
+  .comp-table-wrapper {
+    overflow-x: auto;
+    margin-top: 2rem;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+  }
+  
+  th {
+    background: rgba(255,255,255,0.05);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  tr:hover { background: rgba(255,255,255,0.02); }
+  
+  td:first-child { color: #888; font-weight: bold; }
+  
+  .tag-low { color: var(--c-script); }
+  .tag-high { color: var(--c-cli); }
+  .tag-bad { color: #ff4444; }
+
+</style>
+</head>
+<body>
+
+  <!-- SVG Filters -->
+  <svg style="display: none;">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </svg>
+
+  <div class="noise-bg"></div>
+
+  <!-- 0. Introduction -->
+  <section class="section-container">
+    <img src="../images/scene-1 (71).jpg?se=2025-02-28T10%3A58%3A24Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D42e97914-f5a0-47b6-96a9-8f3523ba780a.webp&sig=G0%2BwJ%2B/oE%2BtB1eGkG1f5HqO%2BuXz6O%2BVXF90N5/K3hGg%3D" class="bg-image" alt="Scales of Digital Balance">
+    <div class="scanlines"></div>
+    <div class="glass-card animate-text">
+      <h1>A Comparative Analysis of Agent Tooling Architectures</h1>
+      <hr class="border-gray-700 my-6">
+      <h3 class="text-xl font-bold mb-4 mono uppercase tracking-widest">Introduction: The Tooling Trilemma in Agentic Systems</h3>
+      <p>
+        The true power of AI agents is unlocked when they are equipped with tools, extending their capabilities beyond the confines of their base model. As these agentic systems grow in sophistication, the architectural decision of how to provide them with tools becomes a central engineering challenge. This challenge can be framed as a tooling trilemma, a constant trade-off between simplicity, control, and the agent's most critical and finite resource: its context window. Every architectural choice exists on a spectrum, balancing the ease of implementation against the need for granular control and context efficiency. This analysis examines four primary architectures for agent tooling—MCP Servers, Command-Line Interfaces (CLI), File System Scripts, and Skills—to provide a clear framework for making these critical design decisions.
+      </p>
+    </div>
+  </section>
+
+  <!-- 1. MCP Server -->
+  <section class="section-container theme-mcp">
+    <img src="../images/scene-4 (61).jpg?se=2025-02-28T10%3A58%3A24Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Dc6f39385-263a-4a64-92dc-218731056526.webp&sig=u3tTADR9/K78kP096yKz505uP2Nl6CjYQYk0Z%2Be0n5E%3D" class="bg-image" alt="MCP Hardware">
+    <div class="scanlines"></div>
+    <div class="glass-card animate-text">
+      <h2>1. The MCP Server: The Standardized Access Layer</h2>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="mono text-sm text-[var(--c-mcp)] mb-2">1.1. Context and Strategic Importance</h3>
+          <p>The Meta-Contextual Protocol (MCP) server represents the incumbent, standardized approach for providing agents with tools. Its strategic value lies in its ability to offer immediate, out-of-the-box functionality, making it an excellent access layer for agents that need to interact with existing external services without a significant upfront engineering investment.</p>
+          
+          <h3 class="mono text-sm text-[var(--c-mcp)] mb-2">1.2. Functional Overview</h3>
+          <p>An MCP server functions as a gateway, giving an agent programmatic access to external platforms and their features. For instance, an agent connected to the "Koshi prediction markets MCP server" can perform a range of actions on behalf of a user. It can search for specific markets, retrieve detailed data like order books and recent trades, and perform complex analysis and summarization. The agent accomplishes this by invoking predefined tools on the server, requiring no direct access to or understanding of the underlying platform's codebase. This demonstrates how MCP servers enable agents to not just manipulate data, but to tap into complex external systems like prediction markets for strategic analysis, a concept the source refers to as "info finance" for understanding the future before it occurs.</p>
+        </div>
+        
+        <div>
+          <h3 class="mono text-sm text-[var(--c-mcp)] mb-2">1.3. Analysis of Strengths and Weaknesses</h3>
+          <div class="bg-black/40 p-4 border border-[var(--c-mcp)] mb-4">
+            <p class="mono text-xs mb-1 uppercase">Strengths</p>
+            <ul class="list-disc pl-4 text-sm mb-4 space-y-1">
+              <li>High Simplicity: Offers a straightforward method for connecting agents to tools with minimal setup.</li>
+              <li>Low Engineering Investment: For external servers, the development work is already done; engineers can simply connect their agent and begin.</li>
+              <li>Open-Source Standard: MCP is a well-established, open standard, which promotes interoperability and prevents vendor lock-in.</li>
+              <li>Rich Feature Set: MCP provides a rich set of features beyond simple tools, including resources, prompts, and elicitation, which are often overlooked by engineers.</li>
+            </ul>
+            <p class="mono text-xs mb-1 uppercase text-red-400">Weaknesses</p>
+            <ul class="list-disc pl-4 text-sm space-y-1 text-red-200">
+              <li>High Context Consumption: Architecturally, this is the least efficient approach ("the big loser") in terms of context window usage.</li>
+              <li>Lack of Control: Engineers have no control over its implementation or performance.</li>
+              <li>Low Customizability & Portability: Customization is impossible unless you own the server.</li>
+            </ul>
+          </div>
+          <h3 class="mono text-sm text-[var(--c-mcp)] mb-2">1.4. Section Conclusion</h3>
+          <p>The inherent limitations of MCP servers, particularly their significant context consumption and lack of customizability, have driven architects to explore more direct, code-based tooling alternatives that offer greater control and efficiency.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. CLI -->
+  <section class="section-container theme-cli">
+    <img src="../images/scene-2 (75).jpg?se=2025-02-28T10%3A58%3A24Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D307736f5-ef87-430c-87d2-06c8340d8768.webp&sig=r13dF7bK/38pM3264wU07L7Xw%2Bc8r3XmZg277XlEa7o%3D" class="bg-image" alt="Hacker Terminal">
+    <div class="scanlines"></div>
+    <div class="glass-card animate-text">
+      <h2>2. The Command-Line Interface (CLI): The Direct Control Approach</h2>
+      
+      <p><strong>2.1. Context and Strategic Importance:</strong> The strategic shift toward using a Command-Line Interface (CLI) represents a move to treat "raw code as tools." This approach positions the CLI as a powerful method for gaining granular control over agent tooling while dramatically improving the efficiency of the context window.</p>
+
+      <p><strong>2.2. Functional Overview:</strong> Equipping an agent with a CLI tool is an exercise in targeted prompt engineering. The process involves explicitly teaching the agent how to use the tool by instructing it to read specific files, such as a README.md that explains its purpose and a CLI script that contains the raw code. This initial instruction, or "priming," loads the tool's usage patterns into the agent's active context, enabling it to call the CLI commands autonomously for the remainder of the session. Once primed, the agent understands the tool's commands, workflows, and settings, allowing it to execute CLI commands directly in the terminal. This method can effectively replicate all the capabilities of an MCP server, but with direct code execution.</p>
+
+      <div class="border-t border-[var(--c-cli)] pt-4 mt-4">
+        <h3 class="mono text-[var(--c-cli)] mb-4">2.3. Analysis of Strengths and Weaknesses</h3>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+           <div>
+             <span class="mono bg-[var(--c-cli)] text-black px-2 py-1">STRENGTHS</span>
+             <ul class="mt-2 space-y-2 list-none">
+               <li>&gt; Superior Context Conservation</li>
+               <li>&gt; Full Customizability</li>
+               <li>&gt; High Portability</li>
+               <li>&gt; The "Trifecta"</li>
+             </ul>
+           </div>
+           <div>
+             <span class="mono bg-white text-black px-2 py-1">WEAKNESSES</span>
+             <ul class="mt-2 space-y-2 list-none">
+               <li>&gt; Upfront Prompt Engineering</li>
+               <li>&gt; Manual Setup Command</li>
+               <li>&gt; Separation of Concerns</li>
+             </ul>
+           </div>
+        </div>
+      </div>
+      
+      <p class="mt-6"><strong>2.4. Section Conclusion:</strong> While the CLI offers excellent control and context efficiency, the pursuit of even greater modularity and portability has led architects toward the use of self-contained, single-file scripts.</p>
+    </div>
+  </section>
+
+  <!-- 3. Scripts -->
+  <section class="section-container theme-script">
+    <img src="../images/scene-3 (63).jpg?se=2025-02-28T10%3A58%3A24Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De98f026a-9f5b-4395-8857-e6e2269a840e.webp&sig=6w7F%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%3D" class="bg-image" alt="Scripts and Folders">
+    <div class="scanlines"></div>
+    <div class="glass-card animate-text">
+      <h2>3. File System Scripts: The Modular and Portable Approach</h2>
+      
+      <div class="grid md:grid-cols-3 gap-6 mb-6">
+         <div class="col-span-2">
+           <p><strong>3.1. Context and Strategic Importance:</strong> The "scripts" approach is a logical evolution for maximizing agent effectiveness. Its strategic value lies in creating hyper-focused, isolated tools that are invoked conditionally. This architecture is designed to minimize the agent's cognitive load by eliminating "garbage context," which can significantly improve performance.</p>
+         </div>
+         <div class="col-span-1 border border-[var(--c-script)] p-4 flex items-center justify-center">
+            <span class="mono text-4xl text-[var(--c-script)] font-bold">DRY = 0</span>
+         </div>
+      </div>
+
+      <p><strong>3.2. Functional Overview:</strong> This approach works by priming an agent with a single README.md file that defines a set of conditions. Each condition maps to a specific, isolated, single-file script. The agent only reads the script's full source code if its help flag (--help) does not provide enough information to execute the task, a mechanism that dramatically conserves the context window. To maintain their self-contained nature, any dependencies are declared directly at the top of each script file.</p>
+
+      <h3 class="mono text-sm text-[var(--c-script)]">3.3. Analysis of Strengths and Weaknesses</h3>
+      <div class="flex flex-wrap gap-2 mt-2 mb-4">
+        <span class="px-2 py-1 border border-white/20 text-xs">Extremely Low Context Consumption</span>
+        <span class="px-2 py-1 border border-white/20 text-xs">Accepts Code Duplication by Design</span>
+        <span class="px-2 py-1 border border-white/20 text-xs">Superior Agent Performance</span>
+        <span class="px-2 py-1 border border-white/20 text-xs">Highest Portability</span>
+      </div>
+
+      <p><strong>3.4. Section Conclusion:</strong> The scripts approach achieves unparalleled context efficiency and portability, but its acceptance of code duplication leads to the final architecture, "Skills," which seeks to bring more structure and organization to this modular paradigm.</p>
+    </div>
+  </section>
+
+  <!-- 4. Skills -->
+  <section class="section-container theme-skill">
+    <img src="../images/scene-3 (63).jpg?se=2025-02-28T10%3A58%3A24Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De98f026a-9f5b-4395-8857-e6e2269a840e.webp&sig=6w7F%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%2B%2Bi%3D" class="bg-image" alt="Skills Structure" style="transform: scaleX(-1);">
+    <div class="scanlines"></div>
+    <div class="glass-card animate-text">
+      <h2>4. Skills: The Bundled and Structured Approach</h2>
+      
+      <p><strong>4.1. Context and Strategic Importance:</strong> The "skills" approach represents a formalization of code-based tooling. Its strategic importance lies in creating self-contained, reusable, and isolated packages of capability that an agent can draw upon. It structures the modularity of scripts into a more organized and portable unit.</p>
+
+      <p><strong>4.2. Functional Overview:</strong> A skill is a directory that bundles all necessary scripts and resources for a specific capability. The primary difference from the scripts approach lies in its invocation method. A central skill.md file acts as the "pivot file" or self-contained priming prompt. This file contains all the instructions the agent needs, telling it when and how to use the various script-based tools contained within the skill's directory. This provides a structured, self-documenting way to package a set of related tools.</p>
+
+      <h3 class="mono text-sm text-[var(--c-skill)]">4.3. Analysis of Strengths and Weaknesses</h3>
+      <ul class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm mt-4 mb-6">
+        <li class="col-span-1 text-[var(--c-skill)]">+ Self-Contained and Organized</li>
+        <li class="col-span-1 text-gray-400">- Ecosystem Lock-in</li>
+        <li class="col-span-1 text-[var(--c-skill)]">+ High Portability</li>
+        <li class="col-span-1 text-[var(--c-skill)]">+ Powerful MCP Alternative</li>
+      </ul>
+
+      <p><strong>4.4. Section Conclusion:</strong> With a clear understanding of the strengths and weaknesses of MCP servers, CLIs, scripts, and skills, a direct, side-by-side analysis can reveal the optimal use case for each architecture.</p>
+    </div>
+  </section>
+
+  <!-- 5. Comparison Table -->
+  <section class="section-container" style="background: #000;">
+    <div class="scanlines"></div>
+    <div class="glass-card w-full max-w-6xl animate-text">
+      <h2 class="text-white border-none mb-2">5. Side-by-Side Comparison</h2>
+      <h3 class="text-sm text-gray-500 mono mb-4">5.1. Context and Strategic Importance</h3>
+      <p class="text-sm">As the analysis has shown, no single tooling method is universally superior. The strategic decision of which architecture to employ depends entirely on a clear-eyed assessment of the trade-offs across several key engineering dimensions. An architect must weigh the needs of the project—be it speed, control, portability, or context efficiency—to select the right tool for the job.</p>
+
+      <div class="comp-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th style="color:var(--c-mcp)">MCP Server</th>
+              <th style="color:var(--c-cli)">CLI</th>
+              <th style="color:var(--c-script)">Scripts</th>
+              <th style="color:var(--c-skill)">Skills</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Invocation Method</td>
+              <td>Agent invokes tools directly; connection is always active.</td>
+              <td>Agent must be primed with a setup command.</td>
+              <td>Agent must be primed with a setup command.</td>
+              <td>Uses a self-contained priming prompt (skill.md).</td>
+            </tr>
+            <tr>
+              <td>Context Consumption</td>
+              <td class="tag-bad">Very High</td>
+              <td class="tag-high">Low</td>
+              <td class="tag-low">Very Low (Efficient)</td>
+              <td>Low to Medium</td>
+            </tr>
+            <tr>
+              <td>Customizability</td>
+              <td class="tag-bad">Low</td>
+              <td class="tag-high">High</td>
+              <td class="tag-high">High</td>
+              <td class="tag-high">High</td>
+            </tr>
+            <tr>
+              <td>Portability</td>
+              <td class="tag-bad">Very Low</td>
+              <td>High</td>
+              <td class="tag-high">Very High</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td>Engineering Investment</td>
+              <td class="tag-high">Low</td>
+              <td>Medium</td>
+              <td>Medium</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td>Composability & Features</td>
+              <td class="tag-high">High</td>
+              <td>Medium</td>
+              <td>Medium</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td>Ecosystem Standard</td>
+              <td class="tag-high">High</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td class="tag-bad">Low</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-xs mono text-right">5.3. Section Conclusion: This objective comparison informs a practical, hybrid strategy.</p>
+    </div>
+  </section>
+
+  <!-- 6. Hybrid Strategy & 7. Conclusion -->
+  <section class="section-container">
+    <img src="../images/generated-image-1 (3).jpg?se=2025-02-28T10%3A58%3A24Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De88d844c-9f6b-4221-8173-03f905581177.webp&sig=mBq0D7aT/X7gO5584yV43yW42y81B3482m1%2B%3D" class="bg-image" alt="Agent Architect">
+    <div class="scanlines"></div>
+    <div class="glass-card animate-text">
+      <h2>6. Recommended Hybrid Strategy</h2>
+      
+      <div class="my-6 space-y-4">
+        <div class="p-4 border-l-2 border-white bg-white/5">
+          <h4 class="mono font-bold text-white">1. Start with a CLI (80% of Cases)</h4>
+          <p class="mb-0 text-sm">The vast majority of new tools should be built as a CLI first. This serves the "trifecta": developer, team, and agent.</p>
+        </div>
+        <div class="p-4 border-l-2 border-[var(--c-mcp)] bg-[var(--c-mcp)]/5">
+          <h4 class="mono font-bold text-[var(--c-mcp)]">2. Wrap in MCP for Scale (10% of Cases)</h4>
+          <p class="mb-0 text-sm">When interoperability is key for multiple agents, wrap the existing CLI in an MCP server.</p>
+        </div>
+        <div class="p-4 border-l-2 border-[var(--c-script)] bg-[var(--c-script)]/5">
+          <h4 class="mono font-bold text-[var(--c-script)]">3. Use Scripts/Skills for Context (10% of Cases)</h4>
+          <p class="mb-0 text-sm">Reserved for cases where context preservation is the absolute highest priority.</p>
+        </div>
+      </div>
+
+      <h3 class="mono text-sm mt-8 mb-2">6.3. Mitigating MCP Drawbacks</h3>
+      <p>The primary drawback of MCP servers—high context consumption—can be effectively mitigated with a specific agent design pattern. By using "dedicated focused one-purpose agents" that are created for a single task and then deleted upon completion, the context window is reset for each new job. This prevents context from accumulating and becoming a bottleneck.</p>
+
+      <hr class="border-gray-700 my-8">
+      
+      <h2 class="text-white">7. Conclusion</h2>
+      <p>
+        The choice of an agent tooling architecture is a deliberate engineering decision, not a matter of dogma. It requires navigating a spectrum of trade-offs between the out-of-the-box simplicity of MCP servers and the granular control offered by code-based methods like CLIs, scripts, and skills. Each approach has a distinct profile of strengths and weaknesses related to context consumption, customizability, and engineering investment. The modern agent architect must master all four of these patterns, understanding when to leverage a standardized protocol for scale and when to hand an agent raw code for maximum efficiency. By doing so, they can effectively manage an agent's context, scale its capabilities, and build truly powerful, tool-augmented systems.
+      </p>
+    </div>
+  </section>
+
+</body>
+</html>

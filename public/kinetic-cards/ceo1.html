@@ -1,0 +1,364 @@
+ceo
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clifton Franco - Homease | AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap');
+
+    :root {
+      --bg-deep: #050505;
+      --grid-color: rgba(255, 255, 255, 0.05);
+      --accent-cyan: #00f3ff;
+      --accent-blueprint: #2a4b7c;
+      --text-primary: #f0f0f0;
+      --text-muted: #888;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    /* SVG FILTERS & TEXTURES */
+    .texture-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.15;
+      filter: url(#paper-grain);
+      mix-blend-mode: overlay;
+    }
+
+    .glitch-target:hover {
+      filter: url(#ai-distortion);
+      color: var(--accent-cyan);
+      transition: 0.2s;
+    }
+
+    /* TYPOGRAPHY */
+    h1,
+    h2,
+    h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    /* GRID BACKGROUND */
+    .blueprint-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    }
+
+    /* SCROLLYTELLING LAYOUT */
+    .section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    /* CEO IMAGE STYLING */
+    .ceo-container {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      overflow: hidden;
+      border-bottom: 1px solid var(--accent-cyan);
+    }
+
+    .ceo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      filter: grayscale(100%) contrast(120%);
+      transition: filter 0.5s ease;
+    }
+
+    .ceo-container:hover .ceo-img {
+      filter: grayscale(0%) contrast(110%);
+    }
+
+    .overlay-data {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, var(--bg-deep) 10%, transparent 80%);
+    }
+
+    /* KINETIC TYPE */
+    .scrolling-text {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.9;
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+      opacity: 0.5;
+    }
+
+    .highlight {
+      color: white;
+      -webkit-text-stroke: 0;
+      text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+    }
+
+    /* IMAGE CARDS */
+    .story-card {
+      position: relative;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      transition: transform 0.5s ease;
+    }
+
+    .story-img {
+      width: 100%;
+      height: auto;
+      mix-blend-mode: luminosity;
+      opacity: 0.8;
+      transition: all 0.5s ease;
+    }
+
+    .story-card:hover .story-img {
+      mix-blend-mode: normal;
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* ANIMATION UTILS */
+    .fade-in-up {
+      animation: fadeInUp 1s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .delay-200 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-400 {
+      animation-delay: 0.4s;
+    }
+
+    /* RESPONSIVE TYPE */
+    p {
+      font-size: clamp(1rem, 1.2vw, 1.3rem);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS DEFINITION -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Paper Grain -->
+      <filter id="paper-grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+        <feColorMatrix type="saturate" values="0" in="noise" result="monoNoise" />
+        <feComponentTransfer in="monoNoise">
+          <feFuncA type="linear" slope="0.5" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- AI Distortion -->
+      <filter id="ai-distortion">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.1" numOctaves="1" result="warp" />
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="30" in="SourceGraphic" in2="warp" />
+        <feGaussianBlur stdDeviation="0.5" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- BACKGROUND ELEMENTS -->
+  <div class="texture-overlay"></div>
+  <div class="blueprint-grid"></div>
+
+  <!-- SECTION 1: HERO -->
+  <section class="section">
+    <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10 items-end">
+      <!-- Text Content -->
+      <div class="z-10 fade-in-up">
+        <h1 class="text-6xl md:text-8xl font-bold tracking-tighter mb-4 leading-none">
+          CLIFTON <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">FRANCO</span>
+        </h1>
+        <div class="h-1 w-24 bg-cyan-400 mb-6"></div>
+        <p class="text-xl md:text-2xl font-mono text-cyan-400 mb-2 tracking-widest">CHIEF EXECUTIVE OFFICER</p>
+        <p class="text-4xl font-bold text-white">HOMEASE | <span class="glitch-target cursor-pointer">AI</span></p>
+      </div>
+
+      <!-- CEO Image -->
+      <div class="ceo-container fade-in-up delay-200 shadow-2xl">
+        <!-- Placeholder for CEO Image based on provided context -->
+        <img src="../images/generated-image-1 (4).jpg?q=80&w=2544&auto=format&fit=crop" alt="Clifton Franco CEO"
+          class="ceo-img">
+        <div class="overlay-data"></div>
+        <!-- Decorative HUD elements -->
+        <div class="absolute top-4 right-4 text-xs font-mono text-cyan-400 opacity-70 border border-cyan-400 p-1">
+          STATUS: ONLINE<br>ID: CF-001
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE PROFILE & STRATEGY -->
+  <section class="section bg-black/40 border-y border-white/10">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-2xl md:text-4xl font-light mb-12 text-gray-300 leading-relaxed">
+        <span class="font-bold text-white">Clifton Franco</span> is a seasoned sales leader and operational strategist
+        with over two decades of experience in the <span class="border-b border-white/30 pb-1">Central Texas
+          home-building</span> and telecommunications sectors.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left mt-16">
+        <div class="p-6 border-l-2 border-cyan-500 bg-white/5">
+          <h3 class="text-cyan-400 mb-2 font-mono text-sm">CURRENT ROLE</h3>
+          <p class="text-lg">As the CEO of <strong class="text-white">Homease | AI</strong>, he translates high-level
+            agentic technology into scalable market solutions.</p>
+        </div>
+        <div class="p-6 border-l-2 border-orange-500 bg-white/5">
+          <h3 class="text-orange-400 mb-2 font-mono text-sm">PHILOSOPHY</h3>
+          <p class="text-lg">Clifton’s career is defined by a <span
+              class="highlight font-bold italic">"Value-First"</span> philosophy, consistently exceeding sales targets
+            by as much as <span class="text-4xl font-bold block mt-2 text-white glitch-target">125%</span></p>
+        </div>
+      </div>
+
+      <p class="mt-8 text-gray-400 text-sm font-mono">ACHIEVED THROUGH A DEEP UNDERSTANDING OF DESIGN QUALITY AND
+        CONSUMER PSYCHOLOGY.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3: INDUSTRY & EXPERIENCE -->
+  <section class="section">
+    <div class="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+      <!-- Image Column -->
+      <div class="story-card rounded-lg shadow-2xl transform rotate-1">
+        <!-- Placeholder for Board/Workshop Image -->
+        <img src="./../images/scene-2 (77).jpg?q=80&w=2631&auto=format&fit=crop"
+          alt="Board Director Architecture Workshop" class="story-img">
+        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
+          <span class="text-xs font-mono text-white bg-black px-2 py-1">ARCHIVE: BOARD DIRECTOR</span>
+        </div>
+      </div>
+
+      <!-- Text Column -->
+      <div>
+        <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white">INSIDER PERSPECTIVE</h2>
+        <p class="text-gray-300 mb-6">
+          Formerly a Director of the Board and VP Elect for the <span
+            class="text-white border-b border-orange-500">Central Texas Home Builders Association</span>, Clifton
+          possesses an insider’s perspective on the friction points between homeowners, realtors, and contractors.
+        </p>
+        <div class="flex items-center gap-4">
+          <div class="h-px flex-1 bg-gray-700"></div>
+          <div class="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_10px_#00f3ff]"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE MISSION -->
+  <section class="section">
+    <div class="relative w-full max-w-5xl mx-auto bg-gray-900 rounded-2xl overflow-hidden border border-gray-700">
+      <!-- Background Image Layer -->
+      <div class="absolute inset-0">
+        <!-- Placeholder for Elderly Couple/Future Living Image -->
+        <img src="./../images/scene-3 (66).jpg?q=80&w=2568&auto=format&fit=crop" alt="Aging in Place Future"
+          class="w-full h-full object-cover opacity-40">
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+      </div>
+
+      <!-- Content Layer -->
+      <div class="relative z-10 p-12 md:p-20">
+        <div
+          class="inline-block px-3 py-1 mb-6 border border-cyan-500/50 text-cyan-400 font-mono text-xs rounded-full uppercase tracking-widest">
+          Mission Protocol: Active
+        </div>
+
+        <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+          ELIMINATE THE <br>
+          <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-600 glitch-target">"INTEGRATION
+            DEBT"</span>
+        </h2>
+
+        <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mb-8 leading-relaxed">
+          At Homease, he leverages this expertise to steer the company’s mission: using AI to eliminate the "integration
+          debt" of home modifications.
+        </p>
+
+        <div class="border-l-4 border-cyan-500 pl-6 py-2">
+          <p class="text-white font-medium italic text-lg">
+            "Ensuring that aging-in-place is not just a dream, but a frictionless reality for families everywhere."
+          </p>
+        </div>
+      </div>
+
+      <!-- HUD Overlay decoration -->
+      <svg class="absolute bottom-10 right-10 w-24 h-24 text-cyan-500/30 animate-spin-slow" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="10 5" />
+        <circle cx="50" cy="50" r="25" stroke="currentColor" stroke-width="1" fill="none" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 text-center text-xs font-mono text-gray-600 uppercase tracking-widest">
+    Homease | AI &copy; 2024 &mdash; Designed by Clifton Franco
+  </footer>
+
+  <style>
+    .animate-spin-slow {
+      animation: spin 10s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+</body>
+
+</html>

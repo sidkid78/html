@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Blueprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        :root {
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            --warm-overlay: rgba(60, 40, 20, 0.4);
+            --anxious-overlay: rgba(20, 25, 30, 0.7);
+            --tech-overlay: rgba(255, 255, 255, 0.85);
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #0f0f0f;
+            color: white;
+        }
+
+        /* SVG Filter Classes */
+        .filter-vintage {
+            filter: url('#paper-grain') sepia(40%) contrast(110%);
+        }
+
+        .filter-anxious {
+            filter: url('#distortion') grayscale(60%) contrast(120%);
+        }
+        
+        .filter-clean {
+            filter: contrast(105%) saturate(110%);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeInSlow {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .reveal-text {
+            animation: fadeInSlow 1.5s ease-out forwards;
+        }
+
+        /* Text Effects */
+        .text-shadow-deep {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Layout Utilities */
+        .scrolly-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .sticky-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            transition: transform 0.5s ease-out;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card-light {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SVG Filters Definition -->
+    <svg style="display: none;">
+        <defs>
+            <!-- Grainy Texture -->
+            <filter id="paper-grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.1 0" in="noise" result="coloredNoise"/>
+                <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite"/>
+                <feBlend mode="multiply" in="composite" in2="SourceGraphic"/>
+            </filter>
+            
+            <!-- Distortion for 'Minefield' -->
+            <filter id="distortion">
+                <feTurbulence type="turbulence" baseFrequency="0.01 0.005" numOctaves="2" seed="2">
+                    <animate attributeName="baseFrequency" dur="30s" values="0.01 0.005; 0.02 0.01; 0.01 0.005" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" scale="15" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Section 1: Nostalgia (Hand) -->
+    <section class="scrolly-section">
+        <div class="sticky-bg filter-vintage" style="background-image: url('./../images/scene-1 (68).jpg'); transform: scale(1.1);"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+        
+        <div class="relative z-10 max-w-4xl px-8 text-center reveal-text">
+            <p class="font-serif text-3xl md:text-5xl lg:text-6xl text-amber-50 leading-tight text-shadow-deep">
+                <span class="block text-lg font-sans tracking-[0.2em] mb-4 text-amber-200 uppercase opacity-80">Killeen, Texas</span>
+                Full of homes where <br/><i class="font-light">memories were made.</i>
+            </p>
+        </div>
+    </section>
+
+    <!-- Section 2: The Anxiety (Hallway/Minefield) -->
+    <section class="scrolly-section">
+        <div class="sticky-bg filter-anxious" style="background-image: url('./../images/scene-3 (62).jpg');"></div>
+        <div class="absolute inset-0 bg-stone-900/60"></div>
+
+        <div class="relative z-10 max-w-3xl px-6 grid gap-12">
+            <div class="glass-card p-8 md:p-12 rounded-xl text-left border-l-4 border-red-400">
+                <p class="font-sans text-xl md:text-2xl font-light leading-relaxed text-gray-100">
+                    But for many of our parents, those same homes are starting to feel like 
+                    <span class="font-bold text-red-300 font-serif text-3xl block mt-2 tracking-wide">minefields.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: The Decision Moment -->
+    <section class="scrolly-section bg-zinc-900">
+        <div class="absolute inset-0 opacity-40 bg-[url('https://i.imgur.com/b9kKz8T.jpeg')] bg-cover bg-center filter grayscale blur-sm"></div>
+        
+        <div class="relative z-10 container mx-auto px-6 flex flex-col items-center">
+            <div class="max-w-4xl text-center space-y-8">
+                <h2 class="font-serif text-4xl md:text-5xl text-white font-bold leading-tight">
+                    The 'Decision-Moment'
+                </h2>
+                <div class="h-1 w-24 bg-amber-500 mx-auto"></div>
+                <p class="font-sans text-lg md:text-2xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
+                    It isn't about choosing a website—it’s about choosing whether Mom 
+                    <span class="text-white font-semibold border-b border-amber-500/50">stays in the house she loves</span> 
+                    or moves into a 
+                    <span class="text-white font-semibold border-b border-gray-500/50">facility she fears</span>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: The Solution (Phone/Tech) -->
+    <section class="scrolly-section">
+        <div class="sticky-bg filter-clean" style="background-image: url('./../images/scene-2 (73).jpg');"></div>
+        <div class="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>
+
+        <div class="relative z-10 max-w-5xl w-full px-6 flex flex-col md:flex-row items-center justify-end md:gap-12">
+            
+            <div class="glass-card-light p-8 md:p-10 rounded-2xl md:max-w-md shadow-2xl animate-float">
+                <h3 class="font-sans font-bold text-emerald-800 text-sm tracking-widest uppercase mb-3">The Innovation</h3>
+                <p class="font-serif text-3xl md:text-4xl text-slate-900 mb-6 leading-tight">
+                    We built the <br/><span class="text-emerald-600">AI Anchor Page</span>
+                </p>
+                <p class="font-sans text-slate-700 text-lg leading-relaxed">
+                    Because "hoping they don't fall" is not a plan. This is the definitive safety blueprint for Bell County families.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Legacy & Action -->
+    <section class="scrolly-section">
+        <div class="sticky-bg" style="background-image: url('./../images/scene-4 (60).jpg');"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-amber-900/90 via-transparent to-transparent"></div>
+
+        <div class="relative z-10 w-full px-6 text-center mt-64">
+            <h2 class="font-serif text-5xl md:text-7xl text-amber-100 mb-4 text-shadow-deep tracking-tight">
+                Protect their legacy.
+            </h2>
+            <p class="font-sans text-xl md:text-2xl text-amber-50/90 mb-12 font-light">
+                Secure their independence before the crisis happens.
+            </p>
+            
+            <a href="#" class="inline-block bg-white text-stone-900 font-sans font-bold py-4 px-10 rounded-full hover:bg-amber-100 transition duration-300 tracking-widest text-sm shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+                LINK IN BIO
+            </a>
+
+            <div class="flex flex-wrap justify-center gap-4 mt-16 text-xs md:text-sm font-sans tracking-wider text-amber-200/60 uppercase">
+                <span>#DignityAtHome</span>
+                <span>•</span>
+                <span>#KilleenStrong</span>
+                <span>•</span>
+                <span>#AgingWithGrace</span>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
