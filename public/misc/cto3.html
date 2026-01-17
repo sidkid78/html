@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Senior Care Guarantee</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Cinzel:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+      --c-bg: #0a0a0a;
+      --c-hardware: #00f3ff;
+      --c-alert: #ff3333;
+      --c-warm: #ffae00;
+      --c-text: #f0f0f0;
+      --font-tech: 'Space Mono', monospace;
+      --font-head: 'Chakra Petch', sans-serif;
+      --font-human: 'Cinzel', serif;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      background-color: var(--c-bg);
+      color: var(--c-text);
+      font-family: var(--font-tech);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* SVG FILTERS & UTILS */
+    .filter-noise {
+      filter: url('#noise-filter');
+    }
+
+    .filter-glow {
+      filter: drop-shadow(0 0 8px var(--c-hardware));
+    }
+
+    .text-glow-warm {
+      text-shadow: 0 0 20px rgba(255, 174, 0, 0.6);
+    }
+
+    .blend-mode {
+      mix-blend-mode: overlay;
+    }
+
+    /* LAYOUT */
+    main {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+    }
+
+    section {
+      position: relative;
+      min-height: 100vh;
+      width: 100vw;
+      display: grid;
+      place-items: center;
+      scroll-snap-align: start;
+      overflow: hidden;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    /* BACKGROUND LAYERS */
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.6;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.5s ease-out;
+    }
+
+    /* TEXT STYLING */
+    .content-wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+      background: rgba(10, 10, 10, 0.85);
+      padding: 2rem;
+      border-left: 4px solid var(--c-hardware);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 1s forwards 0.3s;
+    }
+
+    h1,
+    h2 {
+      font-family: var(--font-head);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.1;
+    }
+
+    p {
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      color: #cccccc;
+    }
+
+    .highlight-tech {
+      color: var(--c-hardware);
+      font-weight: 700;
+    }
+
+    .highlight-danger {
+      color: var(--c-alert);
+      font-weight: 700;
+      text-shadow: 2px 2px 0px #000;
+    }
+
+    .highlight-human {
+      color: var(--c-warm);
+      font-family: var(--font-human);
+      font-weight: 700;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glitch {
+      0% {
+        transform: translate(0);
+      }
+
+      20% {
+        transform: translate(-2px, 2px);
+      }
+
+      40% {
+        transform: translate(-2px, -2px);
+      }
+
+      60% {
+        transform: translate(2px, 2px);
+      }
+
+      80% {
+        transform: translate(2px, -2px);
+      }
+
+      100% {
+        transform: translate(0);
+      }
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    .scanline::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 243, 255, 0.1) 51%, transparent 52%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .glitch-text {
+      display: inline-block;
+      position: relative;
+    }
+
+    .glitch-text:hover {
+      animation: glitch 0.3s infinite;
+      color: var(--c-alert);
+    }
+
+    /* IMAGE FRAMES */
+    .img-frame {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .img-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+      filter: contrast(120%) brightness(80%);
+    }
+
+    /* CUSTOM SECTIONS */
+    /* Section 1: Hardware */
+    #sec-hardware .content-wrapper {
+      border-color: var(--c-hardware);
+    }
+
+    /* Section 2: Senior Care */
+    #sec-care .content-wrapper {
+      border-color: var(--c-alert);
+    }
+
+    /* Section 3: Legacy */
+    #sec-legacy .content-wrapper {
+      border-color: #fff;
+      background: rgba(20, 20, 20, 0.9);
+    }
+
+    #sec-legacy h2 {
+      font-family: var(--font-human);
+    }
+
+    /* Section 4: Guarantee */
+    #sec-guarantee .content-wrapper {
+      border-color: var(--c-warm);
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG DEFINITIONS (FILTERS) -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Film Grain Noise -->
+      <filter id="noise-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="table" tableValues="0 0.3" />
+        </feComponentTransfer>
+        <feComposite operator="in" in2="SourceGraphic" result="monoNoise" />
+        <feBlend in="SourceGraphic" in2="monoNoise" mode="multiply" />
+      </filter>
+      <!-- Chromatic Glitch -->
+      <filter id="chroma">
+        <feOffset in="SourceGraphic" dx="-2" dy="0" result="left" />
+        <feOffset in="SourceGraphic" dx="2" dy="0" result="right" />
+        <feMerge>
+          <feMergeNode in="left" />
+          <feMergeNode in="right" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+
+  <main>
+    <!-- SECTION 1: HARDWARE & DISCIPLINE -->
+    <section id="sec-hardware" class="scanline">
+      <!-- Generated SVG Background: Soldering / Circuit -->
+      <div class="img-frame">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1%20%2878%29.jpg" alt="Hardware Soldering Abstract">
+      </div>
+
+      <div class="content-wrapper">
+        <h1>In <span class="highlight-tech">Hardware</span>, Mistakes Are Permanent. In <span
+            class="highlight-human">Senior Care</span>, They’re <span class="highlight-danger glitch-text">Fatal</span>.
+        </h1>
+
+        <p>In the world of hardware engineering, there is no <span
+            class="font-mono bg-gray-800 px-2 rounded text-sm text-green-400 border border-green-800">"Control+Z."</span>
+          Once a trace is etched into a circuit board, it’s destiny. You learn very quickly to respect the "No-Undo"
+          discipline.</p>
+
+        <p>I spent my life at soldering stations where a millimeter’s error meant
+          total system failure.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THE FRAGILE SYSTEM -->
+    <section id="sec-care">
+      <!-- Generated SVG Background: Senior Home HUD Analysis -->
+      <div class="img-frame">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2%20%2882%29.jpg" alt="Senior Home Analysis HUD">
+      </div>
+
+      <div class="content-wrapper">
+        <h2>Fragile Systems</h2>
+        <p>I brought that same "hardware-grade" obsession to <span class="text-white font-bold">Homease | AI</span>
+          because we are dealing with a system far more fragile than a motherboard: the <span
+            class="highlight-human text-glow-warm">safety of a human being aging at home</span>.</p>
+
+        <p>Most AI companies operate on the "move fast and break things" model. But when you are analyzing the home of a
+          80-year-old widow, "breaking things" isn't an option. A <span
+            class="glitch-text text-red-400">hallucination</span> in our code isn't a UI glitch—it's a missed fall risk,
+          a failed grab bar, or a forgotten medication trigger.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: LEGACY & SCIENCE -->
+    <section id="sec-legacy">
+      <!-- Generated SVG Background: Vintage Lab / Grandfather -->
+      <div class="img-frame">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3%20%2870%29.jpg" class="filter-noise"
+          alt="Vintage Laboratory">
+      </div>
+
+      <div class="content-wrapper">
+        <h2>A Moral Obligation</h2>
+        <p>My step-grandfather, <span class="highlight-human">Dr. L. James Lewis</span>, worked on the team that solved
+          the polio crisis. He didn't view chemistry as a series of experiments; he viewed it as a <em>moral
+            obligation</em> to eliminate human suffering through systematic rigor.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4: THE GUARANTEE -->
+    <section id="sec-guarantee">
+      <!-- Generated SVG Background: Protective Dome / Golden Hour -->
+      <div class="img-frame">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4%20%2865%29.jpg" alt="Protective Dome Guarantee">
+      </div>
+
+      <div class="content-wrapper">
+        <p>At Homease, we aren't "playing" with agentic loops or testing a tech stack. We are building a safety net for
+          the people who raised us. We apply the precision of hardware engineering and the legacy of clinical science to
+          ensure that "aging in place" isn't a gamble—it's a <span
+            class="highlight-human text-glow-warm text-2xl">guarantee</span>.</p>
+
+        <hr class="border-orange-500 my-6 opacity-30 w-1/2 mx-auto" />
+
+        <h1 class="text-2xl md:text-4xl">Because for our parents and grandparents, there is no "undo" button. We have to
+          get it right the first time.</h1>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Simple Scroll Interaction to Trigger CSS classes via Intersection Observer
+    // This ensures the animations replay nicely as the user scrolls
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelector('.content-wrapper').style.animation = 'none';
+          entry.target.querySelector('.content-wrapper').offsetHeight; /* trigger reflow */
+          entry.target.querySelector('.content-wrapper').style.animation = 'fadeInUp 1s forwards 0.2s';
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('section').forEach(section => {
+      observer.observe(section);
+    });
+  </script>
+</body>
+
+</html>
