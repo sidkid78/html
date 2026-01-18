@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <script src='https://cdn.tailwindcss.com'></script>
+    <link
+        href='https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;600;800&display=swap'
+        rel='stylesheet'>
+    <style>
+        body {
+            background: #0f0f0f;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .grain-overlay {
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            opacity: 0.15;
+        }
+
+        .luxury-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes blurIn {
+            from {
+                filter: blur(20px);
+                opacity: 0;
+                transform: scale(1.1);
+            }
+
+            to {
+                filter: blur(0px);
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideRight {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-blur-in {
+            animation: blurIn 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .animate-slide-right {
+            animation: slideRight 1s ease-out forwards;
+            animation-delay: 0.5s;
+            opacity: 0;
+        }
+
+        .stagger-1 {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-2 {
+            animation-delay: 0.4s;
+        }
+
+        .stagger-3 {
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='relative w-full h-screen bg-[#fdfaf6] flex items-center justify-center p-4 md:p-12 overflow-hidden'><svg
+            class='absolute inset-0 w-full h-full grain-overlay' xmlns='http://www.w3.org/2000/svg'>
+            <filter id='noiseFilter'>
+                <feTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'>
+                    <animate attributeName='seed' from='0' to='100' dur='1s' repeatCount='indefinite' />
+                </feTurbulence>
+                <feColorMatrix type='saturate' values='0' />
+            </filter>
+            <rect width='100%' height='100%' filter='url(#noiseFilter)' />
+        </svg>
+        <div class='absolute inset-0 z-0'><img src='https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (77).jpg'
+                class='w-full h-full object-cover opacity-40 mix-blend-multiply' alt='Luxury Kitchen'></div>
+        <div class='relative z-10 w-full max-w-6xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center'>
+            <div class='md:col-span-7 flex flex-col space-y-6'>
+                <div class='overflow-hidden'><span
+                        class='inline-block bg-black text-white px-3 py-1 text-xs tracking-widest uppercase font-bold animate-slide-right'>Austin
+                        Interiors</span></div>
+                <h1 class='luxury-text text-6xl md:text-8xl text-zinc-900 leading-tight animate-blur-in'>The Last
+                    Kitchen <br><span class='italic text-zinc-500'>You’ll Ever Need</span></h1>
+                <p class='text-xl md:text-2xl text-zinc-700 max-w-xl animate-blur-in stagger-1'>The greatest threat to
+                    your independence isn't age—it's a home that wasn't built to grow with you.</p>
+                <div class='flex flex-col space-y-4 animate-blur-in stagger-2 pt-4'>
+                    <div class='flex items-center space-x-4'>
+                        <div class='h-[1px] w-12 bg-zinc-400'></div><span
+                            class='text-sm uppercase tracking-[0.3em] font-semibold text-zinc-500'>Invisible
+                            Accessibility</span>
+                    </div>
+                    <p class='text-zinc-600 max-w-md'>We design spaces that keep you the hero of your own home, blending
+                        high-end Austin aesthetics with safety tech.</p>
+                </div>
+                <div class='pt-8 animate-blur-in stagger-3'><button
+                        class='bg-zinc-900 text-white px-10 py-5 text-sm font-bold tracking-widest uppercase hover:bg-zinc-700 transition-colors duration-300 shadow-2xl'>Book
+                        Your Consultation</button></div>
+            </div>
+            <div class='md:col-span-5 relative flex justify-center items-center'>
+                <div
+                    class='relative w-full aspect-[4/5] animate-float shadow-2xl overflow-hidden rounded-sm ring-1 ring-black/5'>
+                    <img src='https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (85).jpg'
+                        class='w-full h-full object-cover' alt='Warm nostalgic touch'>
+                    <div class='absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent'>
+                        <p class='text-white italic text-lg'>"Safety should feel like luxury."</p>
+                    </div>
+                </div>
+                <div
+                    class='absolute -bottom-6 -left-6 w-48 h-48 rounded-sm shadow-xl border-4 border-white overflow-hidden hidden md:block'>
+                    <img src='https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (88).jpg'
+                        class='w-full h-full object-cover' alt='Accessible shelf'>
+                </div>
+            </div>
+        </div>
+        <div class='absolute bottom-12 left-12 md:left-24 flex items-center space-x-6 z-20'>
+            <div class='flex flex-col'><span class='text-2xl font-black tracking-tighter text-zinc-900'>HOMEase
+                    AI</span><span class='text-[10px] tracking-[0.4em] uppercase text-zinc-500 font-bold'>Keep Your
+                    Home. Keep Your Style.</span></div>
+        </div><svg class='absolute top-0 right-0 w-64 h-64 text-zinc-200/50 pointer-events-none' viewBox='0 0 100 100'>
+            <defs>
+                <filter id='blur-motion'>
+                    <feGaussianBlur stdDeviation='2'>
+                        <animate attributeName='stdDeviation' values='2;0;2' dur='4s' repeatCount='indefinite' />
+                    </feGaussianBlur>
+                </filter>
+            </defs>
+            <circle cx='80' cy='20' r='40' fill='currentColor' filter='url(#blur-motion)' />
+        </svg>
+    </div>
+    <div
+        class='fixed top-0 left-0 w-full p-4 flex justify-between items-center z-50 mix-blend-difference pointer-events-none'>
+        <div class='text-white text-[10px] tracking-widest font-mono uppercase'>0:15 Sec Edit // 2024</div>
+        <div class='text-white text-[10px] tracking-widest font-mono uppercase'>#AustinLiving #DignityByDesign</div>
+    </div>
+</body>
+
+</html>
