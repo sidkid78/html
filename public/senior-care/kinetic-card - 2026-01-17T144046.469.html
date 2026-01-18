@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase: The Story</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* CUSTOM FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap');
+
+    :root {
+      --font-heading: 'Playfair Display', serif;
+      --font-body: 'Inter', sans-serif;
+      --font-tech: 'JetBrains Mono', monospace;
+    }
+
+    /* SMOOTH SCROLL & SNAP */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: #000;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .scrolly-container {
+      height: 100vh;
+      width: 100vw;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+    }
+
+    section {
+      height: 100vh;
+      width: 100vw;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    /* TEXT STYLES */
+    h2 {
+      font-family: var(--font-heading);
+      line-height: 1.1;
+    }
+
+    p {
+      font-family: var(--font-body);
+      line-height: 1.6;
+      max-width: 65ch;
+    }
+
+    /* SECTION 1: THE CONFLICT (Dark/Fear) */
+    .sect-conflict {
+      background-color: #020617;
+    }
+
+    .sect-conflict .bg-img {
+      filter: url(#fear-noise) brightness(0.4) grayscale(0.8);
+      opacity: 0.6;
+    }
+
+    .sect-conflict h2 {
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      filter: url(#shake);
+    }
+
+    .sect-conflict .highlight {
+      color: #ef4444;
+      font-weight: bold;
+    }
+
+    /* SECTION 2: THE VISION (Warm/Hope) */
+    .sect-vision {
+      background-color: #271c19;
+    }
+
+    .sect-vision .bg-img {
+      filter: sepia(0.6) brightness(0.8) contrast(1.1);
+      opacity: 0.4;
+      mix-blend-mode: soft-light;
+    }
+
+    .sect-vision .card {
+      background: rgba(40, 30, 20, 0.7);
+      backdrop-filter: blur(10px) url(#soft-glow);
+      border: 1px solid rgba(255, 200, 150, 0.2);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .sect-vision strong {
+      color: #fbbf24;
+    }
+
+    /* SECTION 3: THE MASTERY (Tech/Clinical) */
+    .sect-mastery {
+      background-color: #0f172a;
+    }
+
+    .sect-mastery .bg-img {
+      opacity: 0.3;
+      mix-blend-mode: luminosity;
+    }
+
+    /* HUD Grid Overlay */
+    .tech-grid {
+      background-image: linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 40px 40px;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .sect-mastery .content {
+      position: relative;
+      z-index: 10;
+      border-left: 4px solid #06b6d4;
+      padding-left: 2rem;
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.1), transparent);
+    }
+
+    .sect-mastery h2 {
+      font-family: var(--font-tech);
+      letter-spacing: -1px;
+      filter: url(#tech-shift);
+    }
+
+    /* SECTION 4: THE TRANSFORMATION (Light/Goal) */
+    .sect-transformation {
+      background-color: #fffbeb;
+      color: #1c1917;
+    }
+
+    .sect-transformation .bg-img {
+      opacity: 0.3;
+      mix-blend-mode: multiply;
+    }
+
+    .sect-transformation .hero-text {
+      text-align: center;
+      border-top: 1px solid #d97706;
+      border-bottom: 1px solid #d97706;
+      padding: 2rem 0;
+    }
+
+    /* UTILITY ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      animation: fadeUp 1s forwards ease-out;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Image Containment */
+    .abs-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      transition: transform 6s ease;
+    }
+
+    section:hover .abs-bg {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS DEFINITION -->
+  <svg height="0" width="0" style="position: absolute; visibility: hidden;">
+    <defs>
+      <!-- Fear Noise: Distorted turbulence for the painful conflict -->
+      <filter id="fear-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" result="noise" />
+        <feColorMatrix type="saturate" values="0" result="desatNoise" />
+        <feComposite operator="in" in="desatNoise" in2="SourceGraphic" result="composite" />
+        <feBlend mode="multiply" in="composite" in2="SourceGraphic" />
+      </filter>
+
+      <!-- Shake Distortion: Slight displacement for anxious text -->
+      <filter id="shake">
+        <feTurbulence type="turbulence" baseFrequency="0.1" numOctaves="1" result="turb" />
+        <feDisplacementMap in="SourceGraphic" in2="turb" scale="2" />
+      </filter>
+
+      <!-- Soft Glow: Hallmark/Dreamy feel -->
+      <filter id="soft-glow">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+
+      <!-- Tech Shift: Chromatic Aberration for Mastery -->
+      <filter id="tech-shift">
+        <feOffset in="SourceGraphic" dx="-2" dy="0" result="offR" />
+        <feOffset in="SourceGraphic" dx="2" dy="0" result="offB" />
+        <feColorMatrix in="offR" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
+        <feColorMatrix in="offB" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
+        <feBlend in="red" in2="blue" mode="screen" result="blend" />
+        <feBlend in="blend" in2="SourceGraphic" mode="normal" />
+      </filter>
+
+      <!-- Paper Grain: For the textured ending -->
+      <filter id="paper-grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" />
+        <feColorMatrix type="matrix" values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1 0" />
+      </filter>
+    </defs>
+  </svg>
+
+  <main class="scrolly-container">
+
+    <!-- TITLE INTRO -->
+    <section class="sect-conflict text-center z-20 h-auto min-h-screen">
+      <!-- BASE64 PLACEHOLDER FOR IMG 1: Dark Hallway -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (79).jpg" alt="Dark Hallway Background"
+        class="abs-bg bg-img" />
+
+      <div class="z-10 relative max-w-4xl px-4">
+        <p class="text-sm uppercase tracking-[0.3em] text-gray-400 mb-4 animate-pulse">The HOMEase Story: Reclaiming the
+          Texas Home</p>
+        <h2 class="text-5xl md:text-7xl mb-8 font-bold reveal">The Conflict <span
+            class="italic font-thin opacity-70 text-3xl"></span></h2>
+
+        <div class="text-lg md:text-xl text-gray-300 space-y-6 text-left reveal">
+          <p>In Central Texas, from the quiet hills of Belton to the bustling streets of Temple, a silent crisis is
+            unfolding. It happens in the middle of the night—the sound of a thud, a cry for help that no one hears, and
+            the sudden, violent end of a senior’s independence.</p>
+          <p>For the families of Central Texas, the "Golden Years" have become the "Years of Anxiety." Adult children
+            are paralyzed by the fear that their parents’ home—the place where they raised their families—has become a
+            <span class="highlight">landscape of hidden dangers.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="sect-vision">
+      <!-- BASE64 PLACEHOLDER FOR IMG 2: Nurse and Senior -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (83).jpg" alt="Nurse and Senior connecting"
+        class="abs-bg bg-img" />
+
+      <div class="card p-8 md:p-12 rounded-sm max-w-3xl z-10 reveal">
+        <h2 class="text-4xl md:text-6xl mb-6 text-amber-100">The Vision <span
+            class="block text-2xl italic opacity-80"></span></h2>
+        <div class="text-amber-50/90 text-lg space-y-4">
+          <p>At <strong>HOMEase</strong>, we believe that "Aging in Place" shouldn't be a gamble; it should be a
+            victory. We aren’t just launching a home health agency; we are starting a movement to protect the dignity of
+            our elders.</p>
+          <p>Our obsession is simple: <strong>No one should be forced into a nursing home because their house was built
+              for a 30-year-old.</strong> We combine the deep, ancestral respect for our elders with cutting-edge
+            technology to turn "houses" back into "sanctuaries."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="sect-mastery">
+      <!-- BASE64 PLACEHOLDER FOR IMG 3: Tech HUD -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (71).jpg" alt="Futuristic HUD Technology"
+        class="abs-bg bg-img" />
+      <div class="tech-grid"></div>
+
+      <div class="content max-w-5xl z-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center reveal">
+        <div>
+          <h2 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-2">THE MASTERY</h2>
+          <p class="text-cyan-200/60 font-mono uppercase tracking-widest mb-6"></p>
+        </div>
+        <div
+          class="text-gray-300 space-y-4 font-light text-sm md:text-base border-t border-cyan-900 pt-4 md:border-t-0 md:pt-0">
+          <p>We didn't just stumble into this. We’ve done the heavy lifting. While others see "patients," we see people
+            who deserve elite clinical care. HOMEase is a lean, tech-empowered operation rooted in Central Texas.</p>
+          <p>We’ve integrated proprietary <strong class="text-cyan-400">Home Safety Technology</strong> that does what
+            the human eye misses. Our clinical teams (RNs, PTs, and OTs) don’t just treat symptoms; they use our tech to
+            predict and prevent the falls that lead to hospitalizations.</p>
+          <p class="italic text-xs text-cyan-200/50">We navigate the complex maze of Texas HCSSA licensing and Medicare
+            certification not because we love paperwork, but because it’s the only way to ensure our neighbors get the
+            high-standard care they deserve without the soul-crushing costs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="sect-transformation">
+      <!-- BASE64 PLACEHOLDER FOR IMG 4: Happy Senior Coffee -->
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (66).jpg" alt="Senior happy in kitchen"
+        class="abs-bg bg-img" />
+
+      <div class="z-10 max-w-3xl text-center px-6 reveal">
+        <h2 class="text-4xl md:text-6xl text-stone-800 mb-8 font-serif">The Transformation <br><span
+            class="text-2xl text-stone-500 italic"></span></h2>
+
+        <p class="text-stone-700 text-lg md:text-xl leading-relaxed mb-8">
+          Within five years, HOMEase will be the gold standard for home health in the Killeen-Temple-Belton corridor.
+          But our success won't be measured in "billable episodes." It will be measured by the thousands of Central
+          Texas seniors who woke up this morning in their own beds, made their own coffee, and looked out their own
+          windows—safe, cared for, and free.
+        </p>
+
+        <div class="hero-text bg-white/80 backdrop-blur-sm p-8 shadow-xl border border-stone-200">
+          <p class="text-2xl md:text-3xl font-serif text-amber-700">
+            This is HOMEase. We’re bringing the hospital’s expertise and the family’s heart back home.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+
+</html>
