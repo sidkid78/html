@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Front Porch Promise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --terracotta: #A65D46;
+            --sage: #8A9A5B;
+            --sand: #EDE6DB;
+            --charcoal: #2C2C2C;
+            --limestone: #F7F5F0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--limestone);
+            color: var(--charcoal);
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Global Texture Overlay */
+        .texture-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.35;
+            filter: url(#paper-grain);
+            mix-blend-mode: multiply;
+        }
+
+        /* Scrollytelling Utilities */
+        .slide-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .image-bg-fixed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: sepia(0.2) contrast(1.1);
+            transition: transform 0.5s ease;
+        }
+
+        /* Animation using Scroll-Driven Animations (Modern CSS) */
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes reveal-image {
+            from {
+                clip-path: inset(10% 20% 10% 20%);
+                filter: grayscale(1);
+            }
+
+            to {
+                clip-path: inset(0% 0% 0% 0%);
+                filter: grayscale(0);
+            }
+        }
+
+        .reveal-text {
+            animation: fade-up 0.8s ease-out both;
+            animation-timeline: view();
+            animation-range: entry 20% cover 40%;
+        }
+
+        .reveal-img {
+            animation: reveal-image 1s ease-out both;
+            animation-timeline: view();
+            animation-range: entry 20% cover 50%;
+        }
+
+        .drop-cap::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            float: left;
+            margin-right: 0.5rem;
+            line-height: 0.8;
+            color: var(--terracotta);
+        }
+
+        /* Specific Compositions */
+        .photo-card {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 8px solid white;
+            border-bottom: 24px solid white;
+        }
+
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG Filters Definition -->
+    <svg class="invisible absolute size-0">
+        <defs>
+            <filter id="paper-grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+                <feColorMatrix type="saturate" values="0" result="grayNoise" />
+                <feComposite operator="in" in2="SourceGraphic" result="composite" />
+            </filter>
+            <filter id="soft-blur">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Global Texture -->
+    <div class="texture-overlay"></div>
+
+    <!-- SECTION 1: HERO / THE PROMISE -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden text-white">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/slide-1-concept (3).png" alt="Senior woman on porch"
+            class="image-bg-fixed brightness-[0.7]">
+        <div class="relative z-10 max-w-4xl text-center px-6">
+            <p class="text-lg md:text-xl uppercase tracking-[0.2em] mb-4 opacity-90 reveal-text">Title</p>
+            <h1 class="text-5xl md:text-8xl font-bold leading-tight mb-8 reveal-text drop-shadow-xl">
+                The Front<br>
+                <span class="italic font-light text-[#E0C097]">Porch Promise</span>
+            </h1>
+            <div class="h-px w-24 bg-white mx-auto my-6 opacity-60"></div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: CONTEXT -->
+    <section class="min-h-screen flex items-center justify-center bg-[#F7F5F0] py-20 px-6">
+        <div class="max-w-2xl text-lg md:text-2xl leading-relaxed text-[#2C2C2C] space-y-8 text-center reveal-text">
+            <p class="drop-cap">
+                In Central Texas, a home is more than four walls and a roof. It’s the notches on the doorframe marking a
+                grandchild’s height; it’s the smell of a kitchen that has seen fifty years of Sunday dinners; it’s the
+                peace of a front porch at sunset.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 3: THE TRAGEDY -->
+    <section class="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[#2f3e46] text-[#F7F5F0]">
+        <div class="relative order-2 md:order-1 h-64 md:h-auto overflow-hidden">
+            <!-- Using mood image for interior atmosphere but darkened/cool to represent the 'facility' fear -->
+            <img src="https://fal.media/files/kangaroo/R1p_C6uO1W2N54x41e1sI.png"
+                class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale"
+                alt="Interior">
+        </div>
+        <div class="order-1 md:order-2 flex flex-col justify-center p-8 md:p-20 space-y-6">
+            <h2 class="text-3xl md:text-4xl serif-font text-[#A65D46] reveal-text">The Tragedy of the System</h2>
+            <p class="text-lg leading-relaxed reveal-text opacity-90">
+                For most seniors in the Killeen-Temple-Belton area, the greatest fear isn’t aging—it’s the "Facility."
+                It’s the moment their independence is traded for a sterile hallway and a meal schedule they didn’t
+                choose. When an elder is forced out of their home, they don't just move; they begin to fade.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 4: THE OBSESSION & PRESERVATORS -->
+    <section class="min-h-[150vh] relative">
+        <div class="sticky top-0 h-screen bg-[#EDE6DB] flex items-center">
+            <div class="absolute right-0 top-0 w-full md:w-1/2 h-full z-0">
+                <img src="https://694d8b0339fe8ba173f56f36.imgix.net/slide-3-concept (3).png"
+                    class="w-full h-full object-cover reveal-img"
+                    style="clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);" alt="Watering plants">
+            </div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="max-w-lg bg-white/90 backdrop-blur-sm p-8 md:p-12 shadow-2xl rounded-sm reveal-text">
+                    <h2 class="text-4xl serif-font mb-6 text-[#2C2C2C]">The HOMEase Obsession</h2>
+                    <p class="mb-6 text-[#4A4A4A]">
+                        At HOMEase, we believe that "aging in place" shouldn't be a luxury—it should be a human right.
+                        We aren’t just a staffing agency that sends nurses to check boxes. We are <strong
+                            class="text-[#A65D46] text-xl">Home Preservators.</strong>
+                    </p>
+                    <p class="text-[#4A4A4A] leading-relaxed">
+                        We’ve married the soul of traditional caregiving with the power of proprietary technology. While
+                        others see a "patient," we see a legacy that needs protecting. Our technology doesn't just
+                        "assess" a home; it maps out a blueprint for safety so that a grandmother never has to fear her
+                        own bathroom, and a son never has to wake up in a cold sweat wondering if his father fell.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: MISSION / DIGNITY -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="w-full md:w-1/2 reveal-img">
+                    <div class="photo-card rotate-1 hover:rotate-0 transition-transform duration-700">
+                        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/slide-2-concept (2).png"
+                            alt="Holding Hands"
+                            class="w-full h-auto grayscale-[30%] hover:grayscale-0 transition-all duration-700">
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 space-y-6">
+                    <h2 class="text-4xl md:text-5xl serif-font text-[#A65D46] reveal-text">Our Mission</h2>
+                    <p class="text-lg text-gray-700 reveal-text">
+                        Founded by a Native American entrepreneur with a deep-rooted cultural reverence for our elders,
+                        HOMEase is on a mission to ensure that every senior in Central Texas can keep their front porch.
+                    </p>
+                    <blockquote
+                        class="border-l-4 border-[#8A9A5B] pl-6 py-2 my-8 italic text-xl text-gray-800 font-serif reveal-text">
+                        "We provide skilled nursing and therapy, yes. But what we actually deliver is <strong
+                            class="not-italic text-[#A65D46]">Dignity.</strong>"
+                    </blockquote>
+                    <p class="text-gray-700 reveal-text">
+                        We provide the medical expertise of a hospital with the heart of a neighbor. From palliative
+                        care that honors the spirit to rehabilitation that restores the walk, we are here to ensure that
+                        the "Golden Years" are spent where they belong: at home.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: THE STANDARD / FINALE -->
+    <section class="min-h-screen flex flex-col items-center justify-center bg-[#F7F5F0] py-20 px-6 text-center">
+        <div class="max-w-4xl w-full mb-12">
+            <div class="relative aspect-video w-full overflow-hidden rounded-lg shadow-xl reveal-img">
+                <img src="https://694d8b0339fe8ba173f56f36.imgix.net/slide-4-concept (3).png" alt="Laughing on couch"
+                    class="w-full h-full object-cover">
+            </div>
+        </div>
+
+        <div class="max-w-3xl space-y-8 reveal-text">
+            <h2 class="text-3xl md:text-5xl serif-font text-[#2C2C2C]">The HOMEase Standard</h2>
+            <p class="text-xl md:text-2xl font-light text-gray-700">
+                We don't measure success by "episodes of care." We measure it by the number of nights our clients sleep
+                soundly in their own beds, and the number of families who can finally stop being "care managers" and go
+                back to being sons and daughters.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 7: OUTRO -->
+    <footer class="h-[80vh] relative flex items-center justify-center overflow-hidden">
+        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/slide-5-concept (2).png" alt="Interior Window"
+            class="absolute inset-0 w-full h-full object-cover brightness-[0.6]">
+        <div class="relative z-10 text-center">
+            <h2 class="text-5xl md:text-9xl serif-font text-white drop-shadow-2xl opacity-0 animate-[fade-up_1.5s_ease-out_1s_forwards]"
+                style="animation-timeline: view(); animation-range: entry 50% cover 100%;">
+                Welcome home.
+            </h2>
+            <p class="text-white mt-4 text-xl tracking-widest uppercase">This is HOMEase.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

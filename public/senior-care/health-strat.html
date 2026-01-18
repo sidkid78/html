@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Blueprint: Home Health in Central Texas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Merriweather:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Merriweather:ital,wght@0,300;0,400;1,400&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --navy-900: #0f172a;
             --blue-500: #3b82f6;
             --paper: #f8fafc;
             --ink: #1e293b;
-            --blueprint-grid: rgba(255,255,255,0.05);
+            --blueprint-grid: rgba(255, 255, 255, 0.05);
         }
 
         body {
@@ -22,7 +25,10 @@
             overflow-x: hidden;
         }
 
-        h1, h2, h3, .sans {
+        h1,
+        h2,
+        h3,
+        .sans {
             font-family: 'Inter', sans-serif;
         }
 
@@ -52,13 +58,25 @@
 
         /* Custom Animations */
         @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @keyframes revealLine {
-            from { width: 0; }
-            to { width: 100px; }
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100px;
+            }
         }
 
         .animate-entry {
@@ -68,6 +86,7 @@
         .animate-delay-1 {
             animation-delay: 0.3s;
         }
+
         .animate-delay-2 {
             animation-delay: 0.6s;
         }
@@ -75,6 +94,7 @@
         /* Glassmorphism Card */
         .glass-card {
             background: rgba(255, 255, 255, 0.7);
+            -webkit-backdrop-filter: blur(12px);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -82,6 +102,7 @@
 
         .dark-glass-card {
             background: rgba(15, 23, 42, 0.6);
+            -webkit-backdrop-filter: blur(12px);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -105,16 +126,18 @@
         }
     </style>
 </head>
+
 <body class="antialiased">
 
     <!-- SVG Filter Definition -->
     <svg class="hidden">
         <defs>
             <filter id="paper-grain">
-                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" result="noise"/>
-                <feColorMatrix type="saturate" values="0" in="noise" result="monoNoise"/>
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"
+                    result="noise" />
+                <feColorMatrix type="saturate" values="0" in="noise" result="monoNoise" />
                 <feComponentTransfer in="monoNoise" result="transparentNoise">
-                    <feFuncA type="linear" slope="0.5"/>
+                    <feFuncA type="linear" slope="0.5" />
                 </feComponentTransfer>
             </filter>
         </defs>
@@ -126,17 +149,24 @@
     <!-- HERO SECTION -->
     <header class="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <div class="absolute inset-0 z-0">
-            <img src="https://i.imgur.com/Kz4Qz7L.png" alt="Office with view of Central Texas" class="w-full h-full object-cover opacity-90">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
+            <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-1 (30).png"
+                alt="Office with view of Central Texas" class="w-full h-full object-cover opacity-90">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80">
+            </div>
         </div>
 
         <div class="relative z-10 max-w-5xl mx-auto px-6 text-center text-white">
             <div class="mb-4 animate-entry flex justify-center space-x-2">
-                <span class="px-3 py-1 border border-white/30 rounded-full text-xs uppercase tracking-widest sans bg-white/10 backdrop-blur">Healthcare Entrepreneurship</span>
-                <span class="px-3 py-1 border border-white/30 rounded-full text-xs uppercase tracking-widest sans bg-white/10 backdrop-blur">Central Texas</span>
+                <span
+                    class="px-3 py-1 border border-white/30 rounded-full text-xs uppercase tracking-widest sans bg-white/10 backdrop-blur">Healthcare
+                    Entrepreneurship</span>
+                <span
+                    class="px-3 py-1 border border-white/30 rounded-full text-xs uppercase tracking-widest sans bg-white/10 backdrop-blur">Central
+                    Texas</span>
             </div>
             <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-entry animate-delay-1 leading-tight">
-                The Blueprint for Starting a <span class="text-blue-400 italic font-serif">Home Health</span> Care Agency
+                The Blueprint for Starting a <span class="text-blue-400 italic font-serif">Home Health</span> Care
+                Agency
             </h1>
             <p class="text-lg md:text-xl font-light text-slate-200 max-w-2xl mx-auto animate-entry animate-delay-2">
                 From Licensing to $3M Revenue: A strategic guide for the visionary entrepreneur.
@@ -149,10 +179,18 @@
         <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
             <div class="md:col-span-12">
                 <p class="drop-cap text-xl md:text-2xl text-slate-700 leading-relaxed mb-8">
-                    So, you are looking to break into the home health game in Central Texas? Honestly, it is a smart move. Between Belton, Killeen, and Temple, we are seeing a massive shift in how seniors want to live. They do not want to be in nursing homes; they want to <span class="marker-highlight italic font-bold">'age in place'</span> in their own living rooms, surrounded by their own memories.
+                    So, you are looking to break into the home health game in Central Texas? Honestly, it is a smart
+                    move. Between Belton, Killeen, and Temple, we are seeing a massive shift in how seniors want to
+                    live. They do not want to be in nursing homes; they want to <span
+                        class="marker-highlight italic font-bold">'age in place'</span> in their own living rooms,
+                    surrounded by their own memories.
                 </p>
                 <p class="text-lg text-slate-600 mb-8 leading-relaxed">
-                    But starting an agency is not just about having a big heart; it is about navigating a maze of Texas regulations, securing the right Medicare certifications, and figuring out how to stand out in a crowded market. In this guide, we will use the <strong class="text-slate-900">HOMEase C-Corp model</strong>—a blueprint for a tech-forward agency—to show you how to build a lean, scalable business.
+                    But starting an agency is not just about having a big heart; it is about navigating a maze of Texas
+                    regulations, securing the right Medicare certifications, and figuring out how to stand out in a
+                    crowded market. In this guide, we will use the <strong class="text-slate-900">HOMEase C-Corp
+                        model</strong>—a blueprint for a tech-forward agency—to show you how to build a lean, scalable
+                    business.
                 </p>
             </div>
         </div>
@@ -169,18 +207,25 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
                 <!-- Left: Narrative -->
                 <div class="space-y-6 text-slate-300 font-light leading-relaxed">
-                    <p>Before you can see your first patient, you have to get right with the state. In Texas, that means obtaining a Home and Community Support Services Agency (HCSSA) license through the Texas Health & Human Services Commission (HHSC). You will be using an online portal called <strong class="text-white font-bold">TULIP</strong> to manage the application.</p>
-                    <p>First, you need to pick your categories. For a full-service agency, you will want Licensed Home Health Services (LHHS) for skilled medical care like nursing and physical therapy. If you want to offer non-medical help like bathing or dressing, you will also need the Personal Assistance Services (PAS) designation.</p>
+                    <p>Before you can see your first patient, you have to get right with the state. In Texas, that means
+                        obtaining a Home and Community Support Services Agency (HCSSA) license through the Texas Health
+                        & Human Services Commission (HHSC). You will be using an online portal called <strong
+                            class="text-white font-bold">TULIP</strong> to manage the application.</p>
+                    <p>First, you need to pick your categories. For a full-service agency, you will want Licensed Home
+                        Health Services (LHHS) for skilled medical care like nursing and physical therapy. If you want
+                        to offer non-medical help like bathing or dressing, you will also need the Personal Assistance
+                        Services (PAS) designation.</p>
                 </div>
 
                 <!-- Right: Requirements Card -->
                 <div class="relative">
-                     <!-- Decorative Blueprint Elements -->
-                     <div class="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-blue-500"></div>
-                     <div class="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-blue-500"></div>
-                     
+                    <!-- Decorative Blueprint Elements -->
+                    <div class="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-blue-500"></div>
+                    <div class="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-blue-500"></div>
+
                     <div class="dark-glass-card p-8 rounded-sm">
-                        <h3 class="text-blue-400 font-bold uppercase tracking-widest text-sm mb-6">The Requirements v1.0</h3>
+                        <h3 class="text-blue-400 font-bold uppercase tracking-widest text-sm mb-6">The Requirements v1.0
+                        </h3>
                         <ul class="space-y-4 text-white sans">
                             <li class="flex items-start">
                                 <span class="text-blue-500 mr-3 font-mono">01.</span>
@@ -203,7 +248,7 @@
                                     <span>8-hour pre-licensure course (Mandatory)</span>
                                 </div>
                             </li>
-                             <li class="flex items-start">
+                            <li class="flex items-start">
                                 <span class="text-blue-500 mr-3 font-mono">04.</span>
                                 <div>
                                     <strong class="block text-sm uppercase text-slate-400">Compliance</strong>
@@ -220,7 +265,8 @@
                 <div class="md:col-span-1">
                     <h3 class="text-2xl text-white font-bold mb-4">The Medicare Hurdle</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">
-                        Getting your state license is just level one. If you want to bill Medicare and Medicaid, you need federal certification. This is where many startups stumble because of the "no-revenue gap."
+                        Getting your state license is just level one. If you want to bill Medicare and Medicaid, you
+                        need federal certification. This is where many startups stumble because of the "no-revenue gap."
                     </p>
                 </div>
                 <div class="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -251,20 +297,28 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div class="relative order-2 md:order-1">
                     <!-- Image with Vignette -->
-                    <div class="relative rounded-lg overflow-hidden shadow-2xl transform md:rotate-1 hover:rotate-0 transition-transform duration-500">
-                        <img src="https://i.imgur.com/gK9q0aT.png" alt="Tablet displaying HOMEase Report" class="w-full">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-blue-900/20 to-transparent mix-blend-multiply"></div>
+                    <div
+                        class="relative rounded-lg overflow-hidden shadow-2xl transform md:rotate-1 hover:rotate-0 transition-transform duration-500">
+                        <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-2 (29).png"
+                            alt="Tablet displaying HOMEase Report" class="w-full">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-tr from-blue-900/20 to-transparent mix-blend-multiply">
+                        </div>
                     </div>
                 </div>
-                
+
                 <div class="order-1 md:order-2">
-                    <h2 class="text-3xl md:text-5xl font-bold mb-6 text-slate-900">The HOMEase Advantage: <span class="text-blue-600">Tech-Driven Care</span></h2>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6 text-slate-900">The HOMEase Advantage: <span
+                            class="text-blue-600">Tech-Driven Care</span></h2>
                     <p class="text-lg text-slate-600 mb-6 leading-relaxed">
-                        In a market like Central Texas, you are competing with big national chains. How do you win? You use tech to provide better data. The HOMEase model relies on proprietary home assessment reports as a secret weapon.
+                        In a market like Central Texas, you are competing with big national chains. How do you win? You
+                        use tech to provide better data. The HOMEase model relies on proprietary home assessment reports
+                        as a secret weapon.
                     </p>
                     <div class="bg-white p-6 border-l-4 border-blue-500 shadow-md">
                         <p class="italic text-slate-700">
-                            "When a doctor at Baylor Scott & White sees that you are using technology to prevent readmissions, they are going to want to work with you."
+                            "When a doctor at Baylor Scott & White sees that you are using technology to prevent
+                            readmissions, they are going to want to work with you."
                         </p>
                     </div>
                 </div>
@@ -282,7 +336,8 @@
 
             <!-- Graph Image Integration -->
             <div class="mb-12 relative">
-                <img src="https://i.imgur.com/kS9Qj6f.png" alt="Financial Growth Trajectory and Map" class="w-full rounded-lg shadow-xl">
+                <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-3 (30).png"
+                    alt="Financial Growth Trajectory and Map" class="w-full rounded-lg shadow-xl">
                 <div class="absolute bottom-4 left-4 md:bottom-8 md:left-8 glass-card p-4 max-w-xs hidden md:block">
                     <p class="text-xs uppercase font-bold text-slate-500 mb-1">Projected Revenue</p>
                     <p class="text-2xl font-bold text-blue-900">$2.5M - $3M</p>
@@ -293,15 +348,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 <div class="p-6 bg-slate-50 rounded-lg">
                     <h4 class="font-bold text-lg mb-2 text-slate-800">Year 1: The Investment</h4>
-                    <p class="text-sm text-slate-600">Expect a loss (around $80,000) as you navigate the no-revenue gap. Startup capital typically ranges between $150k and $350k.</p>
+                    <p class="text-sm text-slate-600">Expect a loss (around $80,000) as you navigate the no-revenue gap.
+                        Startup capital typically ranges between $150k and $350k.</p>
                 </div>
                 <div class="p-6 bg-slate-50 rounded-lg">
                     <h4 class="font-bold text-lg mb-2 text-slate-800">Year 2: Break-Even</h4>
-                    <p class="text-sm text-slate-600">Break-even usually occurs once your census hits 20+ patients and Medicare billing is active.</p>
+                    <p class="text-sm text-slate-600">Break-even usually occurs once your census hits 20+ patients and
+                        Medicare billing is active.</p>
                 </div>
                 <div class="p-6 bg-slate-50 rounded-lg">
-                     <h4 class="font-bold text-lg mb-2 text-slate-800">Native American Strategy</h4>
-                    <p class="text-sm text-slate-600">Access SBA 8(a) for federal contracts (VA home care) and HRSA grants for rural health innovation.</p>
+                    <h4 class="font-bold text-lg mb-2 text-slate-800">Native American Strategy</h4>
+                    <p class="text-sm text-slate-600">Access SBA 8(a) for federal contracts (VA home care) and HRSA
+                        grants for rural health innovation.</p>
                 </div>
             </div>
         </div>
@@ -311,25 +369,30 @@
     <section class="py-24 bg-slate-100">
         <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
             <div class="md:col-span-5">
-                 <h2 class="text-3xl font-bold mb-6">Building a Lean, Hybrid Staffing Model</h2>
-                 <p class="mb-6 text-slate-700">You don't need a massive team on day one. Starting with 2 to 5 core staff is the way to go.</p>
-                 <ul class="space-y-4">
-                     <li class="bg-white p-4 shadow-sm rounded border-l-4 border-indigo-500">
-                         <strong class="block text-indigo-900">W-2 Employees</strong>
-                         <span class="text-sm text-slate-600">Hire your "heavy hitters" (Admin & RN Case Manager). They carry your culture.</span>
-                     </li>
-                     <li class="bg-white p-4 shadow-sm rounded border-l-4 border-teal-500">
-                         <strong class="block text-teal-900">1099 Contractors</strong>
-                         <span class="text-sm text-slate-600">Specialized roles (PT, OT, ST) keep fixed payroll low while building census.</span>
-                     </li>
-                     <li class="bg-white p-4 shadow-sm rounded border-l-4 border-orange-500">
-                         <strong class="block text-orange-900">The Texas Mix</strong>
-                         <span class="text-sm text-slate-600">Utilize LVNs for routine visits under RN supervision to manage costs.</span>
-                     </li>
-                 </ul>
+                <h2 class="text-3xl font-bold mb-6">Building a Lean, Hybrid Staffing Model</h2>
+                <p class="mb-6 text-slate-700">You don't need a massive team on day one. Starting with 2 to 5 core staff
+                    is the way to go.</p>
+                <ul class="space-y-4">
+                    <li class="bg-white p-4 shadow-sm rounded border-l-4 border-indigo-500">
+                        <strong class="block text-indigo-900">W-2 Employees</strong>
+                        <span class="text-sm text-slate-600">Hire your "heavy hitters" (Admin & RN Case Manager). They
+                            carry your culture.</span>
+                    </li>
+                    <li class="bg-white p-4 shadow-sm rounded border-l-4 border-teal-500">
+                        <strong class="block text-teal-900">1099 Contractors</strong>
+                        <span class="text-sm text-slate-600">Specialized roles (PT, OT, ST) keep fixed payroll low while
+                            building census.</span>
+                    </li>
+                    <li class="bg-white p-4 shadow-sm rounded border-l-4 border-orange-500">
+                        <strong class="block text-orange-900">The Texas Mix</strong>
+                        <span class="text-sm text-slate-600">Utilize LVNs for routine visits under RN supervision to
+                            manage costs.</span>
+                    </li>
+                </ul>
             </div>
             <div class="md:col-span-7">
-                 <img src="https://i.imgur.com/uQv8t3q.png" alt="Staff Meeting" class="w-full rounded-lg shadow-2xl grayscale hover:grayscale-0 transition duration-700">
+                <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-4 (28).png" alt="Staff Meeting"
+                    class="w-full rounded-lg shadow-2xl grayscale hover:grayscale-0 transition duration-700">
             </div>
         </div>
     </section>
@@ -339,9 +402,11 @@
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="text-3xl font-bold text-white mb-8">Winning the Referral Game</h2>
             <p class="text-lg mb-12 font-light">
-                Your marketing strategy needs to be focused on "boots on the ground" relationship building. You need to be in the offices of orthopedic surgeons, cardiologists, and geriatricians. Bring them copies of your tech-driven safety reports so they can see exactly how you protect their patients.
+                Your marketing strategy needs to be focused on "boots on the ground" relationship building. You need to
+                be in the offices of orthopedic surgeons, cardiologists, and geriatricians. Bring them copies of your
+                tech-driven safety reports so they can see exactly how you protect their patients.
             </p>
-            
+
             <div class="w-full h-px bg-slate-800 my-12"></div>
 
             <h3 class="text-2xl font-bold text-white mb-4">Conclusion</h3>
@@ -349,13 +414,17 @@
                 "Starting a home health agency in Central Texas is a marathon, not a sprint."
             </p>
             <p class="mb-8 leading-relaxed">
-                You have to respect the regulations, manage your cash flow like a hawk, and never lose sight of the patient's safety. By combining compassionate care with high-tech assessment tools, you are positioning yourself as a leader in the next generation of home care.
+                You have to respect the regulations, manage your cash flow like a hawk, and never lose sight of the
+                patient's safety. By combining compassionate care with high-tech assessment tools, you are positioning
+                yourself as a leader in the next generation of home care.
             </p>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition transform hover:scale-105">
+            <button
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition transform hover:scale-105">
                 Get Your TULIP Application Ready
             </button>
         </div>
     </section>
 
 </body>
+
 </html>

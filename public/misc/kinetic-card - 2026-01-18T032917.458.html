@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMEase Startup Plan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@300;400;600&display=swap');
+
+    :root {
+      --bg-dark: #0f172a;
+      --text-light: #f1f5f9;
+      --accent: #2dd4bf;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    /* Custom Scrollbar */
+    .editorial-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .editorial-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .editorial-scroll::-webkit-scrollbar-thumb {
+      background: rgba(45, 212, 191, 0.5);
+      border-radius: 3px;
+    }
+
+    /* Typography */
+    .font-serif {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* Animation Classes */
+    .fade-in-up {
+      animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .delay-100 {
+      animation-delay: 0.1s;
+    }
+
+    .delay-200 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-300 {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Image Blend Modes */
+    .blend-image {
+      mix-blend-mode: overlay;
+      filter: grayscale(100%) contrast(120%);
+      transition: filter 0.5s ease;
+    }
+
+    .blend-image:hover {
+      filter: grayscale(0%) contrast(100%);
+    }
+
+    /* SVG Filter Targets */
+    .noise-bg {
+      filter: url(#noiseFilter);
+    }
+
+    .glitch-text {
+      filter: url(#glitchFilter);
+    }
+  </style>
+</head>
+
+<body class="flex flex-col lg:flex-row w-full h-full relative">
+
+  <!-- SVG Filters Definition -->
+  <svg class="absolute w-0 h-0">
+    <defs>
+      <!-- Animated Noise for Texture -->
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" from="0" to="100" dur="10s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.05" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- Liquid Glitch for Title Entrance -->
+      <filter id="glitchFilter">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.02;0.005;0.02" dur="4s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="3" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Left Pane: Visual Anchor (Sticky) -->
+  <aside
+    class="relative w-full lg:w-5/12 h-1/3 lg:h-full overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-700 bg-slate-900">
+    <!-- Background Image Layer -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-1 (32).png" alt="Home Interior"
+        class="w-full h-full object-cover opacity-40 mix-blend-luminosity" />
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+      <div class="absolute inset-0 noise-bg opacity-50 pointer-events-none"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 h-full flex flex-col justify-center p-8 lg:p-12">
+      <div class="uppercase tracking-widest text-teal-400 text-xs font-bold mb-4 fade-in-up">Central Texas / Healthcare
+        Startup</div>
+      <h1 class="font-serif text-5xl lg:text-7xl leading-tight text-white mb-6 glitch-text fade-in-up delay-100">
+        Launching a <br />
+        <span class="text-teal-500 italic">Home Health</span><br />
+        Agency
+      </h1>
+      <p class="text-slate-400 max-w-md text-sm lg:text-base leading-relaxed fade-in-up delay-200">
+        A strategic roadmap for tech-enabled, compassionate care in the Belton, Killeen, and Temple Region.
+      </p>
+      <div class="mt-8 flex gap-2 flex-wrap fade-in-up delay-300">
+        <span class="px-3 py-1 border border-slate-600 rounded-full text-xs text-slate-300">#Medicare
+          Certification</span>
+        <span class="px-3 py-1 border border-slate-600 rounded-full text-xs text-slate-300">#Native American
+          Entrepreneurship</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Pane: Editorial Scroll -->
+  <main class="w-full lg:w-7/12 h-2/3 lg:h-full relative bg-slate-950">
+    <div class="absolute inset-0 noise-bg opacity-20 pointer-events-none z-20"></div>
+
+    <div class="editorial-scroll h-full overflow-y-auto overflow-x-hidden p-6 lg:p-16 scroll-smooth">
+
+      <!-- Intro Section -->
+      <article class="max-w-2xl mx-auto space-y-16 pb-20">
+
+        <section class="fade-in-up delay-300">
+          <p class="text-lg lg:text-xl font-serif leading-relaxed text-slate-200 drop-shadow-md">
+            <span class="text-4xl lg:text-6xl float-left mr-3 mt-[-10px] text-teal-500 font-serif">T</span>he Central
+            Texas region, spanning the vibrant corridor of Belton, Killeen, and Temple, is currently witnessing a
+            significant demographic shift as a rapidly aging demographic reaches its shores. This growing elderly
+            population, combined with a fierce cultural preference for aging in place, has created a massive demand for
+            high-quality, medical-grade home health services. Starting a home health care agency under the HOMEase
+            C-Corp banner represents more than just a business opportunity; it is a commitment to delivering
+            compassionate, skilled nursing and rehabilitative care directly to the doorsteps of those who need it most.
+          </p>
+          <p class="mt-6 text-slate-400 leading-relaxed">
+            By leveraging proprietary home assessment technology, HOMEase aims to redefine the standard of care, moving
+            beyond simple medical visits to a holistic model of home safety and independence. This comprehensive startup
+            plan outlines the strategic roadmap for launching a lean, scalable operation that balances clinical
+            excellence with financial sustainability.
+          </p>
+        </section>
+
+        <!-- Market Opportunity -->
+        <section class="relative group">
+          <div
+            class="absolute -left-6 top-0 bottom-0 w-1 bg-teal-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500">
+          </div>
+          <div class="mb-6 overflow-hidden rounded-lg border border-slate-800">
+            <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-4 (30).png" alt="Market Growth Map"
+              class="w-full h-48 object-cover blend-image" />
+          </div>
+          <h2 class="text-2xl font-serif text-teal-400 mb-4">Market Opportunity and the HOMEase Competitive Edge</h2>
+          <p class="text-slate-300 leading-relaxed">
+            Central Texas presents a unique landscape for home health providers, characterized by a mix of rapidly
+            growing urban centers and underserved rural pockets. The Belton, Killeen, and Temple areas are home to a
+            diverse population of seniors and veterans who increasingly require post-acute care and chronic disease
+            management. Unlike traditional agencies that focus solely on clinical tasks, HOMEase differentiates itself
+            through a tech-enabled approach. Our proprietary home assessment reports allow us to perform comprehensive
+            safety evaluations during the admission process. This data-driven strategy identifies fall risks and
+            accessibility barriers that others might miss, providing a significant value-add for hospital discharge
+            planners and physicians.
+          </p>
+        </section>
+
+        <!-- Regulatory -->
+        <section>
+          <div class="flex items-center gap-4 mb-6">
+            <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-2 (31).png" alt="Compliance Tablet"
+              class="w-24 h-24 rounded-full object-cover border-2 border-slate-700" />
+            <h2 class="text-2xl font-serif text-teal-400">Regulatory Navigation: Texas HCSSA and Medicare Certification
+            </h2>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            Launching in Texas requires strict adherence to the Health and Human Services Commission (HHSC) regulations.
+            The first step is obtaining a Home and Community Support Services Agency (HCSSA) license via the TULIP
+            online portal. For HOMEase, we will focus on Licensed Home Health Services (LHHS) to provide skilled medical
+            care, with the option to include Personal Assistance Services (PAS) for non-medical custodial needs. A
+            critical requirement is the designation of an Administrator and an Alternate who meet specific
+            qualifications... Beyond state licensing, achieving Medicare certification is vital for long-term growth.
+          </p>
+        </section>
+
+        <!-- Staffing -->
+        <section class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-2xl">
+          <h2 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">Lean Staffing Model: A Hybrid Clinical
+            Team</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <p class="text-slate-400 text-sm leading-relaxed">
+              To maintain a lean operation during the startup phase, HOMEase will utilize a core team of 2 to 5
+              full-time equivalents (FTEs). The cornerstone of this team is the Director of Nursing (DON), a Registered
+              Nurse who oversees clinical quality and compliance. We will also employ at least one full-time Field Nurse
+              (RN or LVN) to handle admissions and care plan implementation.
+            </p>
+            <img src="https://694d8b0339fe8ba173f56f36.imgix.net/visual-3 (32).png" alt="Medical Team"
+              class="w-full h-full object-cover rounded-lg opacity-80" />
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            To manage costs while offering a full suite of services, we will leverage a hybrid model of W-2 employees
+            for core roles and PRN (as-needed) contractors for specialized therapy services. Physical Therapists (PTs)
+            and Occupational Therapists (OTs) will be brought on as contractors to handle rehabilitative cases.
+          </p>
+        </section>
+
+        <!-- Financials & Funding -->
+        <section>
+          <h2 class="text-2xl font-serif text-teal-400 mb-4 mt-12">Financial Projections and Funding Strategies</h2>
+          <div class="border-l-2 border-teal-500/30 pl-6 space-y-4">
+            <p class="text-slate-300 leading-relaxed">
+              The startup capital required for a Medicare-certified agency in Texas typically ranges from $150,000 to
+              $350,000. This funding covers the initial $2,625 licensing fee, accreditation costs, office setup,
+              and—most importantly—the working capital needed to sustain the non-revenue phase.
+            </p>
+            <p class="text-slate-300 leading-relaxed">
+              <strong class="text-teal-300">Native American Entrepreneurs:</strong> As a Native American-owned business,
+              HOMEase has access to specialized funding pathways. We will actively pursue Small Business Innovation
+              Research (SBIR) grants if our home assessment technology includes R&D components. We will also leverage
+              resources from the Office of Native American Affairs (ONAA).
+            </p>
+          </div>
+        </section>
+
+        <!-- Go To Market & Conclusion -->
+        <section class="pb-12 border-b border-slate-800">
+          <h2 class="text-2xl font-serif text-teal-400 mb-4 mt-12">Go-to-Market Strategy and Community Engagement</h2>
+          <p class="text-slate-300 leading-relaxed mb-6">
+            Our go-to-market strategy centers on building deep-rooted referral relationships within the Central Texas
+            medical community. We will target hospital discharge planners at major facilities like Baylor Scott & White
+            in Temple. Digitally, we will maintain a strong local SEO presence, ensuring that when families in Killeen
+            or Belton search for home health, they find HOMEase.
+          </p>
+
+          <div class="bg-teal-900/20 p-6 rounded-lg border border-teal-900/50 mt-8">
+            <h3 class="text-lg font-bold text-teal-200 mb-2">Conclusion</h3>
+            <p class="text-slate-400 text-sm italic">
+              "Ultimately, HOMEase is more than a clinical provider; it is a safety partner dedicated to ensuring that
+              the seniors of Central Texas can age in place with the dignity, independence, and medical support they
+              deserve."
+            </p>
+          </div>
+        </section>
+
+        <!-- Footer Meta -->
+        <footer class="pt-8 text-xs text-slate-600 font-mono">
+          <p>Meta Description: A strategic guide to launching a Medicare-certified home health agency in Central Texas.
+          </p>
+        </footer>
+
+      </article>
+    </div>
+  </main>
+
+</body>
+
+</html>
