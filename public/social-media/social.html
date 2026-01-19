@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;700&display=swap');
+
+        :root {
+            --duration: 15s;
+        }
+
+        body {
+            background: #0a0a0a;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .canvas {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .film-grain {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.15;
+        }
+
+        .image-sequence {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .image-layer {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            animation: imageCycle var(--duration) infinite;
+        }
+
+        .img1 {
+            background-image: url('https://694d8b0339fe8ba173f56f36.imgix.net/scene-1 (86).jpg');
+            animation-delay: 0s;
+            filter: contrast(1.1) saturate(0.8);
+        }
+
+        .img2 {
+            background-image: url('https://694d8b0339fe8ba173f56f36.imgix.net/scene-2 (91).jpg');
+            animation-delay: 3s;
+        }
+
+        .img3 {
+            background-image: url('https://694d8b0339fe8ba173f56f36.imgix.net/scene-3 (78).jpg');
+            animation-delay: 7s;
+        }
+
+        .img4 {
+            background-image: url('https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (71).jpg');
+            animation-delay: 12s;
+        }
+
+        @keyframes imageCycle {
+
+            0%,
+            20% {
+                opacity: 0;
+            }
+
+            5%,
+            15% {
+                opacity: 1;
+            }
+        }
+
+        .text-overlay {
+            position: absolute;
+            width: 80%;
+            text-align: center;
+            color: white;
+            z-index: 40;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
+            opacity: 0;
+            transform: translateY(20px);
+            animation: textFade var(--duration) infinite;
+            pointer-events: none;
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        @keyframes textFade {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            2%,
+            18% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            20% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .caption-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 40px 20px 20px;
+            z-index: 60;
+            color: #fff;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            opacity: 0;
+            animation: captionShow var(--duration) infinite;
+        }
+
+        @keyframes captionShow {
+            85% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            90%,
+            98% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .brand-logo {
+            width: 120px;
+            margin: 0 auto 10px;
+            opacity: 0.9;
+        }
+
+        .distort {
+            filter: url(#liquid-distortion);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="canvas"><svg class="film-grain">
+            <filter id="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch">
+                    <animate attributeName="seed" from="0" to="100" dur="1s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncR type="linear" slope="0.2" />
+                    <feFuncG type="linear" slope="0.2" />
+                    <feFuncB type="linear" slope="0.2" />
+                </feComponentTransfer>
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noise)" />
+        </svg><svg width="0" height="0">
+            <filter id="liquid-distortion">
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" result="turb">
+                    <animate attributeName="baseFrequency" values="0.02;0.05;0.02" dur="5s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turb" scale="20" />
+            </filter>
+        </svg>
+        <div class="image-sequence">
+            <div class="image-layer img1 distort"></div>
+            <div class="image-layer img2"></div>
+            <div class="image-layer img3"></div>
+            <div class="image-layer img4"></div>
+        </div>
+        <div class="text-overlay" style="animation-delay: 0s;">
+            <h2 class="serif text-3xl md:text-5xl italic mb-4">The most dangerous<br />room in the house?</h2>
+        </div>
+        <div class="text-overlay" style="animation-delay: 3s;">
+            <h2 class="text-4xl md:text-6xl font-black mb-2">80%</h2>
+            <p class="text-lg tracking-widest uppercase">of senior falls happen<br />in the bathroom.</p>
+        </div>
+        <div class="text-overlay" style="animation-delay: 7s;">
+            <h2 class="serif text-4xl md:text-6xl italic">Safety meets style.</h2>
+            <p class="mt-4 tracking-tight">Your bathroom should be a sanctuary, not a hazard.</p>
+        </div>
+        <div class="text-overlay flex flex-col items-center" style="animation-delay: 12s;">
+            <div class="bg-white/10 backdrop-blur-md p-8 rounded-lg border border-white/20">
+                <h1 class="font-bold tracking-tighter text-2xl mb-1">HOMEase | AI</h1>
+                <p class="text-xs uppercase tracking-[0.3em] opacity-80 mb-6">Austin, Texas</p>
+                <p class="text-xl font-light mb-4">Secure your Austin home.</p><a href="#"
+                    class="inline-block px-6 py-2 bg-white text-black font-bold rounded-full text-sm">LINK IN BIO</a>
+            </div>
+        </div>
+        <div class="caption-panel">
+            <p class="mb-2 font-bold uppercase tracking-widest text-[10px] text-yellow-500">Austin living re-imagined
+            </p>
+            <p>Is your home ready for the future? Tap the link in our bio for a free safety assessment. 🏠✨</p>
+            <div class="flex gap-2 mt-4 opacity-60 text-[10px]">
+                <span>#AustinAIP</span><span>#SafeHome</span><span>#AgingInPlace</span><span>#AustinLiving</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
