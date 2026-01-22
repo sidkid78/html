@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800&family=Playfair+Display:ital,wght@1,600&family=Space+Mono&display=swap');
+
+        :root {
+            --gold: #d4af37;
+            --cream: #f4f1ea;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            width: 90vw;
+            height: 90vh;
+            max-width: 1200px;
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.7);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #000;
+        }
+
+        .bg-layers {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            display: flex;
+        }
+
+        .img-left {
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+            filter: grayscale(1) contrast(1.2);
+        }
+
+        .img-right {
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            grid-column: 1 / span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4rem;
+            pointer-events: none;
+        }
+
+        .manifest-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 8vw;
+            color: white;
+            mix-blend-mode: overlay;
+            line-height: 1;
+            filter: url(#liquid);
+        }
+
+        .quote-box {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-left: 2px solid var(--gold);
+            padding: 2rem;
+            max-width: 500px;
+            transform: translateY(0);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .tab-trophy {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+        }
+
+        .tab-trophy img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .grain-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+            pointer-events: none;
+            filter: url(#grain);
+            opacity: 0.2;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .hashtag {
+            font-family: 'Space Mono', monospace;
+            color: var(--gold);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body><svg style="display:none">
+        <filter id="grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch">
+                <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <filter id="liquid">
+            <feTurbulence baseFrequency="0.015" numOctaves="3" seed="1">
+                <animate attributeName="baseFrequency" values="0.015;0.025;0.015" dur="10s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" scale="20" />
+        </filter>
+    </svg>
+    <div class="card">
+        <div class="bg-layers"><img src="./../images/scene-1 (901).jpg" class="img-left"><img
+                src="./../images/scene-2 (931).jpg" class="img-right"></div>
+        <div class="grain-overlay"></div>
+        <div class="content">
+            <div>
+                <p class="text-white/60 uppercase tracking-widest text-xs mb-8">The Extension of Mind</p>
+                <h2 class="manifest-text">manifest</h2>
+            </div>
+            <div class="quote-box">
+                <p class="text-white/90 text-lg leading-relaxed font-light italic mb-4">"They say the best tools
+                    shouldn’t feel like tools—they should feel like an extension of your mind."</p>
+                <p class="text-white/70 text-sm leading-relaxed mb-4">For years, the gap between my imagination and the
+                    code was a grind of syntax and boilerplate. Cursor didn't just 'optimize my workflow'; it removed
+                    the ceiling. Now, I don’t type; I *manifest*.</p>
+                <p class="text-white/70 text-sm leading-relaxed">This physical 'Tab' key from Ben and the @cursor_ai
+                    team is more than a gift. It’s a trophy for every time I chose flow over friction. If you’re still
+                    fighting your IDE, you’re playing the wrong game. 🚀</p>
+                <div class="hashtag">#buildinpublic #cursorai</div>
+            </div>
+        </div>
+        <div class="tab-trophy"><img src="./../images/scene-3 (811).jpg">
+            <div class="absolute inset-0 rounded-full shadow-[inset_0_0_20px_rgba(212,175,55,0.5)]"></div>
+            <div
+                class="absolute -top-4 -left-4 bg-black/80 text-[var(--gold)] text-[10px] px-2 py-1 border border-[var(--gold)] uppercase tracking-tighter">
+                The Trophy</div>
+        </div>
+        <div class="absolute top-8 right-8 mix-blend-difference"><img src="
+https://694d8b0339fe8ba173f56f36.imgix.net/scene-4 (73).jpg"
+                class="w-32 h-20 object-cover border border-white/20 opacity-50"></div>
+    </div>
+</body>
+
+</html>
