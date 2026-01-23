@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dwellingly Carousel</title>
+  <style>
+    /* RESET & TYPOGRAPHY */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* UTILITIES */
+    .hidden {
+      display: none;
+    }
+
+    .absolute {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .object-cover {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+
+    .z-10 {
+      z-index: 10;
+    }
+
+    .z-20 {
+      z-index: 20;
+    }
+
+    /* CAROUSEL CONTAINER */
+    .carousel-wrapper {
+      width: 100%;
+      max-width: 450px;
+      height: 85vh;
+      background: #111;
+      position: relative;
+      overflow: hidden;
+      border-radius: 2px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* SLIDE SETUP */
+    .slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      color: white;
+      overflow: hidden;
+    }
+
+    /* SCRIMS */
+    .scrim-dark {
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 10%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    .scrim-brand {
+      background: linear-gradient(to top, rgba(16, 56, 50, 0.95) 10%, rgba(16, 56, 50, 0.7) 60%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    /* TEXT STYLES */
+    .eyebrow {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      color: #4ade80;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .headline {
+      font-size: 2.5rem;
+      line-height: 1.1;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .headline-small {
+      font-size: 1.8rem;
+      line-height: 1.2;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .body-copy {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #e5e5e5;
+      margin-bottom: 2rem;
+      max-width: 90%;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+    }
+
+    .content-box {
+      padding: 2rem;
+      position: relative;
+      z-index: 20;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeUp 0.8s forwards 0.3s;
+    }
+
+    /* CTA BUTTON */
+    .btn {
+      display: inline-block;
+      background: white;
+      color: black;
+      padding: 12px 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      margin-top: 1rem;
+    }
+
+    /* PROGRESS BAR */
+    .progress-container {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 4px;
+      display: flex;
+      gap: 4px;
+      z-index: 50;
+    }
+
+    .progress-segment {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.3);
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .progress-segment.active {
+      background: #4ade80;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes panImage {
+      0% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .animate-pan {
+      animation: panImage 10s ease-out forwards;
+    }
+
+    /* FILTER CLASSES */
+    .filter-grain {
+      filter: url(#grain);
+    }
+
+    .filter-distort {
+      filter: url(#distort);
+      color: #ff6b6b;
+      mix-blend-mode: screen;
+    }
+
+    .filter-blur {
+      filter: url(#motionBlur);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS DEFINITION -->
+  <svg class="hidden">
+    <defs>
+      <!-- 1. FILM GRAIN -->
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.80" numOctaves="3" stitchTiles="stitch" result="noise" />
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.15" />
+        </feComponentTransfer>
+        <feComposite operator="in" in2="SourceGraphic" result="composite" />
+        <feBlend mode="overlay" in="composite" in2="SourceGraphic" />
+      </filter>
+
+      <!-- 2. LIQUID DISTORTION (For 'Disorganized') -->
+      <filter id="distort">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.02;0.05;0.02" dur="4s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+
+      <!-- 3. PANIC BLUR (For 'Deadline') -->
+      <filter id="motionBlur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
+          <animate attributeName="stdDeviation" values="8,0; 0,0; 4,0; 0,0" dur="3s" repeatCount="indefinite" />
+        </feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="carousel-wrapper">
+    <!-- Progress Indicators -->
+    <div class="progress-container">
+      <div class="progress-segment active" id="p1"></div>
+      <div class="progress-segment" id="p2"></div>
+      <div class="progress-segment" id="p3"></div>
+      <div class="progress-segment" id="p4"></div>
+      <div class="progress-segment" id="p5"></div>
+    </div>
+
+    <div class="carousel-track" id="track">
+
+      <!-- SLIDE 1: INTRO (Luxury Home) -->
+      <section class="slide">
+        <div class="absolute filter-grain">
+          <img src="https://res.cloudinary.com/dvjf6y1a6/image/upload/v1701800001/sample-luxury-home.jpg"
+            alt="Luxury Home" class="object-cover animate-pan"
+            style="content:url('./../images/scene-1 (97).jpg?se=2024-10-25T17%3A01%3A22Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D42e97554-ce15-4674-8a43-e18e8760088b.png&sig=w5Pz%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8');">
+        </div>
+        <div class="absolute scrim-dark"></div>
+        <div class="content-box">
+          <p class="eyebrow">Instagram Engagement</p>
+          <h1 class="headline">The 3 Mistakes <br>FSBO Sellers Make</h1>
+          <p class="body-copy">"The Option Period Doesn't Have to Be Scary"</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: MISTAKE 1 (Disorganized) -->
+      <section class="slide">
+        <div class="absolute">
+          <!-- Using crop of messy image -->
+          <img src="https://files.oaiusercontent.com/file-4933a339-4933a339?se=2024-10-25T17%3A01%3A22Z"
+            alt="Disorganized" class="object-cover animate-pan"
+            style="content:url('./../images/scene-2 (100).jpg?se=2024-10-25T17%3A01%3A22Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D035f1119-9061-4ec4-9447-380104616239.png&sig=Jz5%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8'); filter: grayscale(80%) contrast(120%);">
+        </div>
+        <div class="absolute scrim-dark"></div>
+        <div class="content-box">
+          <p class="eyebrow" style="color:#ff6b6b">Mistake #1</p>
+          <h2 class="headline filter-distort">Disorganized repairs.</h2>
+          <p class="body-copy">Chaos in the kitchen? Leaky pipes? Losing track of what needs fixing is the fastest way
+            to lose a buyer.</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: MISTAKE 2 (Deadline) -->
+      <section class="slide">
+        <div class="absolute">
+          <!-- Zoomed in on calendar part of image 2 via object-position -->
+          <img src="https://files.oaiusercontent.com/file-4933a339-4933a339" alt="Deadline" class="object-cover"
+            style="object-position: right center; content:url('./../images/scene-2 (100).jpg?se=2024-10-25T17%3A01%3A22Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D035f1119-9061-4ec4-9447-380104616239.png&sig=Jz5%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8');">
+        </div>
+        <div class="absolute scrim-dark" style="background: rgba(0,0,0,0.7);"></div>
+        <div class="content-box">
+          <p class="eyebrow" style="color:#ff6b6b">Mistake #2</p>
+          <h2 class="headline filter-blur">Missing the deadline.</h2>
+          <p class="body-copy">The Option Period is the most high-stakes window of your sale. 🕒 Don't let time run out
+            on your deal.</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: SOLUTION (App) -->
+      <section class="slide">
+        <div class="absolute">
+          <img src="https://files.oaiusercontent.com/file-33a33949-33a33949" alt="Solution"
+            class="object-cover animate-pan"
+            style="content:url('./../images/scene-3 (88).jpg?se=2024-10-25T17%3A01%3A22Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D5d5a639d-2104-4b47-ba42-7a02c3127818.png&sig=X2c9q%2BH/Jz5%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8X2c9q%2BH');">
+        </div>
+        <div class="absolute scrim-brand"></div>
+        <div class="content-box">
+          <p class="eyebrow">The Solution</p>
+          <h2 class="headline-small">Dwellingly's Option Period Command Center solution.</h2>
+          <p class="body-copy">Our Command Center features a live countdown and repair tracker to keep you in control
+            while you handle the buyer's inspection. </p>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: OUTRO (Happy) -->
+      <section class="slide">
+        <div class="absolute">
+          <img src="https://files.oaiusercontent.com/file-9933a339-9933a339" alt="happy home"
+            class="object-cover animate-pan"
+            style="content:url('./../images/scene-4 (80).jpg?se=2024-10-25T17%3A01%3A22Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D49ef20e4-968b-4b2a-8742-b364805f14e3.png&sig=9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8X2c9q%2BH/Jz5%2B6%2B9Zz8X2c9q%2BH');">
+        </div>
+        <div class="absolute scrim-brand"></div>
+        <div class="content-box">
+          <h2 class="headline">No more stress,<br>just structure.</h2>
+          <p class="body-copy" style="font-size: 0.85rem; opacity: 0.8;">
+            #HomeSellingTips #AustinTX #RealEstateAustin #SoldByOwner
+          </p>
+          <a href="#" class="btn">Learn More</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- VANILLA JS FOR INTERSECTION OBSERVER (Progress Bar) -->
+  <script>
+    const track = document.getElementById('track');
+    const slides = document.querySelectorAll('.slide');
+    const segments = document.querySelectorAll('.progress-segment');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Get index of the slide
+          const index = Array.from(slides).indexOf(entry.target);
+          // Update segments
+          segments.forEach((seg, i) => {
+            if (i === index) seg.classList.add('active');
+            else seg.classList.remove('active');
+          });
+        }
+      });
+    }, { threshold: 0.6 }); // Trigger when 60% visible
+
+    slides.forEach(slide => observer.observe(slide));
+  </script>
+</body>
+
+</html>

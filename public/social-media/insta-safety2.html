@@ -189,7 +189,7 @@
             inset: 0;
             pointer-events: none;
             mix-blend-mode: overlay;
-            opacity: 0.15;
+            opacity: 0.02;
             z-index: 50;
         }
 
@@ -202,6 +202,7 @@
             letter-spacing: 0.1em;
             font-size: 0.75rem;
             margin-bottom: 1.5rem;
+            -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
         }
     </style>
@@ -211,7 +212,7 @@
     <div class="canvas">
         <div class="grain-overlay"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 <filter id="noiseFilter">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.25" numOctaves="2" stitchTiles="stitch">
                         <animate attributeName="seed" from="0" to="100" dur="1s" repeatCount="indefinite" />
                     </feTurbulence>
                     <feColorMatrix type="saturate" values="0" />
@@ -220,7 +221,7 @@
             </svg></div><svg style="height: 0; width: 0; position: absolute;">
             <filter id="motionBlur">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
-                    <animate attributeName="stdDeviation" values="0,0; 10,0; 0,0" dur="0.5s" repeatCount="indefinite" />
+                    <animate attributeName="stdDeviation" values="0,0; 2,0; 0,0" dur="0.5s" repeatCount="indefinite" />
                 </feGaussianBlur>
             </filter>
         </svg>
