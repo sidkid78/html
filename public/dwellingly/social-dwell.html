@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dwellingly Editorial Experience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap');
+
+    :root {
+      --color-dark: #1a1a1a;
+      --color-light: #f4f4f5;
+      --color-accent: #c2410c;
+      --color-navy: #1e3a8a;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-dark);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Scroll Snap Logic */
+    .scrolly-container {
+      height: 100vh;
+      width: 100%;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .slide {
+      height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* SVG Filters Classes */
+    .filter-stress-blur {
+      filter: url(#stress-blur);
+    }
+
+    .filter-grain {
+      filter: url(#grain);
+    }
+
+    .filter-chromatic {
+      filter: url(#chromatic);
+    }
+
+    /* Animation States */
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease-out;
+    }
+
+    .active .reveal-text {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom Interactive Poll */
+    .poll-option {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+
+    .poll-option:hover,
+    .poll-option.selected {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #fff;
+      transform: scale(1.02);
+    }
+
+    .poll-option.selected::before {
+      content: '✓';
+      margin-right: 8px;
+    }
+
+    /* Split Screen Visual */
+    .split-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+    }
+
+    .split-left {
+      width: 50%;
+      height: 100%;
+      background-image: url('../images/scene-2-20261.jpg?auto=format&fit=crop&q=80');
+      background-size: cover;
+      background-position: center;
+      filter: sepia(0.5) contrast(1.2) url(#grain);
+    }
+
+    .split-right {
+      width: 50%;
+      height: 100%;
+      background-image: url('../images/scene-2-20262.jpg?auto=format&fit=crop&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Dynamic Blur Animation Sync */
+    @keyframes breatheBlur {
+
+      0%,
+      100% {
+        filter: blur(0px);
+      }
+
+      50% {
+        filter: blur(4px);
+      }
+    }
+
+    .breathing-blur {
+      animation: breatheBlur 6s infinite ease-in-out;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition -->
+  <svg style="display: none;">
+    <defs>
+      <!-- 1. Animated Film Grain -->
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise">
+          <animate attributeName="baseFrequency" values="0.8;0.85;0.8" dur="0.5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" result="grayNoise" />
+        <feComposite operator="in" in="grayNoise" in2="SourceGraphic" result="monoNoise" />
+        <feBlend mode="multiply" in="monoNoise" in2="SourceGraphic" />
+      </filter>
+
+      <!-- 2. Stress Blur (Dynamic) -->
+      <filter id="stress-blur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0">
+          <animate attributeName="stdDeviation" values="0;3;0;1;0" dur="4s" repeatCount="indefinite" />
+        </feGaussianBlur>
+      </filter>
+
+      <!-- 3. Liquid Distortion (For Fear Text) -->
+      <filter id="liquid">
+        <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.01;0.02;0.01" dur="3s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="10" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <main class="scrolly-container">
+
+    <!-- SLIDE 0: HOOK -->
+    <section class="slide" id="slide-0">
+      <div class="absolute inset-0 z-0">
+        <img src="../images/scene-4 (81).jpg?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-60"
+          alt="Sunset Deck">
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+      </div>
+      <div class="relative z-10 max-w-2xl px-8 text-center text-white reveal-text">
+        <h1 class="text-4xl md:text-6xl font-serif font-bold leading-tight mb-6 drop-shadow-xl">
+          "Your home is your life’s work."
+        </h1>
+        <p class="text-lg md:text-2xl font-light opacity-90 leading-relaxed">
+          Don't let a 40-page contract take the joy out of your next chapter.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 1: INVISIBLE WEIGHT -->
+    <section class="slide" id="slide-1">
+      <div class="absolute inset-0 z-0">
+        <!-- Applying Stress Blur Filter to Background -->
+        <img src="../images/scene-1 (98).jpg?auto=format&fit=crop&q=80"
+          class="w-full h-full object-cover filter-stress-blur scale-105" style="transform-origin: center;"
+          alt="Hands gripped on mug">
+        <div class="absolute inset-0 bg-black/50"></div>
+      </div>
+
+      <div class="relative z-10 max-w-md px-8 text-white reveal-text">
+        <h2 class="text-3xl font-bold mb-4 tracking-widest uppercase border-b border-white/30 pb-2">The Invisible Weight
+        </h2>
+        <p class="text-xl md:text-2xl font-serif italic mb-6 leading-relaxed opacity-90">
+          "You’ve spent years building a life here."
+        </p>
+        <p class="text-lg font-light">
+          Now, the thought of selling it feels like holding your breath for 30 days straight.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: FORK IN THE ROAD -->
+    <section class="slide" id="slide-2">
+      <!-- Split Screen Background -->
+      <div class="absolute inset-0 z-0 split-bg">
+        <div class="split-left relative">
+          <div class="absolute inset-0 bg-black/60"></div>
+        </div>
+        <div class="split-right relative">
+          <div class="absolute inset-0 bg-white/10"></div>
+        </div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-3xl px-6 flex flex-col md:flex-row gap-8 items-center reveal-text">
+
+        <div class="md:w-1/2 text-white">
+          <h2 class="text-3xl font-serif font-bold mb-2">The Fork in the Road</h2>
+          <p class="text-gray-300 mb-6">A choice between chaos and clarity.</p>
+
+          <div class="bg-black/80 backdrop-blur-md p-6 rounded-lg border border-gray-700 shadow-2xl">
+            <p class="text-lg font-semibold mb-4 text-center">What keeps you up at 2:00 AM?</p>
+
+            <div class="space-y-3">
+              <div class="poll-option p-4 rounded text-sm md:text-base text-gray-200" onclick="selectOption(this)">
+                Option A: Being 'Taken' by the Fine Print 📑
+              </div>
+              <div class="poll-option p-4 rounded text-sm md:text-base text-gray-200" onclick="selectOption(this)">
+                Option B: The Fear of the Deal Falling Through 📉
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 3: THE PROTECTOR -->
+    <section class="slide bg-white" id="slide-3">
+      <div class="absolute inset-0 z-0">
+        <img src="../images/scene-3 (89).jpg?auto=format&fit=crop&q=80"
+          class="w-full h-full object-cover object-center lg:object-right opacity-90" alt="Maria Rodriguez">
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 max-w-2xl px-8 mr-auto text-white reveal-text h-full flex flex-col justify-center">
+        <h2 class="text-4xl font-serif text-white mb-6">The Protector</h2>
+
+        <div class="prose prose-invert prose-lg leading-relaxed font-light text-gray-200 space-y-4">
+          <p>"The traditional way of selling treats you like a transaction. We think that’s wrong."</p>
+          <p>"At Dwellingly, we don’t just 'list' homes; <span
+              class="text-white font-bold border-b-2 border-orange-500">we protect the equity you’ve worked a lifetime
+              to build.</span>"</p>
+          <p>"We handle the predators in the fine print and the chaos of the clock so you can finally exhale."</p>
+          <p class="italic font-serif text-xl">"Austin, you deserve a partner, not just a platform."</p>
+        </div>
+
+        <div class="mt-8">
+          <a href="#"
+            class="inline-block bg-orange-700 hover:bg-orange-600 text-white text-sm md:text-base font-bold py-4 px-8 rounded-none tracking-widest transition-all transform hover:-translate-y-1 shadow-lg border border-orange-500">
+            DOWNLOAD 'PROTECTIVE SELLER’S MANIFESTO'
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Poll Interaction
+    function selectOption(el) {
+      // Remove selected from siblings
+      const siblings = el.parentElement.children;
+      for (let i = 0; i < siblings.length; i++) {
+        siblings[i].classList.remove('selected');
+        siblings[i].style.opacity = '0.5';
+      }
+      // Add to clicked
+      el.classList.add('selected');
+      el.style.opacity = '1';
+    }
+
+    // Intersection Observer for Scroll Animations
+    const observerOptions = {
+      threshold: 0.3
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+
+          // Special handling for Slide 1 image zoom if needed
+          if (entry.target.id === 'slide-1') {
+            const img = entry.target.querySelector('img');
+            if (img) img.style.transform = 'scale(1.1)';
+            if (img) img.style.transition = 'transform 10s ease-out';
+          }
+        } else {
+          entry.target.classList.remove('active');
+          if (entry.target.id === 'slide-1') {
+            const img = entry.target.querySelector('img');
+            if (img) img.style.transform = 'scale(1.0)';
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.slide').forEach(slide => {
+      observer.observe(slide);
+    });
+  </script>
+
+</body>
+
+</html>
