@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Equalizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --c-dark: #0f172a;
+            --c-light: #f8fafc;
+            --c-accent: #10b981;
+            --c-alert: #ef4444;
+        }
+
+        body {
+            background-color: #000;
+            color: var(--c-light);
+            font-family: 'Space Mono', monospace;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Scrollytelling Container */
+        .scrolly-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--c-dark);
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* SVG Filters */
+        .filter-noise {
+            filter: url(#noise);
+        }
+
+        .filter-glitch {
+            filter: url(#text-distort);
+        }
+
+        .filter-blur-motion {
+            filter: url(#motion-blur);
+        }
+
+        /* Utilities */
+        .text-shadow-lg {
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+        }
+
+        .chapter {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            scroll-snap-align: start;
+        }
+
+        /* Chapter 1 Specifics */
+        .bg-fear {
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 1)), url('https://image.pollinations.ai/prompt/stressed%20man%20at%20desk%20late%20night%20paperwork?width=600&height=1000&nologo=true');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: multiply;
+        }
+
+        /* Animations */
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.1), transparent);
+            height: 100px;
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        @keyframes pulse-red {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+            }
+        }
+
+        .tactical-border {
+            border-left: 2px solid var(--c-accent);
+            padding-left: 1rem;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+
+        /* Image Stylings */
+        .img-reveal {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin: 1rem 0;
+            filter: grayscale(80%) contrast(120%);
+            transition: filter 0.5s ease;
+        }
+
+        .img-reveal:hover {
+            filter: grayscale(0%) contrast(100%);
+        }
+
+        /* Typography Hierarchy */
+        h1 {
+            font-size: 3rem;
+            line-height: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            letter-spacing: -0.05em;
+            color: var(--c-accent);
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            border-bottom: 1px solid var(--c-accent);
+            display: inline-block;
+            padding-bottom: 0.2rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        em {
+            color: #fff;
+            font-style: italic;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .sticky-element {
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+            mix-blend-mode: difference;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG Filters Definition -->
+    <svg style="display: none;">
+        <defs>
+            <!-- Cinematic Grain -->
+            <filter id="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"
+                    result="noise" />
+                <feColorMatrix type="saturate" values="0" result="grayNoise" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.1" />
+                </feComponentTransfer>
+                <feComposite operator="in" in2="SourceGraphic" result="composite" />
+            </filter>
+
+            <!-- Anxiety Distortion -->
+            <filter id="text-distort">
+                <feTurbulence type="turbulence" baseFrequency="0.02 0.005" numOctaves="2" result="turbulence">
+                    <animate attributeName="baseFrequency" values="0.02 0.005;0.05 0.005;0.02 0.005" dur="3s"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="2" xChannelSelector="R"
+                    yChannelSelector="G" />
+            </filter>
+
+            <!-- Motion Blur Pulse -->
+            <filter id="motion-blur">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
+                    <animate attributeName="stdDeviation" values="10,0; 0,0" dur="0.8s" fill="freeze" begin="indefinite"
+                        class="blur-trigger" />
+                </feGaussianBlur>
+            </filter>
+        </defs>
+    </svg>
+
+    <main class="scrolly-container">
+
+        <!-- INTRO: The Fear -->
+        <section class="chapter bg-fear">
+            <div class="filter-noise" style="position:absolute; inset:0; opacity:0.5; pointer-events:none;"></div>
+            <div class="sticky-element">
+                <h1 class="serif text-white">The Equalizer:</h1>
+                <h2 class="text-white font-mono text-xl">How You Master the Sale</h2>
+            </div>
+
+            <img src="../images/scene-1 (92).jpg" alt="The Fear of FSBO" class="img-reveal my-6">
+
+            <div class="glass-panel mt-auto filter-glitch" style="margin-top: 60vh;">
+                <h3 class="text-red-400 border-none mt-0">The Shadow of the &quot;Expert&quot;</h3>
+                <p>Every FSBO seller in Texas hears the same whispers: <em>“You’re going to miss a disclosure.” “The
+                        buyer’s agent will eat you alive.” “You’re going to lose the deal over a missed deadline.”</em>
+                </p>
+                <p>For most, the dream of saving $20,000 in commission is quickly replaced by a paralyzing fear of the
+                    unknown. You aren't just selling a house; you’re navigating a legal minefield where one wrong
+                    step—one &quot;I thought you were doing that&quot;—can cost you your equity, your time, and your
+                    peace of mind.</p>
+            </div>
+        </section>
+
+        <!-- TRANSITION: The Solution -->
+        <section class="chapter bg-slate-900">
+            <div class="scanline"></div>
+            <div class="tactical-border">
+                <h2 style="color: #fff">Dwellingly is the end of the &quot;Information Gap.&quot;</h2>
+                <p class="text-lg">We didn’t build a platform; we built a fortress for your transaction. We believe that
+                    with the right map, you are the most capable person to sell your home.</p>
+            </div>
+        </section>
+
+        <!-- SECTION I: Chaos to Command -->
+        <section class="chapter bg-slate-900 relative">
+            <div style="position:absolute; right:-20px; top:10%; opacity:0.1; font-size:10rem; font-weight:bold;">I
+            </div>
+            <h3 class="serif text-3xl mb-4">From Chaos to Command</h3>
+            <p>The moment you enter your address, the noise stops. The &quot;Command Center&quot; isn't just a
+                dashboard; it’s the end of ambiguity.</p>
+            <div class="grid grid-cols-2 gap-4 my-4">
+                <div class="border border-slate-700 p-2 text-xs text-slate-500">EMAIL THREADS <br><span
+                        class="text-red-500">[ERROR]</span></div>
+                <div class="border border-emerald-500 p-2 text-xs text-emerald-400 bg-emerald-900/20">SINGLE SOURCE
+                    <br><span class="text-white">[ACTIVE]</span>
+                </div>
+            </div>
+            <p>While other sellers are drowning in email threads and lost PDFs, you are looking at a single source of
+                truth. The anxiety of <em>&quot;What am I missing?&quot;</em> is replaced by the clarity of
+                <em>&quot;What's next?&quot;</em>
+            </p>
+        </section>
+
+        <!-- SECTION II: The Armor -->
+        <section class="chapter">
+            <h3 class="serif text-3xl">II. The Armor of Preparation</h3>
+            <img src="./../images/scene-2 (96).jpg?width=600&height=400&nologo=true" alt="Document Vault"
+                class="img-reveal">
+            <p>In Texas, a missing Seller’s Disclosure isn't just a mistake; it's a liability. Dwellingly’s
+                &quot;Document Vault&quot; doesn't just store files; it audits your readiness.</p>
+            <p class="border-l-4 border-emerald-500 pl-4 py-2 bg-slate-800">Our Disclosures Helper acts as your silent
+                partner, ensuring your paperwork is airtight before a buyer ever sees it. You aren't just a
+                &quot;homeowner&quot; anymore—you are an organized professional who cannot be bullied.</p>
+        </section>
+
+        <!-- SECTION III: The Aha Moment -->
+        <section class="chapter bg-white text-slate-900">
+            <h3 class="serif text-3xl border-slate-900">III. The &quot;Aha&quot; Moment</h3>
+            <h2 class="text-slate-900 text-4xl my-4 tracking-tighter">Taking the High Ground</h2>
+            <p class="text-slate-700 font-serif text-xl italic">The power dynamic shifts the second you send the
+                <strong>Professional Buyer Packet</strong>.
+            </p>
+            <p class="text-slate-600">When a buyer opens a single, pristine link containing every disclosure, survey,
+                and HOA doc, the message is clear: <em>This seller is prepared. This deal is serious.</em></p>
+            <p class="text-slate-600">You’ve eliminated the friction that kills deals, and you’ve done it with more
+                grace than most high-commission agents.</p>
+        </section>
+
+        <!-- SECTION IV: The Heartbeat -->
+        <section class="chapter bg-black">
+            <img src="./../images/scene-3 (84).jpg" alt="Clock Interface" class="img-reveal opacity-80">
+            <h3 class="serif text-3xl text-emerald-400 border-emerald-400">IV. The Heartbeat of the Deal: The Clock</h3>
+            <p>When the contract is signed, the &quot;Texas Contract Clock&quot; awakens. This is where most FSBO
+                sellers lose sleep—calculating Option Periods and Financing Contingencies in their heads.</p>
+            <div class="glass-panel my-4 border-emerald-500">
+                <div class="flex justify-between items-center text-emerald-400 font-mono text-sm mb-2">
+                    <span>STATUS: ACTIVE</span>
+                    <span class="animate-pulse">● REC</span>
+                </div>
+                <p class="text-sm m-0">Dwellingly takes that weight off your shoulders. The clock counts down in
+                    real-time. The &quot;Deal Health&quot; indicator watches your back. You aren't &quot;hoping&quot;
+                    you hit the deadline; you are watching the mission play out exactly as planned.</p>
+            </div>
+        </section>
+
+        <!-- SECTION V: Defending -->
+        <section class="chapter relative">
+            <svg class="absolute top-0 right-0 w-32 h-32 opacity-20" viewBox="0 0 100 100">
+                <path d="M10,10 L90,10 L90,90 L10,90 Z" fill="none" stroke="white" stroke-width="1" />
+                <path d="M10,10 L20,20" stroke="white" />
+                <path d="M90,10 L80,20" stroke="white" />
+                <path d="M90,90 L80,80" stroke="white" />
+                <path d="M10,90 L20,80" stroke="white" />
+            </svg>
+            <h3 class="serif text-3xl">V. Defending the Option Period</h3>
+            <p>The Option Period is the &quot;Danger Zone&quot;—the high-stakes window where buyers try to claw back
+                your equity. Dwellingly’s <strong>Option Period Command Center</strong> is your tactical advantage.</p>
+            <ul class="list-none pl-0 space-y-2 font-mono text-sm text-emerald-200">
+                <li class="flex items-center"><span class="mr-2">[✓]</span> TRACK INSPECTIONS</li>
+                <li class="flex items-center"><span class="mr-2">[✓]</span> LOG REPAIR REQUESTS</li>
+                <li class="flex items-center"><span class="mr-2">[✓]</span> WATCH TIMER</li>
+            </ul>
+            <p class="mt-4">You aren't reacting to the buyer; you are managing the process.</p>
+        </section>
+
+        <!-- CONCLUSION: Victory -->
+        <section class="chapter bg-slate-900">
+            <img src="./../images/scene-4 (77).jpg" alt="Victory" class="img-reveal mb-6" style="height: 300px;">
+            <h1 class="serif text-4xl text-emerald-400">Your Equity, Your Victory</h1>
+            <p class="text-lg">Dwellingly doesn’t sell your house—<strong>you do.</strong></p>
+            <p>We provide the structure so you can provide the soul. We are the &quot;experienced family member&quot;
+                who has done this a thousand times, standing right behind you, pointing the way.</p>
+            <p>By the time you reach the closing table, the victory isn't just the money you saved. It’s the realization
+                that you were never &quot;unqualified&quot;—you just needed the right map.</p>
+            <div class="mt-8 p-4 border border-emerald-500 text-center">
+                <strong class="text-xl tracking-widest uppercase">Welcome to your confident path to closing.</strong>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Simple intersection observer to trigger animations if needed
+        // Kept lightweight as per instructions
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+    </script>
+</body>
+
+</html>

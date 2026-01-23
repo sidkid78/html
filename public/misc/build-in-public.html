@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Mind-Meld Narrative</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;600;800&display=swap');
+
+    :root {
+      --c-bg: #050505;
+      --c-text: #F0F0F0;
+      --c-accent: #00FF94;
+      --c-warn: #FF4D4D;
+      --c-warm: #FFB800;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--c-bg);
+      color: var(--c-text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      height: 100vh;
+      width: 100vw;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      scroll-behavior: smooth;
+    }
+
+    /* SVG Filters Hidden */
+    .svg-defs {
+      position: absolute;
+      width: 0;
+      height: 0;
+    }
+
+    /* Common Layout */
+    section {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      overflow: hidden;
+      perspective: 1000px;
+    }
+
+    /* Background Images */
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0.4;
+      transition: opacity 1s ease, transform 10s ease-out;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(5, 5, 5, 0.8) 0%, rgba(5, 5, 5, 0.4) 50%, rgba(5, 5, 5, 0.9) 100%);
+      z-index: 2;
+    }
+
+    /* Typography & Content */
+    .content {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+      mix-blend-mode: normal;
+    }
+
+    h1,
+    h2 {
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+      line-height: 1.1;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    p {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .highlight {
+      color: var(--c-accent);
+      font-weight: 700;
+    }
+
+    .highlight-warn {
+      color: var(--c-warn);
+    }
+
+    .highlight-warm {
+      color: var(--c-warm);
+      text-shadow: 0 0 10px rgba(255, 184, 0, 0.6);
+    }
+
+    /* --- SECTION 1: THE STRUGGLE --- */
+    #sec1 .bg-img {
+      /* Image 1: Frustrated Coder */
+      filter: grayscale(80%) contrast(120%);
+    }
+
+    .glitch-text {
+      position: relative;
+      filter: url(#noise-distort);
+      display: inline-block;
+    }
+
+    .code-block {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 4px solid var(--c-warn);
+      padding: 1.5rem;
+      margin-top: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      backdrop-filter: blur(4px);
+      transform: translateX(-20px);
+      opacity: 0;
+      animation: slideIn 1s forwards 0.5s;
+    }
+
+    /* --- SECTION 2: THE SHIFT --- */
+    #sec2 .bg-img {
+      /* Image 2: Finger on Tab */
+      object-position: center bottom;
+    }
+
+    .pulse-text {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 800;
+      color: #fff;
+      display: block;
+      margin-bottom: 2rem;
+      filter: url(#glow-pulse);
+    }
+
+    /* --- SECTION 3: THE FLOW --- */
+    #sec3 .bg-img {
+      /* Image 4: Abstract Speed */
+      filter: saturate(150%);
+    }
+
+    .speed-container {
+      border-top: 1px solid var(--c-accent);
+      border-bottom: 1px solid var(--c-accent);
+      padding: 3rem 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      transform: skewX(-10deg);
+    }
+
+    .speed-text {
+      transform: skewX(10deg);
+      filter: url(#motion-blur-filter);
+      opacity: 0;
+      animation: speedReveal 1.5s cubic-bezier(0.2, 1, 0.3, 1) forwards 0.3s;
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes speedReveal {
+      0% {
+        transform: skewX(10deg) translateX(100px);
+        opacity: 0;
+        filter: url(#motion-blur-filter);
+      }
+
+      100% {
+        transform: skewX(10deg) translateX(0);
+        opacity: 1;
+        filter: none;
+      }
+    }
+
+    /* Floating particles for depth */
+    .particle {
+      position: absolute;
+      background: var(--c-accent);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS -->
+  <svg class="svg-defs">
+    <defs>
+      <!-- 1. NOISE/GLITCH FILTER -->
+      <filter id="noise-distort">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="warp">
+          <animate attributeName="baseFrequency" values="0.02; 0.04; 0.02" dur="0.2s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="5" in="SourceGraphic" in2="warp" />
+      </filter>
+
+      <!-- 2. GLOW/PULSE FILTER -->
+      <filter id="glow-pulse" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur">
+          <animate attributeName="stdDeviation" values="2; 10; 2" dur="3s" repeatCount="indefinite" />
+        </feGaussianBlur>
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+
+      <!-- 3. MOTION BLUR FILTER (Dynamic) -->
+      <filter id="motion-blur-filter">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="20,0" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- SECTION 1: THE STRUGGLE -->
+  <section id="sec1">
+    <img src="./../images/scene-1 (91).jpg" class="bg-img" alt="Frustrated coder with blue screen">
+    <div class="bg-overlay"></div>
+
+    <!-- Audio for Scene 1 -->
+    <audio id="audio1" src="../audio/download (47).wav" autoplay></audio>
+
+    <div class="content">
+      <h1><span style="color:var(--c-accent)"></span></h1>
+      <p style="font-size: 1rem; opacity: 0.7; letter-spacing: 2px; margin-bottom: 2rem;"></p>
+
+      <div class="code-block">
+        <p>Coding used to feel like a <span class="glitch-text highlight-warn" style="font-weight:700;">wrestling
+            match</span>—me against the syntax, the bugs, and the friction of my own keyboard.</p>
+        <p>Most tools just sit there, waiting for you to fail. But something changed when I started using Cursor.</p>
+        <p>It’s the first time a tool hasn't just anticipated my code; it’s anticipated my <em
+            class="highlight">intent</em>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE SHIFT -->
+  <section id="sec2">
+    <img src="./../images/scene-2 (95).jpg" class="bg-img" alt="Finger pressing glowing Tab key">
+    <div class="bg-overlay"></div>
+
+    <!-- Audio for Scene 2 -->
+    <audio id="audio2" src="../audio/download (48).wav"></audio>
+
+    <div class="content" style="text-align: center;">
+      <span class="pulse-text">That <span class="highlight-warm">'Tab'</span> key<br>isn't a feature anymore;<br>it’s a
+        heartbeat.</span>
+
+      <p style="max-width: 600px; margin: 0 auto;">It’s the sound of the gap between my brain and the machine finally
+        closing. The team sent over this hardware as a 'thank you,' but the real gift is finally feeling like I’m not
+        coding alone.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3: THE FLOW -->
+  <section id="sec3">
+    <img src="./../images/scene-4 (75).jpg" class="bg-img" alt="Abstract neural network speed">
+    <div class="bg-overlay"></div>
+
+    <!-- Audio for Scene 3 (scene-4 audio) -->
+    <audio id="audio3" src="../audio/download (49).wav"></audio>
+
+    <div class="content">
+      <div class="speed-container">
+        <div class="speed-text">
+          <p style="font-size: 1.5rem; font-weight: 300;">We aren't just building apps;</p>
+          <h2 style="font-size: clamp(2.5rem, 6vw, 5rem); color: var(--c-accent);">we’re finally moving at the speed of
+            thought.</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Simple Vanilla JS for Parallax, Audio, and Auto-scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section');
+      const audioElements = [
+        document.getElementById('audio1'),
+        document.getElementById('audio2'),
+        document.getElementById('audio3')
+      ];
+
+      // Auto-scroll to next section when audio ends
+      audioElements.forEach((audio, index) => {
+        if (audio) {
+          audio.addEventListener('ended', () => {
+            // Scroll to next section
+            const nextIndex = index + 1;
+            if (nextIndex < sections.length) {
+              sections[nextIndex].scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        }
+      });
+
+      // Intersection Observer to trigger animations and audio when sections enter view
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+
+            // Play audio for the current section
+            const sectionId = entry.target.id;
+            if (sectionId === 'sec1' && audioElements[0]) {
+              audioElements[0].play().catch(e => console.log('Audio autoplay prevented:', e));
+            } else if (sectionId === 'sec2' && audioElements[1]) {
+              audioElements[1].play().catch(e => console.log('Audio autoplay prevented:', e));
+            } else if (sectionId === 'sec3' && audioElements[2]) {
+              audioElements[2].play().catch(e => console.log('Audio autoplay prevented:', e));
+            }
+
+            // Specific logic for resetting animations if needed
+            const speedText = entry.target.querySelector('.speed-text');
+            if (speedText) {
+              speedText.style.animation = 'none';
+              speedText.offsetHeight; /* trigger reflow */
+              speedText.style.animation = 'speedReveal 1.5s cubic-bezier(0.2, 1, 0.3, 1) forwards 0.3s';
+            }
+          }
+        });
+      }, { threshold: 0.3 });
+
+      sections.forEach(sec => observer.observe(sec));
+
+      // Parallax Effect on Scroll
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        sections.forEach((sec, index) => {
+          const img = sec.querySelector('.bg-img');
+          const speed = 0.5;
+          const offset = (scrollY - (sec.offsetTop)) * speed;
+          // Apply parallax only if close to viewport
+          if (Math.abs(scrollY - sec.offsetTop) < window.innerHeight) {
+            img.style.transform = `translateY(${offset}px) scale(1.1)`;
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>

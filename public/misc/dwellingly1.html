@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dwellingly: Confident Path to Closing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap');
+
+    :root {
+      --bg-dark: #0f172a;
+      --text-light: #f1f5f9;
+      --accent: #34d399;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    .serif {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Global Grain Overlay */
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.07;
+      filter: url(#noiseFilter);
+    }
+
+    /* Scrollytelling Layout */
+    .step-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .sticky-image-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .sticky-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+      transition: transform 0.8s ease-out;
+    }
+
+    .content-card {
+      position: relative;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.85);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      padding: 3rem;
+      max-width: 600px;
+      border-left: 1px solid rgba(52, 211, 153, 0.3);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .content-card.in-view {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* SVG Motion Blur Class */
+    .blur-text {
+      filter: url(#motionBlur);
+    }
+
+    /* Intro Typography */
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.9;
+      background: linear-gradient(to right, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .meta-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Smooth Scroll Behavior */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters -->
+  <svg style="display: none;">
+    <defs>
+      <!-- 1. Animated Noise -->
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="baseFrequency" values="0.8;0.85;0.8" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+
+      <!-- 2. Dynamic Motion Blur -->
+      <filter id="motionBlur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
+          <animate attributeName="stdDeviation" values="0,10; 0,0" dur="0.8s" fill="freeze" begin="indefinite"
+            class="blur-anim-trigger" />
+        </feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="grain-overlay"></div>
+
+  <!-- HERO SECTION -->
+  <section class="min-h-screen flex flex-col justify-center items-center px-6 relative overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-900"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl text-center">
+      <div class="flex flex-wrap justify-center gap-2 mb-8 opacity-80">
+        <span class="meta-tag">#FSBO Texas</span>
+        <span class="meta-tag">#Real Estate Tech</span>
+        <span class="meta-tag">#Dwellingly</span>
+      </div>
+
+      <h1 class="hero-title mb-6 trigger-blur">Your Confident Path to Closing</h1>
+      <h2 class="text-2xl md:text-3xl text-slate-400 font-light italic serif mb-12">A Guided Tour of Dwellingly</h2>
+
+      <div
+        class="max-w-2xl mx-auto text-slate-300 leading-relaxed text-lg text-left border-l-2 border-emerald-500 pl-6">
+        <p class="mb-4">Master your Texas FSBO sale with Dwellingly. Our step-by-step guide shows you how to organize
+          documents, track deadlines, and close your deal with confidence.</p>
+      </div>
+    </div>
+
+    <div class="absolute bottom-10 animate-bounce">
+      <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- INTRO NARRATIVE -->
+  <section class="py-24 px-6 max-w-3xl mx-auto text-lg leading-loose text-slate-300">
+    <p
+      class="mb-6 first-letter:text-5xl first-letter:font-serif first-letter:text-emerald-400 first-letter:float-left first-letter:mr-3">
+      Selling your own home in Texas is a bold move. It usually starts with the excitement of saving thousands on
+      commissions, but that feeling can quickly be replaced by the stress of managing a complex legal process. Documents
+      end up scattered across your email and desktop, deadlines feel vague, and the constant risk of misalignment with
+      your buyer looms large.
+    </p>
+    <p class="mb-6">
+      In this environment of uncertainty, a single phrase becomes the ultimate deal-killer: "I thought you were doing
+      that." This lack of clarity is where most DIY sales crumble. That is where Dwellingly steps in. It is a platform
+      designed to bring order to the chaos and provide a clear, trackable path to closing. Our goal is to make the
+      entire process feel like a project you can manage, not a legal minefield you have to navigate alone. As our users
+      often say, "It feels like my organized, experienced family member is guiding me through the process."
+    </p>
+    <p class="font-semibold text-white">
+      Let’s take a tour of how Dwellingly converts selling anxiety into a structured, professional process you can
+      control.
+    </p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="step-section">
+    <div class="sticky-image-container">
+      <img src="./../images/visual-1 (34).png?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" class="sticky-image"
+        alt="Laptop Workspace context">
+      <!-- Replacing user image placeholder with contextual background for demo rendering, in real use would use provided [User Image 1] -->
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+    </div>
+
+    <div class="content-card">
+      <h3 class="text-emerald-400 text-sm font-bold tracking-widest uppercase mb-2">Step 1</h3>
+      <h2 class="text-3xl font-serif text-white mb-4 trigger-blur">Creating Your Deal's Command Center</h2>
+      <p class="text-slate-300 mb-4">
+        Your first step toward a successful sale is remarkably simple. You create a deal workspace without long
+        onboarding forms or complex setups. You perform a single action—entering your property address. In less than a
+        minute, you have laid the foundation for your entire transaction.
+      </p>
+      <p class="text-slate-300 mb-4">
+        Immediately, you are presented with a clean, minimalist dashboard that is easy on the eyes. This is your new
+        command center. Before your contract is official, this dashboard helps you prepare. The 'Next Step' module is
+        the star of the show; it features a primary button that says "Add Executed Date." Since you aren't there yet,
+        the system intelligently directs your attention to the most important preparatory task: gathering your initial
+        documents.
+      </p>
+      <p class="text-slate-300">
+        You'll also see the 'Docs Summary,' a small but powerful module showing a count of missing required documents.
+        It instantly creates a clear, actionable to-do list. Finally, a dedicated 'Texas Contract Clock' strip is
+        visible under the header. It isn't active yet, but it sits there as a clear indicator of what is to come. The
+        psychological benefit is immediate. Dwellingly replaces ambiguity with a clear structure and a single source of
+        truth.
+      </p>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step-section">
+    <div class="sticky-image-container">
+      <img src="./../images/visual-2 (33).png?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" class="sticky-image"
+        alt="Abstract planning context">
+      <!-- Contextual placeholder for [User Image 2] -->
+      <div class="absolute inset-0 bg-gradient-to-l from-slate-900 via-slate-900/80 to-transparent"></div>
+    </div>
+
+    <div class="content-card ml-auto mr-0 md:mr-12 border-l-0 border-r">
+      <h3 class="text-emerald-400 text-sm font-bold tracking-widest uppercase mb-2">Step 2</h3>
+      <h2 class="text-3xl font-serif text-white mb-4 trigger-blur">Assembling the Foundation - Documents and Disclosures
+      </h2>
+      <p class="text-slate-300 mb-4">
+        With your command center established, you click into the 'Document Vault,' the digital heart of your
+        transaction. Its purpose is to be the one clean source of truth for every file related to your sale. The app
+        guides you through uploading the key documents required for a Texas resale transaction, such as the Seller’s
+        Disclosure Notice (SDN), your Survey or T-47, and the HOA addendum.
+      </p>
+      <p class="text-slate-300">
+        The vault is designed for ease of use with drag-and-drop functionality. Each document slot has a clear status
+        label—Missing, Uploaded, or Needs Update—so you can see your progress at a glance. For the legally intimidating
+        Seller's Disclosure Notice, you can use the 'Disclosures Helper.' While the app isn't a lawyer, it acts like a
+        second pair of eyes, giving you a completeness score to ensure you haven't missed any required fields before you
+        upload the final version. This step reveals that Dwellingly isn't just a cloud folder; it’s an intelligent
+        system that understands the Texas selling process.
+      </p>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step-section bg-slate-800">
+    <div class="max-w-4xl mx-auto text-center px-6">
+      <h3 class="text-emerald-400 text-sm font-bold tracking-widest uppercase mb-4">Step 3</h3>
+      <h2 class="text-4xl md:text-5xl font-serif text-white mb-8 trigger-blur">The 'Aha!' Moment <br><span
+          class="text-slate-400 italic">The Professional Buyer Packet</span></h2>
+      <div class="grid md:grid-cols-2 gap-12 text-left">
+        <div class="bg-slate-900 p-8 rounded-lg shadow-2xl border-t-4 border-emerald-500">
+          <p class="text-slate-300 leading-relaxed">
+            This is where your early preparation truly pays off. Inside the Document Vault, you will see a prominent
+            button: "Generate Buyer Packet." With a single click, the app generates a shareable, view-only link. When a
+            potential buyer opens this link, they don't receive a chaotic mess of email attachments. Instead, they see a
+            neatly organized, branded packet containing all the disclosures and documents you have uploaded.
+          </p>
+        </div>
+        <div class="flex items-center">
+          <p class="text-slate-300 text-lg leading-relaxed">
+            This isn't just about looking good; it is about eliminating buyer friction. A professional packet preempts
+            questions, builds trust, and reduces the back-and-forth that can kill a deal's momentum. It signals to the
+            buyer and their agent that you are a serious seller who knows exactly what they are doing.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step-section">
+    <div class="sticky-image-container">
+      <img src="./../images/visual-3 (34).png?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" class="sticky-image"
+        alt="Clock context">
+      <!-- Contextual placeholder for [User Image 3] -->
+      <div class="absolute inset-0 bg-slate-900/90"></div>
+    </div>
+
+    <div class="content-card w-full max-w-4xl border-none bg-transparent shadow-none p-0">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h3 class="text-emerald-400 text-sm font-bold tracking-widest uppercase mb-2">Step 4</h3>
+          <h2 class="text-3xl font-serif text-white mb-4 trigger-blur">The Clock Starts <br>From Offer to Executed
+            Contract</h2>
+          <p class="text-slate-300 mb-4">
+            When you receive a written offer, you navigate to the 'Offer Log.' Here, you can attach the offer PDF and
+            summarize key terms for your own records. Dwellingly stays in its lane as your organizational partner—it’s
+            here to record the details, not to handle the negotiations.
+          </p>
+          <p class="text-slate-300">
+            Once you and the buyer reach an agreement, you reach the most important moment: when you log the deal by
+            setting the official 'executed date.' The instant you do this, your dashboard transforms from a static prep
+            area into a dynamic, active project timeline.
+          </p>
+        </div>
+        <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 relative overflow-hidden">
+          <!-- Simulated Clock UI -->
+          <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500 blur-3xl opacity-20"></div>
+          <p class="text-slate-300 mb-4">The Contract Clock, previously dormant, now starts counting down the days,
+            hours, and minutes to your first deadline. The 'Next Step' module shifts to time-sensitive tasks like
+            "Confirm Key Dates with Title Company." A 'Critical Dates' list instantly populates with all contract
+            deadlines—Option Period, Financing Contingency, and more—calculated automatically. The abstract timeline of
+            a real estate contract is now a visible, trackable project.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step-section bg-gradient-to-br from-slate-900 to-slate-800">
+    <div class="content-card">
+      <h3 class="text-emerald-400 text-sm font-bold tracking-widest uppercase mb-2">Step 5</h3>
+      <h2 class="text-3xl font-serif text-white mb-4 trigger-blur">Mastering the Critical Window <br>The Option Period
+      </h2>
+      <p class="text-slate-300 mb-4">
+        The option period is a short, high-stakes window where the buyer conducts inspections. For independent sellers,
+        this is where misunderstandings escalate. To manage this risk, Dwellingly provides the 'Option Period Command
+        Center.' This screen is purpose-built to prevent deal-breaking mistakes.
+      </p>
+      <p class="text-slate-300">
+        It features a prominent visual countdown timer reinforcing the exact deadline for the buyer's option to
+        terminate. You'll find an 'Inspection Checklist' to track tasks and a 'Repair Request Tracker,' a neutral log
+        where you record requests from the buyer. This keeps everything in one place, ensuring Dwellingly remains your
+        coordination tool while you handle the conversation with the buyer. By successfully navigating the option period
+        with clarity, you have overcome the biggest hurdle to closing.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONCLUSION -->
+  <section class="step-section">
+    <div class="sticky-image-container">
+      <img src="./../images/visual-4 (32).png?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" class="sticky-image"
+        style="opacity: 0.6;" alt="Celebration context">
+      <!-- Contextual placeholder for [User Image 4] -->
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 text-center max-w-2xl mx-auto px-6">
+      <h2 class="text-4xl md:text-6xl font-serif text-white mb-8 trigger-blur"
+        style="text-shadow: 0 4px 20px rgba(0,0,0,0.5);">Conclusion</h2>
+      <div class="bg-slate-900/90 backdrop-blur-md p-8 rounded-lg shadow-2xl border border-slate-700">
+        <p class="text-slate-300 text-lg mb-6">
+          In just these few steps, your journey has been transformed. You went from a blank slate to the pilot of a
+          fully active, organized deal. You have a professional document vault, a live contract clock, and clear,
+          actionable deadlines.
+        </p>
+        <p class="text-white font-serif text-xl italic">
+          "You are still in full control of your sale—you make the decisions, you communicate with the buyer, and you
+          manage the outcome. But now, you have a procedural partner ensuring you have the structure, reminders, and
+          organization needed to cross the finish line. Your path to closing is no longer a source of fear, but a
+          confident, step-by-step process."
+        </p>
+      </div>
+      <button
+        class="mt-12 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold tracking-wide rounded transition-colors shadow-[0_0_20px_rgba(52,211,153,0.4)]">
+        START YOUR SALE
+      </button>
+    </div>
+  </section>
+
+  <script>
+    // Intersection Observer for Animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.2
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+
+            // Trigger SVG Motion Blur Animation
+            const blurTargets = entry.target.querySelectorAll('.trigger-blur');
+            blurTargets.forEach(el => {
+              el.style.filter = 'url(#motionBlur)';
+              // Find the animate tag inside the filter and begin it
+              const anim = document.querySelector('#motionBlur animate');
+              if (anim) {
+                anim.beginElement();
+              }
+              // Remove filter after animation to prevent rendering cost
+              setTimeout(() => {
+                el.style.filter = 'none';
+              }, 800);
+            });
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.content-card, .hero-title').forEach(el => {
+        observer.observe(el);
+      });
+    });
+  </script>
+
+</body>
+
+</html>

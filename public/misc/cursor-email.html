@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursor Testimonial Art</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    /* Custom Animations */
+    @keyframes drift {
+      0% {
+        background-position: 0% 0%;
+      }
+
+      100% {
+        background-position: 100% 100%;
+      }
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    @keyframes type-cursor {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes text-flicker {
+      0% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      2% {
+        opacity: 0.8;
+        transform: translateX(1px);
+      }
+
+      4% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      98% {
+        opacity: 1;
+      }
+
+      99% {
+        opacity: 0.5;
+        transform: translateX(-1px);
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* Utility Classes */
+    .font-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .font-body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .text-shadow-glow {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5), 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+
+    .bg-grid-pattern {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .glass-panel {
+      background: rgba(10, 10, 12, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body class="bg-neutral-950 text-white min-h-screen flex items-center justify-center overflow-hidden p-4">
+
+  <!-- SVG Filters Definition -->
+  <svg class="hidden">
+    <defs>
+      <!-- Filter 1: Distress/Noise (The Mud) -->
+      <filter id="distress-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise">
+          <animate attributeName="baseFrequency" values="0.8;0.85;0.8" dur="0.2s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" result="desatNoise" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.3" />
+        </feComponentTransfer>
+        <feComposite operator="in" in2="SourceGraphic" result="composite" />
+      </filter>
+
+      <!-- Filter 2: Chromatic Aberration (The Friction) -->
+      <filter id="chromatic-glitch">
+        <feOffset in="SourceGraphic" dx="-2" dy="0" result="layerRed" />
+        <feOffset in="SourceGraphic" dx="2" dy="0" result="layerCyan" />
+        <feColorMatrix in="layerRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.7 0" result="red" />
+        <feColorMatrix in="layerCyan" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.7 0"
+          result="cyan" />
+        <feBlend mode="screen" in="red" in2="cyan" />
+      </filter>
+
+      <!-- Filter 3: Liquid Flow (The Mind Reading) -->
+      <filter id="liquid-flow">
+        <feTurbulence type="turbulence" baseFrequency="0.01 0.02" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.01 0.02; 0.015 0.025; 0.01 0.02" dur="4s"
+            repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="5" xChannelSelector="R" yChannelSelector="G" />
+        <feGaussianBlur stdDeviation="0.5" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Main Card Container -->
+  <div class="relative w-full max-w-2xl bg-black rounded-2xl overflow-hidden shadow-2xl border border-neutral-800">
+
+    <!-- Background Layers -->
+    <!-- Top Half: The Struggle (Image 1) -->
+    <div class="absolute top-0 left-0 w-full h-1/2 overflow-hidden">
+      <img src="../images/scene-2 (93).jpg" alt="Struggle coding"
+        class="w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale contrast-125 scale-110">
+      <div class="absolute inset-0 bg-red-900/20 mix-blend-overlay"></div>
+      <div class="absolute inset-0 bg-black/60"></div>
+    </div>
+
+    <!-- Bottom Half: The Flow (Image 3) -->
+    <div class="absolute bottom-0 left-0 w-full h-1/2 overflow-hidden">
+      <img src="../images/scene-4 (74).jpg" alt="Flow state coding"
+        class="w-full h-full object-cover opacity-60 mix-blend-screen scale-110">
+      <div class="absolute inset-0 bg-blue-900/30 mix-blend-overlay"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="relative z-10 flex flex-col h-full">
+
+      <!-- Header -->
+      <div class="p-6 md:p-8 pb-0 flex justify-between items-start">
+        <div class="glass-panel px-3 py-1 rounded-full text-xs font-code text-neutral-400 tracking-wider uppercase">
+          <span class="text-red-500 mr-2">●</span>Syntax_Error // Resolved
+        </div>
+        <div class="text-xs font-code text-neutral-500">To: Ben & Cursor Team</div>
+      </div>
+
+      <!-- Section 1: The Struggle (Mud) -->
+      <div class="p-6 md:p-8 space-y-6">
+        <div class="border-l-2 border-red-500/50 pl-4">
+          <p class="font-body text-sm text-neutral-300 mb-2 leading-relaxed opacity-80">
+            Hi Ben and the Cursor team,<br>
+            The gift arrived, and while I love the gear, it’s what you’ve done to my brain that I’m actually writing
+            about.
+          </p>
+          <h2 class="font-bold text-2xl md:text-3xl text-neutral-200 tracking-tight leading-tight"
+            style="filter: url(#chromatic-glitch); animation: text-flicker 4s infinite;">
+            For years, coding felt like <span class="text-red-400 font-serif italic">wading through mud</span>—a
+            constant battle between the speed of my ideas and the friction of my fingers.
+          </h2>
+          <p class="mt-3 text-sm text-neutral-400 font-code">
+            I used to lose my <span class="text-neutral-500 line-through">'flow'</span> a dozen times an hour to syntax
+            errors and boilerplate.
+          </p>
+        </div>
+      </div>
+
+      <!-- Transition / Divider -->
+      <div class="relative h-12 w-full overflow-hidden flex items-center">
+        <div class="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+        <div
+          class="mx-auto bg-black border border-blue-500/50 px-4 py-1 rounded text-blue-400 text-xs font-code uppercase tracking-widest shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+          Connecting to AI...
+        </div>
+      </div>
+
+      <!-- Section 2: The Flow (Composition) -->
+      <div
+        class="flex-1 bg-gradient-to-b from-black/80 to-black/40 backdrop-blur-sm p-6 md:p-8 rounded-t-3xl border-t border-white/10">
+        <div class="bg-neutral-900/50 rounded-lg p-5 border border-white/5 relative overflow-hidden group">
+          <!-- Scanning Beam Animation -->
+          <div
+            class="absolute top-0 left-0 w-full h-1 bg-blue-400/50 shadow-[0_0_20px_rgba(96,165,250,0.8)] z-0 opacity-0 group-hover:opacity-100"
+            style="animation: scanline 3s linear infinite;"></div>
+
+          <p class="relative z-10 font-code text-sm md:text-base leading-relaxed text-blue-100">
+            <span class="text-purple-400">const</span> <span class="text-blue-300">experience</span> = <span
+              class="text-green-300">"Using Cursor"</span>;<br>
+            <span class="text-neutral-500">// specifically that eerie, 'mind-reading' Tab autocomplete</span><br>
+            <span class="block mt-2 font-body text-white" style="filter: url(#liquid-flow);">...is the first time in a
+              decade that the tool has actually caught up to my thoughts. It’s removed the 'grunt work' that used to
+              drain my battery by 3 PM.</span>
+          </p>
+
+          <div class="mt-4 flex items-center space-x-2">
+            <span class="text-blue-400">></span>
+            <span class="font-bold text-white text-lg md:text-xl text-shadow-glow">
+              Now, I’m not just typing; I’m <span class="italic text-cyan-300">composing</span>.
+              <span class="inline-block w-2 h-5 bg-cyan-400 ml-1 align-middle"
+                style="animation: type-cursor 1s infinite;"></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Final Impact -->
+        <div class="mt-8">
+          <p class="font-body text-lg text-neutral-200 leading-snug">
+            You haven’t just built a better IDE; you’ve given me back the <span
+              class="font-bold text-white border-b-2 border-yellow-400">joy of pure building</span>.
+          </p>
+          <p
+            class="mt-4 text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-white">
+            Thank you for making me feel like a 10x developer again.
+          </p>
+
+          <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-4">
+            <div class="text-sm font-code text-neutral-400">
+              Best,<br>
+              <span class="text-white font-semibold">Shaun Koehne</span>
+            </div>
+            <!-- Decorative Tech Elements -->
+            <svg class="w-8 h-8 text-blue-500 opacity-80" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dwellingly Reel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --slide-duration: 5s;
+        }
+
+        body {
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Reel Container (9:16 Aspect Ratio) */
+        .reel-frame {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 9/16;
+            background: #000;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Texture Overlay (Grain) */
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.35;
+            mix-blend-mode: overlay;
+            filter: url(#grain);
+        }
+
+        /* Scenes */
+        .scene {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+        }
+
+        .scene.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 20;
+        }
+
+        /* Images */
+        .bg-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.1);
+            transition: transform 6s ease-out;
+            z-index: -1;
+        }
+
+        .scene.active .bg-img {
+            transform: scale(1);
+        }
+
+        /* Typography Animations */
+        .animate-text {
+            transform: translateY(100%);
+            opacity: 0;
+            filter: blur(10px);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s, filter 0.8s;
+        }
+
+        .scene.active .animate-text {
+            transform: translateY(0);
+            opacity: 1;
+            filter: blur(0px);
+        }
+
+        /* Delays */
+        .delay-100 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-200 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-300 {
+            transition-delay: 0.3s;
+        }
+
+        /* Scrim Gradients */
+        .scrim-dark {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+            z-index: 0;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #f97316;
+            width: 0%;
+            z-index: 60;
+        }
+
+        /* Specific Utilities */
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .glass-bg {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Liquid Background Animation */
+        .liquid-layer {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.6;
+            mix-blend-mode: soft-light;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG Filters -->
+    <svg style="display: none;">
+        <defs>
+            <!-- Animated Film Grain -->
+            <filter id="grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+                    <animate attributeName="baseFrequency" values="0.8;0.85;0.8" dur="1s" repeatCount="indefinite" />
+                    <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.15" /> <!-- Low opacity noise -->
+                </feComponentTransfer>
+            </filter>
+
+            <!-- Liquid Distortion -->
+            <filter id="liquid">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="warp">
+                    <animate attributeName="baseFrequency" values="0.015;0.025;0.015" dur="10s"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="30" in="SourceGraphic" in2="warp" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="reel-frame">
+        <div class="texture-overlay"></div>
+        <div class="progress-bar" id="progress"></div>
+
+        <!-- SCENE 1: HOOK -->
+        <div class="scene active" data-duration="4000">
+            <!-- Abstract Liquid BG -->
+            <img src="./../images/scene-1 (95).jpg?q=80&w=1000&auto=format&fit=crop" class="bg-img"
+                alt="Abstract texture" style="filter: url(#liquid);">
+            <div class="scrim-dark"></div>
+            <div class="relative z-10">
+                <h1 class="text-5xl text-white font-bold leading-tight animate-text serif-font mb-4">
+                    Say <span class="text-orange-500 italic">Goodbye</span><br>to Buyer<br>Friction
+                </h1>
+                <div class="w-16 h-1 bg-white animate-text delay-200"></div>
+            </div>
+        </div>
+
+        <!-- SCENE 2: PROBLEM -->
+        <div class="scene" data-duration="5000">
+            <!-- Messy Desk Image -->
+            <img src="./../images/scene-2 (991).jpg?q=80&w=1000&auto=format&fit=crop"
+                class="bg-img grayscale contrast-125" alt="Messy desk">
+            <div class="scrim-dark bg-red-900/30"></div> <!-- Red tint for 'problem' -->
+            <div class="relative z-10">
+                <p class="text-xl text-orange-200 font-semibold mb-2 animate-text uppercase tracking-widest">The Old Way
+                </p>
+                <h2 class="text-3xl text-white font-bold animate-text delay-100">
+                    Want to impress potential buyers? 🏠
+                </h2>
+                <p class="text-white/90 mt-4 text-lg animate-text delay-200">
+                    Stop sending messy email attachments.
+                </p>
+            </div>
+        </div>
+
+        <!-- SCENE 3: SOLUTION (ACTION) -->
+        <div class="scene" data-duration="4500">
+            <!-- App Usage - Phone -->
+            <img src="./../images/scene-2 (991)2.jpg?q=80&w=1000&auto=format&fit=crop" class="bg-img" alt="Phone App">
+            <div class="scrim-dark"></div>
+            <!-- Floating UI Card simulation -->
+            <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-3/4 glass-bg p-6 rounded-xl animate-text">
+                <div
+                    class="bg-orange-500 text-white text-center py-3 rounded-lg font-bold shadow-lg transform active:scale-95 transition-transform">
+                    Generate Buyer Packet
+                </div>
+            </div>
+            <div class="relative z-10 mt-auto">
+                <h2 class="text-3xl text-white font-bold animate-text delay-100 serif-font">
+                    With Dwellingly,
+                </h2>
+                <p class="text-white/90 mt-2 text-lg animate-text delay-200">
+                    one click generates a professional Buyer Packet.
+                </p>
+            </div>
+        </div>
+
+        <!-- SCENE 4: BENEFIT (TECH) -->
+        <div class="scene" data-duration="5000">
+            <!-- iPad/Tablet Shot -->
+            <img src="./../images/scene-3 (87).jpg?q=80&w=1000&auto=format&fit=crop" class="bg-img"
+                alt="Tablet Interface">
+            <div class="scrim-dark"></div>
+            <div class="relative z-10">
+                <div class="border-l-4 border-orange-500 pl-4 mb-6 animate-text">
+                    <h3 class="text-2xl text-white font-bold">Instant & Professional</h3>
+                </div>
+                <p class="text-white text-xl leading-snug animate-text delay-100">
+                    ...with all your <span class="text-orange-400 font-semibold">Texas disclosures</span> and surveys.
+                </p>
+                <p class="text-white/80 mt-4 text-sm animate-text delay-200">
+                    It signals that you are a serious seller who knows the process.
+                </p>
+            </div>
+        </div>
+
+        <!-- SCENE 5: CTA (LIFESTYLE) -->
+        <div class="scene" data-duration="5000">
+            <!-- Happy Couple -->
+            <img src="./../images/scene-4 (79).jpg?q=80&w=1000&auto=format&fit=crop" class="bg-img" alt="Happy Couple">
+            <div class="scrim-dark"></div>
+            <div class="relative z-10 text-center">
+                <button
+                    class="bg-white text-slate-900 px-8 py-3 rounded-full font-bold text-lg mb-8 shadow-[0_0_20px_rgba(255,255,255,0.3)] animate-text">
+                    View the Tour
+                </button>
+                <div class="flex flex-wrap justify-center gap-2 text-xs text-white/70 animate-text delay-200 font-mono">
+                    <span>#AustinHomes</span>
+                    <span>#DIYHomeSale</span>
+                    <span>#TexasLiving</span>
+                    <span>#Dwellingly</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scenes = document.querySelectorAll('.scene');
+            const progressBar = document.getElementById('progress');
+            let currentSceneIndex = 0;
+
+            function playScene() {
+                // Reset all scenes
+                scenes.forEach(s => s.classList.remove('active'));
+
+                // Activate current scene
+                const currentScene = scenes[currentSceneIndex];
+                currentScene.classList.add('active');
+
+                // Animation timing
+                const duration = parseInt(currentScene.getAttribute('data-duration'));
+
+                // Progress Bar Animation
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '0%';
+                // Force reflow
+                void progressBar.offsetWidth;
+                progressBar.style.transition = `width ${duration}ms linear`;
+                progressBar.style.width = '100%';
+
+                // Queue next scene
+                setTimeout(() => {
+                    currentSceneIndex = (currentSceneIndex + 1) % scenes.length;
+                    playScene();
+                }, duration);
+            }
+
+            // Start the loop
+            playScene();
+        });
+    </script>
+</body>
+
+</html>
