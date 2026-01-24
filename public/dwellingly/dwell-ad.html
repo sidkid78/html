@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dwellingly - The Protected Passage</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&family=Space+Mono:wght@700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #d4af37;
+      --dark: #0a0a0a;
+      --danger: #ff2a2a;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .serif {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .mono {
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* SMOOTH SCROLL SNAP */
+    .scroll-container {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    section {
+      height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* BACKGROUND LAYERS */
+    .bg-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+      transition: opacity 1s ease-in-out, transform 10s ease-out;
+      opacity: 0;
+      transform: scale(1.1);
+    }
+
+    section.active .bg-layer {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+
+    /* TEXT CONTENT */
+    .content {
+      z-index: 10;
+      max-width: 800px;
+      padding: 2rem;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s ease-out 0.5s;
+    }
+
+    section.active .content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* SCENE 1: NOSTALGIA */
+    #scene-1 .bg-layer {
+      background-image: url('../images/scene-1-2026111.jpg?se=2025-02-23T16%3A37%3A48Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D4566d51c-6d12-426c-851f-d7482813589b.webp&sig=6w15e3/7L%2Bb3o3UeF%2BNz1s/zS0mF1q9gB2%2B1T7h%2BO/o%3D');
+      filter: url(#warm-glow) brightness(0.7);
+    }
+
+    /* SCENE 2: GLITCH/THREAT */
+    #scene-2 .bg-layer {
+      background-image: url('../images/scene-2-2026112.jpg?se=2025-02-23T16%3A37%3A48Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Da0d8b5c9-9e2e-48a5-9a4f-5b6d9c7a8e2f.webp&sig=G0%2BoM4dZ3%2B8qJ2%2B5k8tL5%2B4jJ2%2B9%2B2%2B8%2B5%2B9%2B8%2B5%2B9%3D');
+      filter: url(#glitch-filter) contrast(1.2);
+    }
+
+    .danger-text {
+      color: var(--danger);
+      text-shadow: 2px 0 0 #fff;
+      filter: url(#noise-text);
+    }
+
+    /* SCENE 3: SHIELD */
+    #scene-3 .bg-layer {
+      background-image: url('../images/scene-3 (92).jpg?se=2025-02-23T16%3A37%3A48Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D8a2b5c7d-3e4f-6a7b-8c9d-0e1f2a3b4c5d.webp&sig=PlaceholderSigForImg3');
+      /* Fallback to Img 3 provided in logic */
+      background-image: url('../images/scene-3 (92).jpg?se=2025-02-23T16%3A37%3A48Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De2f3a4b5-6c7d-8e9f-0a1b-2c3d4e5f6g7h.webp&sig=PlaceholderSigForImg3');
+      /* Using visual description logic, user Img 3 */
+      background-image: url('../images/scene-3 (92).jpg?se=2025-02-23T16%3A37%3A48Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De0885c3b-5353-41e9-8269-2f5a5e3b8a1c.webp&sig=1s2d3f4g5h6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x');
+    }
+
+    /* SCENE 4: PEACE */
+    #scene-4 .bg-layer {
+      background-image: url('../images/scene-4 (82).jpg?se=2025-02-23T16%3A37%3A48Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D8f0c9d2e-1b3a-4c5d-6e7f-8g9h0i1j2k3l.webp&sig=PlaceholderSigForImg4');
+      background-image: url('../images/scene-4 (82).jpg?se=2025-02-23T16%3A37%3A48Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D1b777a83-9366-4d08-8e6f-4d9f64c67d3d.webp&sig=z1y2x3w4v5u6t7s8r9q0p1o2n3m4l5k6j7i8h9g0');
+    }
+
+    /* UTILS */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.2));
+      pointer-events: none;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.8rem;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+    }
+
+    .btn:hover {
+      background: white;
+      color: black;
+      border-color: white;
+    }
+
+    /* KINETIC TYPOGRAPHY */
+    @keyframes shake {
+      0% {
+        transform: translate(1px, 1px) rotate(0deg);
+      }
+
+      10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+      }
+
+      20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+      }
+
+      30% {
+        transform: translate(3px, 2px) rotate(0deg);
+      }
+
+      40% {
+        transform: translate(1px, -1px) rotate(1deg);
+      }
+
+      50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+      }
+
+      60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+      }
+
+      70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+      }
+
+      80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+      }
+
+      90% {
+        transform: translate(1px, 2px) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+      }
+    }
+
+    .glitch-anim {
+      display: inline-block;
+      animation: shake 0.5s infinite;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Warm Glow Filter -->
+      <filter id="warm-glow">
+        <feColorMatrix type="matrix" values="1.2 0 0 0 0  0 1.1 0 0 0  0 0 0.9 0 0  0 0 0 1 0" />
+        <feGaussianBlur stdDeviation="0.5" />
+      </filter>
+
+      <!-- Glitch / Distortion Filter -->
+      <filter id="glitch-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.01 0.4" numOctaves="2" result="warp">
+          <animate attributeName="baseFrequency" values="0.01 0.4; 0.01 0.8; 0.01 0.4" dur="0.2s"
+            repeatCount="indefinite" />
+          <animate attributeName="seed" values="0;100" dur="0.5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="20" in="SourceGraphic" in2="warp" />
+        <feColorMatrix type="saturate" values="0" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="redChan" />
+      </filter>
+
+      <!-- Noise Text Filter -->
+      <filter id="noise-text">
+        <feTurbulence type="fractalNoise" baseFrequency="0.5" result="noise">
+          <animate attributeName="seed" values="1;100" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feComposite operator="in" in="noise" in2="SourceGraphic" result="composite" />
+        <feComposite operator="arithmetic" k1="1.5" k2="0.5" in="composite" in2="SourceGraphic" />
+      </filter>
+    </defs>
+  </svg>
+
+  <main class="scroll-container">
+
+    <!-- SCENE 1: HOOK / NOSTALGIA -->
+    <section id="scene-1" class="active">
+      <div class="bg-layer"></div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h1 class="serif text-4xl md:text-6xl mb-6 leading-tight text-[#f3eacb]">
+          Austin: Your home is a story, <br><span class="italic font-light opacity-80">not a line item.</span>
+        </h1>
+        <p class="text-lg md:text-xl font-light opacity-90 mb-8 max-w-xl mx-auto">
+          They call it "liquidating an asset." We call it closing a chapter of your life.
+        </p>
+        <div class="text-sm uppercase tracking-widest border-b border-white/30 inline-block pb-2">Scroll to continue
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 2: THE PROBLEM / GLITCH -->
+    <section id="scene-2">
+      <div class="bg-layer"></div>
+      <div class="overlay" style="background: rgba(10,0,0,0.8)"></div>
+      <div class="content">
+        <p class="mono text-sm md:text-base text-gray-300 mb-4 tracking-wider">
+          THE INDUSTRY WAY
+        </p>
+        <h2 class="serif text-3xl md:text-5xl mb-6 font-bold leading-tight">
+          Don't let the industry treat it like one.
+        </h2>
+        <div class="my-8 space-y-4">
+          <div class="danger-text mono text-4xl md:text-6xl font-bold glitch-anim">EXPLOITATION</div>
+          <div class="danger-text mono text-3xl md:text-5xl font-bold opacity-80 glitch-anim"
+            style="animation-delay: 0.1s">FINE PRINT</div>
+          <div class="danger-text mono text-3xl md:text-5xl font-bold opacity-60 glitch-anim"
+            style="animation-delay: 0.2s">EQUITY AT RISK</div>
+        </div>
+        <p class="text-gray-300 max-w-lg mx-auto">
+          In Austin’s cutthroat market, the big players want you overwhelmed by jargon and the ticking clock so you'll
+          settle for less money, less peace, less respect.
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 3: THE SOLUTION / SHIELD -->
+    <section id="scene-3">
+      <div class="bg-layer"></div>
+      <div class="overlay" style="background: linear-gradient(to top, #111 20%, transparent 80%);"></div>
+      <div class="content">
+        <h2 class="serif text-4xl md:text-6xl mb-4 text-[#d4af37]">The Dwellingly Shield</h2>
+        <p class="text-lg md:text-xl font-light leading-relaxed mb-6">
+          At Dwellingly, we’re obsessed with changing that. We didn't build a platform to "move units"; we built a
+          sanctuary for the Austin seller.
+        </p>
+        <div class="p-6 border border-[#d4af37]/30 bg-[#d4af37]/10 backdrop-blur-sm rounded-lg max-w-lg mx-auto">
+          <p class="text-sm md:text-base italic">
+            "We handle the 'scary' stuff—the predatory fine print and the brutal timelines—so you can walk away from
+            your first home with your head held high."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 4: RESOLUTION / PEACE -->
+    <section id="scene-4">
+      <div class="bg-layer"></div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h2 class="serif text-5xl md:text-7xl mb-6 font-bold tracking-tight">
+          Protect your peace. <br>Claim your equity.
+        </h2>
+        <p class="text-xl md:text-2xl font-light mb-8">
+          You’ve spent years building a life here. Don't let the process devalue it.
+        </p>
+        <div class="flex flex-col items-center gap-4">
+          <p class="font-bold">Is the "industry way" stressing you out? We’re listening.</p>
+          <a href="#" class="btn">Drop a 🛡️ if you’re ready</a>
+          <div class="flex gap-2 text-xs text-gray-400 mt-4">
+            <span>#AustinRealEstate</span>
+            <span>#Dwellingly</span>
+            <span>#SellSmart</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Vanilla JS to handle Scroll Interaction
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section');
+
+      const observerOptions = {
+        root: document.querySelector('.scroll-container'),
+        threshold: 0.5
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Remove active class from all, add to current
+            sections.forEach(s => s.classList.remove('active'));
+            entry.target.classList.add('active');
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
+
+</body>
+
+</html>
