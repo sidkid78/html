@@ -1,0 +1,351 @@
+ce
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clifton Franco | Architectural Editorial</title>
+  <style>
+    :root {
+      --c-dark: #0f1319;
+      --c-slate: #2c3e50;
+      --c-accent: #c4a484;
+      /* Sand/Stone */
+      --c-light: #f4f4f4;
+      --font-head: 'Times New Roman', serif;
+      --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--c-dark);
+      color: var(--c-light);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- SVG FILTERS & ASSETS --- */
+    .svg-assets {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    /* Global Grain Overlay */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.07;
+      filter: url(#noiseFilter);
+      mix-blend-mode: overlay;
+    }
+
+    /* --- LAYOUT --- */
+    .editorial-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--c-dark);
+      position: relative;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    }
+
+    section {
+      min-height: 90vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+      transition: transform 1.5s ease-out;
+      z-index: 0;
+      filter: grayscale(40%);
+    }
+
+    .bg-img.zoom-fx {
+      transform: scale(1.1);
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      max-width: 480px;
+    }
+
+    /* --- TYPOGRAPHY & ANIMATIONS --- */
+    h1,
+    h2 {
+      font-family: var(--font-head);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      color: var(--c-light);
+      /* Intro Animation applied on load */
+      animation: titleSlideUp 1.2s cubic-bezier(0.2, 0.0, 0.2, 1) forwards;
+      filter: url(#motionBlurY);
+      opacity: 0;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--c-accent);
+      font-weight: 300;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-left: 2px solid var(--c-accent);
+      padding-left: 1rem;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 1s ease 0.5s;
+    }
+
+    .subtitle.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    p.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .highlight {
+      color: var(--c-accent);
+      font-weight: 600;
+    }
+
+    blockquote {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      border-left: 4px solid var(--c-accent);
+      padding-left: 1.5rem;
+      margin: 2rem 0;
+      color: #fff;
+      font-style: italic;
+    }
+
+    /* --- SPECIFIC SECTIONS --- */
+    .hero-section .content {
+      margin-top: 10vh;
+    }
+
+    .split-screen {
+      background: linear-gradient(to bottom, transparent, var(--c-dark) 90%);
+    }
+
+    .outro-text {
+      text-align: center;
+      font-size: 2.5rem;
+      font-family: var(--font-head);
+      line-height: 1.2;
+    }
+
+    /* CSS Keyframes for layout */
+    @keyframes titleSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(100px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Blueprint Decoration */
+    .blueprint-line {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      width: 100px;
+      height: 1px;
+      background: var(--c-accent);
+      transform-origin: right;
+      transform: scaleX(0);
+      transition: transform 1s ease 0.2s;
+    }
+
+    .in-view .blueprint-line {
+      transform: scaleX(1);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG DEFINITIONS -->
+  <svg class="svg-assets">
+    <defs>
+      <!-- 1. ANIMATED NOISE (Grain) -->
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+
+      <!-- 2. DYNAMIC MOTION BLUR (Vertical) -->
+      <!-- Synced to the CSS TitleSlideUp duration of 1.2s -->
+      <filter id="motionBlurY">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0,40">
+          <animate attributeName="stdDeviation" values="0,40; 0,0" dur="1.2s" fill="freeze" calcMode="spline"
+            keySplines="0.2 0.0 0.2 1" />
+        </feGaussianBlur>
+      </filter>
+
+    </defs>
+  </svg>
+
+  <!-- VISUAL NOISE OVERLAY -->
+  <div class="noise-overlay"></div>
+
+  <main class="editorial-card">
+
+    <!-- SECTION 1: HERO -->
+    <section class="hero-section" id="sec1">
+      <img src="../images/cliff1.png?q=80&w=2574&auto=format&fit=crop" alt="Man looking at skyline" class="bg-img">
+      <div class="content">
+        <h1>Clifton Franco</h1>
+        <div class="subtitle">Building Certainty in an Uncertain Market</div>
+        <p>Most people see a residential development as a collection of blueprints and bottom lines. Clifton Franco sees
+          the heartbeat of Central Texas.</p>
+      </div>
+      <div class="blueprint-line"></div>
+    </section>
+
+    <!-- SECTION 2: BRIDGE -->
+    <section id="sec2">
+      <!-- Using Image 3: Corporate/Construction Split -->
+      <img src="../images/scene-3 (99).jpg?q=80&w=2669&auto=format&fit=crop" alt="Construction vs Corporate"
+        class="bg-img">
+      <div class="content">
+        <p>In an industry defined by volatility, Clifton has spent over 15 years acting as the <span
+            class="highlight">bridge</span> between a builder’s vision and a family’s future.</p>
+        <p>He doesn't just "manage sales teams"—he architects the human experience required to turn a construction site
+          into a neighborhood.</p>
+      </div>
+      <div class="blueprint-line" style="top:2rem; left:2rem; transform-origin:left;"></div>
+    </section>
+
+    <!-- SECTION 3: TRANSITION -->
+    <section id="sec3">
+      <!-- Using Image 2: Boardroom -->
+      <img src="../images/cliff3.png?q=80&w=2670&auto=format&fit=crop" alt="Boardroom Meeting" class="bg-img">
+      <div class="content">
+        <p>While others focus on the transaction, Clifton is obsessed with the <span
+            class="highlight">transition</span>.</p>
+        <p>He understands that for a builder, a "slow launch" is a threat to the legacy; for a buyer, a "bad process" is
+          a threat to their peace of mind.</p>
+        <p>By merging high-level strategic marketing with a deep, intuitive grasp of buyer psychology, Clifton has
+          consistently turned "underperforming" into "unprecedented."</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4: MISSION -->
+    <section id="sec4" style="background: var(--c-slate);">
+      <div class="content">
+        <p>From the boardroom of the Home Builders Association to the muddy boots of a new community launch, his mission
+          remains the same: To eliminate the friction of the home-buying process.</p>
+        <p>Whether he is hitting 125% of a closing goal or mentoring the next generation of sales leaders, Clifton isn't
+          just selling square footage. He is building the economic and emotional foundations that Central Texas stands
+          on.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 5: OUTRO -->
+    <section id="sec5">
+      <!-- Using Image 4: Hand Opening Door -->
+      <img src="../images/scene-4 (89).jpg?q=80&w=2606&auto=format&fit=crop" alt="Opening Door" class="bg-img">
+      <div class="content">
+        <div class="outro-text">
+          He doesn’t just close deals;<br>
+          <span class="highlight">he opens doors.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Vanilla JS for Scroll Interactions
+    document.addEventListener('DOMContentLoaded', () => {
+      const observerOptions = {
+        root: null,
+        threshold: 0.2
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+
+            // Trigger subtitle
+            const sub = entry.target.querySelector('.subtitle');
+            if (sub) sub.classList.add('active');
+
+            // Trigger paragraphs sequentially
+            const paras = entry.target.querySelectorAll('p');
+            paras.forEach((p, index) => {
+              setTimeout(() => {
+                p.classList.add('reveal');
+              }, index * 200);
+            });
+
+            // Trigger Background Zoom
+            const img = entry.target.querySelector('.bg-img');
+            if (img) img.classList.add('zoom-fx');
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('section').forEach(sec => {
+        observer.observe(sec);
+      });
+    });
+  </script>
+
+</body>
+
+</html>
