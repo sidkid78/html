@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vampire Subscriptions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+
+    :root {
+      --neon-red: #ff3333;
+      --neon-cyan: #00f3ff;
+      --bg-dark: #050505;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-dark);
+      color: white;
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Custom Scrollbar */
+    .hide-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .hide-scroll::-webkit-scrollbar-thumb {
+      background: var(--neon-red);
+      border-radius: 2px;
+    }
+
+    .hide-scroll::-webkit-scrollbar-track {
+      background: #111;
+    }
+
+    /* Utility */
+    .font-tech {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .text-shadow-red {
+      text-shadow: 0 0 10px var(--neon-red), 0 0 20px var(--neon-red);
+    }
+
+    .text-shadow-cyan {
+      text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+    }
+
+    /* SVG Filter Classes */
+    .filter-noise {
+      filter: url(#static-noise);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .filter-glitch {
+      filter: url(#glitch-anim);
+    }
+
+    .filter-blur-anim {
+      animation: focusIn 2s ease-out forwards;
+    }
+
+    @keyframes focusIn {
+      0% {
+        filter: blur(10px);
+        opacity: 0;
+      }
+
+      100% {
+        filter: blur(0px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse-border {
+
+      0%,
+      100% {
+        box-shadow: 0 0 5px var(--neon-red) inset;
+        border-color: rgba(255, 51, 51, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 0 20px var(--neon-red) inset;
+        border-color: rgba(255, 51, 51, 1);
+      }
+    }
+
+    .alert-box {
+      background: rgba(20, 0, 0, 0.9);
+      border: 1px solid var(--neon-red);
+      animation: pulse-border 2s infinite;
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+    }
+
+    .card-container {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .snap-section {
+      scroll-snap-align: start;
+    }
+  </style>
+</head>
+
+<body class="bg-black">
+
+  <!-- SVG Filters -->
+  <svg width="0" height="0" class="absolute">
+    <defs>
+      <!-- 1. Animated Noise (Static) -->
+      <filter id="static-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.4" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- 2. Glitch / Liquid Distortion -->
+      <filter id="glitch-anim">
+        <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.05;0.02;0.05" dur="4s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Main Card Container -->
+  <main
+    class="relative w-full max-w-md h-[90vh] bg-neutral-900 overflow-hidden shadow-2xl border border-gray-800 rounded-xl">
+
+    <!-- Global Noise Overlay -->
+    <div class="absolute inset-0 z-20 w-full h-full filter-noise bg-blend-overlay"></div>
+
+    <!-- Scrollable Content -->
+    <div class="card-container w-full h-full overflow-y-auto hide-scroll relative z-10">
+
+      <!-- SECTION 1: HEADLINE & ALERT -->
+      <section class="snap-section relative w-full h-full flex flex-col justify-end pb-12 p-6 box-border">
+        <!-- Background Image 1 -->
+        <div class="absolute inset-0 z-0">
+          <img src="./../images/scene-1-76.jpg" alt="Hand clutching money in fog"
+            class="w-full h-full object-cover opacity-60 filter-blur-anim">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-90"></div>
+        </div>
+
+        <div class="relative z-10">
+          <h1 class="font-tech text-4xl font-bold leading-tight mb-4">
+            Stop letting <br>
+            <span class="text-red-500 filter-glitch inline-block">"Vampire Subscriptions"</span>
+            <br>tax your distraction.
+          </h1>
+
+          <!-- Alert Notification -->
+          <div class="alert-box p-4 rounded mt-6 mb-2">
+            <div class="flex items-center space-x-2 mb-2">
+              <div class="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
+              <span class="text-red-500 font-bold uppercase tracking-widest text-xs">System Alert</span>
+            </div>
+            <p class="text-sm text-gray-200 italic leading-relaxed">
+              “Google just charged you for space you haven't touched in 14 months. Reclaim it?”
+            </p>
+          </div>
+
+          <p class="text-xs text-gray-500 mt-4 text-center animate-bounce">Swipe Up</p>
+        </div>
+      </section>
+
+      <!-- SECTION 2: THE PROBLEM (BODY COPY) -->
+      <section
+        class="snap-section relative w-full h-auto min-h-full flex flex-col justify-center p-8 box-border bg-black">
+        <!-- Background Image 2 -->
+        <div class="absolute inset-0 z-0">
+          <img src="./../images/scene-2 (80).jpg" alt="Vampire Subscription Metaphor"
+            class="w-full h-full object-cover opacity-50">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 space-y-6 text-lg leading-relaxed text-gray-300">
+          <p>
+            You’re building a career, a business, and a life. But in the background, a dozen trillion-dollar companies
+            are betting on your distraction.
+          </p>
+          <p>
+            They love it when you’re too busy to notice that <span class="text-white font-bold">"Pro" tier</span> you no
+            longer need. They thrive on the $10/month you forgot to cancel in 2022.
+          </p>
+          <p class="border-l-2 border-red-500 pl-4 text-white">
+            It’s not just $480 a year—it’s a <span class="text-red-500 font-bold">leak in your personal
+              sovereignty.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 3: THE SOLUTION & CTA -->
+      <section class="snap-section relative w-full h-full flex flex-col justify-center p-6 box-border">
+        <!-- Background Image 3 -->
+        <div class="absolute inset-0 z-0">
+          <img src="./../images/scene-3 (69).jpg" alt="Digital Sentry" class="w-full h-full object-cover opacity-50">
+          <div class="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10">
+          <h2 class="font-tech text-3xl text-cyan-400 text-shadow-cyan mb-4">Subscription Guardian</h2>
+          <p class="text-sm text-gray-300 mb-4">
+            Isn't an "audit tool." It’s your <span class="text-cyan-300">digital sentry.</span>
+          </p>
+          <p class="text-sm text-gray-300 leading-relaxed">
+            Powered by <strong class="text-white">Gemini AI</strong>, it doesn't just look at bills; it analyzes your
+            <em>intent.</em> It spots the gap between what you pay for and what you actually use, then hands you the
+            "kill switch."
+          </p>
+        </div>
+
+        <div class="relative z-10 mt-auto mb-4 flex justify-center">
+          <p class="text-xs text-gray-500 animate-bounce">Swipe Up</p>
+        </div>
+      </section>
+
+      <!-- SECTION 4: CALL TO ACTION -->
+      <section class="snap-section relative w-full h-full flex flex-col justify-center p-6 box-border">
+        <!-- Background Image 4 -->
+        <div class="absolute inset-0 z-0">
+          <img src="./../images/scene-4 (64).jpg" alt="Reclaim Your Focus"
+            class="w-full h-full object-cover opacity-50">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90"></div>
+        </div>
+
+        <div class="relative z-10 flex flex-col justify-center h-full">
+          <p class="text-sm text-center text-gray-200 mb-8 max-w-xs mx-auto">
+            Stop being the silent benefactor for Big Tech’s bottom line. <br><br>
+            <span class="text-white font-bold">Reclaim your capital. Reclaim your focus.</span>
+          </p>
+
+          <!-- CTA Button -->
+          <button
+            class="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white font-tech font-bold tracking-widest uppercase rounded shadow-[0_0_15px_rgba(0,243,255,0.5)] transition-all transform hover:scale-[1.02] active:scale-95">
+            Deploy Your Guardian
+          </button>
+
+          <!-- Hashtags -->
+          <div
+            class="mt-8 flex flex-wrap justify-center gap-2 text-[10px] text-gray-500 uppercase tracking-wide font-tech">
+            <span>#FinancialJustice</span>
+            <span>#FocusOverClutter</span>
+            <span>#AIVigilance</span>
+            <span>#TheGreatUnsubscribe</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</body>
+
+</html>

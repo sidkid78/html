@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dwellingly - Defending Equity</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Roboto+Mono:wght@300;400;700&display=swap');
+
+    :root {
+      --c-dark: #0f172a;
+      --c-accent: #06b6d4;
+      --c-alert: #f43f5e;
+      --c-gold: #fbbf24;
+    }
+
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      background-color: #000;
+      overflow: hidden;
+      font-family: 'Roboto Mono', monospace;
+      color: white;
+    }
+
+    /* Main Card Container */
+    .card-viewport {
+      width: 100%;
+      height: 100%;
+      background: var(--c-dark);
+      position: relative;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+    }
+
+    .card-viewport::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Individual Slides */
+    .slide {
+      height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      box-sizing: border-box;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    /* Background Layers */
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+      transition: transform 0.5s ease-out;
+    }
+
+    .slide:hover .bg-layer {
+      transform: scale(1.05);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.6));
+    }
+
+    /* Content Layer */
+    .content {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Text Styling */
+    h1,
+    h2,
+    h3 {
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .text-glitch {
+      filter: url(#glitch-filter);
+    }
+
+    .text-shadow-glow {
+      text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    }
+
+    /* Specific Effects */
+    .noise-overlay {
+      position: absolute;
+      inset: 0;
+      opacity: 0.4;
+      filter: url(#noise);
+      z-index: 2;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    .scanline {
+      width: 100%;
+      height: 100px;
+      z-index: 10;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+      opacity: 0.1;
+      position: absolute;
+      bottom: 100%;
+      animation: scanline 10s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scanline {
+      0% {
+        bottom: 100%;
+      }
+
+      100% {
+        bottom: -100px;
+      }
+    }
+
+    /* Animations */
+    .fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .delay-1 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.6s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters -->
+  <svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+      <!-- Animated Noise for Anxiety -->
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.5" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- Distorted Glitch Text -->
+      <filter id="glitch-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="warp">
+          <animate attributeName="baseFrequency" values="0.02;0.005;0.02" dur="3s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="5" in="SourceGraphic" in2="warp" />
+      </filter>
+
+      <!-- Speed Motion Blur -->
+      <filter id="motion-blur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
+          <animate attributeName="stdDeviation" values="10,0; 0,0" dur="0.5s" fill="freeze" begin="indefinite" />
+        </feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="card-viewport">
+
+    <!-- SLIDE 1: Title & Nightmare -->
+    <section class="slide">
+      <div class="bg-layer" style="background-image: url('../images/scene-1-20.jpg');"></div>
+      <div class="noise-overlay"></div>
+      <div class="overlay"></div>
+
+      <div class="content">
+        <h4 class="text-xs text-gray-400 mb-2 uppercase tracking-widest">Title</h4>
+        <h1 class="text-3xl font-bold mb-6 leading-tight fade-in-up">
+          You Aren't Just Selling a House. <br>
+          <span class="text-red-500">You’re Defending Your Equity.</span>
+        </h1>
+
+        <div class="border-l-2 border-red-500 pl-4 fade-in-up delay-1">
+          <h2 class="text-xl mb-2 text-red-100">The Nightmare in the Silence</h2>
+          <p class="text-sm text-gray-300 leading-relaxed">
+            For a Texas FSBO seller, the scariest sound isn't a "no." It’s the silence that follows the phrase: <em
+              class="text-white">"I thought you were doing that."</em> In that silence, thousands of dollars in earnest
+            money vanish, and your move-out date evaporates. You aren't just a seller; you're a person navigating a
+            legal minefield designed for professionals, holding nothing but a stack of scattered emails and a prayer.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Mission & Phase 1 -->
+    <section class="slide">
+      <div class="bg-layer" style="background-image: url('../images/scene-2-20.jpg');"></div>
+      <div class="overlay" style="background: linear-gradient(to top, #0f172a 90%, transparent);"></div>
+      <div class="scanline"></div>
+
+      <div class="content">
+        <h2 class="text-2xl font-bold text-cyan-400 mb-4 fade-in-up">The Dwellingly Mission: The Equalizer</h2>
+        <p class="text-sm text-gray-300 mb-8 fade-in-up delay-1">
+          We didn’t build Dwellingly to be another app on your phone. We built it because we believe the "FSBO Tax"—the
+          mistakes made by honest people—is a tragedy. We are your "Professional Shadow," an invisible expert family
+          member standing between you and the chaos of the Texas real estate machine.
+        </p>
+
+        <div class="bg-gray-800 bg-opacity-60 p-4 border border-cyan-500/30 rounded fade-in-up delay-2">
+          <h3 class="text-lg text-white mb-2">Phase 1: Your Fortress of Truth (The Command Center)</h3>
+          <p class="text-xs text-cyan-100">
+            The second you enter your address, the chaos stops. We replace the "Amateur’s Anxiety" with the "Pro’s
+            Workspace." This isn't just a dashboard; it’s your <strong class="text-cyan-400">Fortress of Truth.</strong>
+            While others are digging through "Sent" folders, you are looking at a singular, undeniable source of
+            reality. You don't "hope" you're ready; you <em>know</em> you are.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Phase 2 & 3 -->
+    <section class="slide">
+      <div class="bg-layer" style="background-image: url('../images/scene-3-20.jpg');"></div>
+      <div class="overlay"></div>
+
+      <div class="content">
+        <div class="mb-8 fade-in-up">
+          <h3
+            class="text-lg font-bold text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+            Phase 2: Weaponizing Transparency (The Buyer Packet)</h3>
+          <p class="text-xs text-gray-300">
+            In Texas, uncertainty is the deal-killer. Most FSBO sellers look like amateurs, which invites aggressive
+            buyers to "lowball" or "bully." When you send the Dwellingly Buyer Packet, the power dynamic shifts. You
+            aren't just "some guy selling a house"; you are an organized, formidable seller. You are signaling: <em>“I
+              am prepared. I am professional. You cannot out-maneuver me.”</em>
+          </p>
+        </div>
+
+        <div class="border-t border-b border-cyan-500/50 py-4 fade-in-up delay-1">
+          <h3 class="text-lg font-bold text-cyan-400 text-glitch mb-2">Phase 3: The Point of No Return (The Contract
+            Clock)</h3>
+          <p class="text-xs text-gray-200">
+            The moment the contract is signed, the "Clock of Consequences" begins. In the old way, you’d wake up at 2 AM
+            wondering if you missed the Option Period deadline. With Dwellingly, that fear is dead. The "Texas Contract
+            Clock" isn't a feature—it's your <strong class="text-white">Early Warning System.</strong> It breathes life
+            into the dead words of a legal contract, counting down every second so you never have to say "I didn't
+            know."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Phase 4 & Conclusion -->
+    <section class="slide">
+      <div class="bg-layer" style="background-image: url('../images/scene-4-20.jpg'); filter: brightness(0.7);"></div>
+      <div class="overlay" style="background: linear-gradient(to top, #000 50%, transparent);"></div>
+
+      <div class="content">
+        <div class="mb-6 fade-in-up">
+          <h3 class="text-lg font-bold text-red-500 mb-1">Phase 4: The Kill Zone</h3>
+          <h4 class="text-xs text-gray-400 mb-2">(The Option Period Command Center)</h4>
+          <p class="text-xs text-gray-300">
+            The Option Period is where deals go to die. It’s where buyers get "cold feet" and inspections become
+            weapons. Most sellers are defenseless here. Dwellingly transforms this window from a "Kill Zone" into a
+            managed process. We track the repairs, the reports, and the timers. We don’t just "log" information; we
+            guard the gates of your deal until the buyer is locked in.
+          </p>
+        </div>
+
+        <div class="bg-white text-black p-6 rounded shadow-lg fade-in-up delay-2">
+          <h3 class="text-xl font-bold mb-2 uppercase">The Dignity of the Win</h3>
+          <p class="text-sm leading-snug">
+            Dwellingly doesn't sell "organization." We sell <strong>Certainty.</strong> We believe that you deserve to
+            keep your equity and your sanity. You provide the house; we provide the backbone. When you stand at the
+            closing table and hand over the keys, you won't just feel relieved—you’ll feel the immense pride of someone
+            who did it right, did it professionally, and won.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Logo & Final CTA -->
+    <section class="slide flex items-center justify-center bg-black">
+      <div class="bg-layer" style="background-image: url('../images/scene-5-20.png'); opacity: 0.3;"></div>
+
+      <div class="content text-center">
+        <img src="../images/scene-5-20.png" alt="Dwellingly Logo" class="w-48 mx-auto mb-6 drop-shadow-2xl fade-in-up"
+          style="filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));">
+        <h2 class="text-2xl text-white font-bold mb-4 fade-in-up delay-1">Welcome to Dwellingly.</h2>
+        <p class="text-lg text-cyan-400 fade-in-up delay-2">You’ve got this, because we’ve got you.</p>
+      </div>
+    </section>
+
+  </div>
+</body>
+
+</html>

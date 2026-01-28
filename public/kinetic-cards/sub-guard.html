@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The End of the Subscription Tax</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* CUSTOM CURSOR & SCROLLBAR */
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        /* TYPOGRAPHY */
+        h1,
+        h2,
+        h3,
+        .brand-font {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* SVG FILTERS CLASSES */
+        .filter-noise {
+            filter: url(#noiseFilter);
+        }
+
+        .filter-glitch {
+            filter: url(#glitchFilter);
+            display: inline-block;
+        }
+
+        .filter-blur-anim {
+            animation: motionBlurIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        /* ANIMATIONS */
+        @keyframes motionBlurIn {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+                filter: url(#motionBlur-0);
+            }
+
+            50% {
+                filter: url(#motionBlur-1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: none;
+            }
+        }
+
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight-red {
+            color: #ff2a2a;
+            text-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
+        }
+
+        .highlight-cyan {
+            color: #00f0ff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        /* LAYOUT UTILS */
+        .scrolly-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #0a0a0a;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-parallax {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.4;
+            transition: transform 0.1s ease-out;
+        }
+
+        .content-block {
+            position: relative;
+            z-index: 2;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, rgba(5, 5, 5, 0) 0%, rgba(5, 5, 5, 0.9) 20%, rgba(5, 5, 5, 1) 50%, rgba(5, 5, 5, 0.9) 80%, rgba(5, 5, 5, 0) 100%);
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .overlay-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, #050505 0%, transparent 20%, transparent 80%, #050505 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG DEFINITIONS -->
+    <svg style="display: none;">
+        <defs>
+            <!-- 1. CINEMATIC GRAIN -->
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+                    <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.1" />
+                </feComponentTransfer>
+                <feComposite operator="in" in2="SourceGraphic" result="monoNoise" />
+                <feBlend in="SourceGraphic" in2="monoNoise" mode="screen" />
+            </filter>
+
+            <!-- 2. GLITCH DISTORTION -->
+            <filter id="glitchFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.05 0.01" numOctaves="2" result="warp" seed="0">
+                    <animate attributeName="baseFrequency" values="0.05 0.01;0.05 0.2;0.05 0.01" dur="3s"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="10" in="SourceGraphic" in2="warp" />
+            </filter>
+
+            <!-- 3. DYNAMIC MOTION BLUR STAGES (Simulated for Animation) -->
+            <filter id="motionBlur-0">
+                <feGaussianBlur stdDeviation="0 10" />
+            </filter>
+            <filter id="motionBlur-1">
+                <feGaussianBlur stdDeviation="0 0" />
+            </filter>
+        </defs>
+    </svg>
+
+    <main class="scrolly-card filter-noise">
+
+        <!-- SECTION 1: THE PROBLEM -->
+        <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+            <img src="../images/scene-1-01.jpg" alt="Man with Leeches" class="img-parallax"
+                style="transform: scale(1.1); filter: grayscale(80%) contrast(120%);">
+            <div class="overlay-gradient"></div>
+            <div class="relative z-10 p-8 text-center">
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-4 filter-blur-anim">
+                    The End of the <br><span class="highlight-red">"Subscription Tax"</span>
+                </h1>
+                <p class="text-xl md:text-2xl font-light tracking-wide mb-8 reveal-text">
+                    Reclaiming Your Wealth from the <span class="font-bold filter-glitch text-red-500">Digital
+                        Vampires</span>
+                </p>
+                <div class="w-24 h-1 bg-red-600 mx-auto reveal-text"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE REVEAL -->
+        <section class="content-block">
+            <div class="max-w-md mx-auto">
+                <p class="text-2xl font-bold mb-6 reveal-text">You are being quietly bled.</p>
+                <p class="text-lg mb-6 leading-relaxed reveal-text opacity-80">
+                    Right now, in the dark corners of your bank statement, dozens of <span
+                        class="text-white font-bold">"Digital Vampires"</span> are draining your account. They are
+                    counting on you being too busy, too tired, or too overwhelmed to notice. They’ve designed their
+                    "Platinum Tiers" like mazes—easy to enter, nearly impossible to leave.
+                </p>
+                <p class="text-2xl font-bold border-l-4 border-red-500 pl-4 reveal-text">
+                    This isn't just "financial leakage."<br>
+                    <span class="highlight-red">It is a tax on your attention.</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE GUARDIAN -->
+        <section class="relative min-h-screen flex items-center overflow-hidden">
+            <!-- Bird Image -->
+            <img src="../images/scene-2-02.jpg" alt="Robotic Sentry" class="img-parallax" style="opacity: 0.3;">
+            <div class="overlay-gradient"></div>
+
+            <div class="relative z-10 p-8 max-w-lg mx-auto">
+                <h2 class="text-4xl font-bold mb-6 highlight-cyan reveal-text">The Digital Sentry</h2>
+                <p class="text-lg mb-6 reveal-text">
+                    The <strong>Subscription Guardian</strong> wasn't built to be a calculator. It was built to be your
+                    Digital Sentry.
+                </p>
+                <p class="text-lg mb-6 reveal-text text-gray-300">
+                    We believe that if you aren't using a service, the company doesn't deserve your money. Period. Our
+                    AI doesn't just "audit" your accounts; it hunts for every cent of <span
+                        class="text-white border-b border-cyan-400">"Lazy Revenue"</span> these corporations are
+                    stealing from you.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: THE TRAP & STATS -->
+        <section class="content-block bg-neutral-900">
+            <div class="max-w-md mx-auto">
+                <h3 class="text-3xl font-bold mb-4 reveal-text">The Neglect Index: <br><span
+                        class="text-gray-500 text-xl">When Your Money Becomes Their Gift</span></h3>
+
+                <div class="bg-neutral-800 p-6 rounded-lg mb-8 reveal-text border border-neutral-700 shadow-lg">
+                    <p class="mb-4">Most people treat subscriptions like a gym membership they'll "eventually" use. The
+                        corporations love this. We use a <strong>Usage Score</strong> to expose the truth.</p>
+                    <p class="text-xl font-bold text-red-400">If your score is a 10, you aren't a "customer"—you are a
+                        donor.</p>
+                    <p class="text-sm text-gray-400 mt-2">You are subsidizing a billionaire’s server farm while getting
+                        zero value in return.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: THE MANSION -->
+        <section class="relative min-h-screen flex items-center justify-center">
+            <img src="../images/scene-3 (97).jpg" alt="Empty Skyscraper" class="img-parallax" style="opacity: 0.5;">
+            <div class="relative z-10 p-8 max-w-md bg-black/80 backdrop-blur-sm border border-gray-800 rounded-xl m-4">
+                <h2 class="text-3xl font-bold mb-6 reveal-text">Exposing the <br>"Mansion" Trap</h2>
+                <p class="mb-4 text-gray-300 reveal-text">Are you paying for a ten-room digital mansion while you live
+                    in a studio apartment?</p>
+
+                <ul class="space-y-4 mb-6 reveal-text">
+                    <li class="flex items-start">
+                        <span class="text-red-500 mr-2">➤</span>
+                        <span><strong>Storage Greed:</strong> Companies sell you 3,000GB knowing you’ll only use 40.
+                            They are selling you "digital air."</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 mr-2">➤</span>
+                        <span><strong>The Empty Chair:</strong> They sell you "Family Plans" for seats that stay empty,
+                            year after year.</span>
+                    </li>
+                </ul>
+
+                <div class="p-4 border border-cyan-500/50 bg-cyan-900/20 rounded reveal-text">
+                    <strong class="text-cyan-400 block mb-1">The 10% Rule</strong>
+                    <span class="text-sm">If you are using less than 10% of what you’re paying for, we trigger a
+                        logic-based strike to move your money back where it belongs: in your pocket.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: BODYGUARD & GHOST HUNT -->
+        <section class="content-block">
+            <div class="max-w-md mx-auto space-y-8">
+                <div class="reveal-text">
+                    <h3 class="text-2xl font-bold mb-2">The Decision Tree: <br><span class="text-cyan-400">Your
+                            Financial Bodyguard</span></h3>
+                    <p class="text-gray-400">Our AI doesn't ask for permission to be "efficient." It scans the market
+                        like a hawk. If Google is offering for $2 what Dropbox is charging you $20 for, the Guardian
+                        flags it instantly. We calculate the "Cost per Unit" of your digital life. If the math doesn't
+                        favor <em>you</em>, we demand a switch.</p>
+                </div>
+
+                <div class="reveal-text">
+                    <h3 class="text-2xl font-bold mb-2 text-red-500">Stop Being the Victim of "Auto-Renew"</h3>
+                    <div class="grid grid-cols-1 gap-4 mt-4">
+                        <div class="bg-neutral-800 p-4 border-l-4 border-red-500">
+                            <h4 class="font-bold">The "Ghost" Hunt</h4>
+                            <p class="text-sm text-gray-300">We found $50/month hiding in an Adobe sub you haven't
+                                touched since 2022. That’s $600 a year. That’s a vacation.</p>
+                        </div>
+                        <div class="bg-neutral-800 p-4 border-l-4 border-green-500">
+                            <h4 class="font-bold">The Storage Shrink</h4>
+                            <p class="text-sm text-gray-300">We found you were paying for 2TB of "air." We moved you to
+                                a $2.99 plan. You just gave yourself a raise.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: THE SO WHAT / CONCLUSION -->
+        <section class="relative min-h-screen flex flex-col items-center justify-end pb-20 overflow-hidden">
+            <img src="../images/scene-4 (88).jpg" alt="Freedom" class="img-parallax"
+                style="opacity: 0.6; object-position: center bottom;">
+            <div class="overlay-gradient" style="background: linear-gradient(to top, #050505 10%, transparent 100%);">
+            </div>
+
+            <div class="relative z-10 p-6 max-w-md text-center">
+                <h2 class="text-4xl font-bold mb-4 reveal-text">The "So What?"</h2>
+                <p class="text-lg mb-8 reveal-text font-light">
+                    This isn't about being "frugal." It’s about <strong class="text-white">integrity.</strong> It’s
+                    about refusing to let your hard-earned income dissolve into the pockets of companies that hope you
+                    never log in.
+                </p>
+
+                <div class="reveal-text space-y-2 mb-10 text-gray-300">
+                    <p>Audit your life.</p>
+                    <p>Count your empty chairs.</p>
+                    <p>Stop paying for the mansion you aren't living in.</p>
+                </div>
+
+                <button
+                    class="bg-white text-black font-bold py-4 px-8 rounded-full text-xl hover:scale-105 transition-transform duration-300 reveal-text shadow-xl shadow-white/20">
+                    Deploy the Guardian <br><span class="text-sm font-normal">and take your money back.</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // LOGIC FOR SCROLL ANIMATIONS
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Stop observing once visible to avoid re-triggering (optional preference)
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const revealElements = document.querySelectorAll('.reveal-text');
+            revealElements.forEach(el => observer.observe(el));
+
+            // PARALLAX EFFECT
+            window.addEventListener('scroll', () => {
+                const scrolled = window.scrollY;
+                const parallaxImages = document.querySelectorAll('.img-parallax');
+
+                parallaxImages.forEach((img) => {
+                    // Calculate distance from top of viewport to parent section
+                    const parent = img.parentElement;
+                    const parentTop = parent.offsetTop;
+                    const parentHeight = parent.offsetHeight;
+
+                    // Only animate if section is roughly in view
+                    if (scrolled + window.innerHeight > parentTop && scrolled < parentTop + parentHeight) {
+                        const speed = 0.4;
+                        const yPos = (scrolled - parentTop) * speed;
+                        img.style.transform = `translateY(${yPos}px) scale(1.1)`;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
