@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Dwellingly Standard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;600;800&display=swap');
+
+    :root {
+      --c-bg: #0a0a0a;
+      --c-text: #f0f0f0;
+      --c-accent: #3b82f6;
+      --c-danger: #ef4444;
+      --c-gold: #d4af37;
+    }
+
+    body {
+      background-color: var(--c-bg);
+      color: var(--c-text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    /* Utility */
+    .hidden-svg {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    /* Scrollytelling Sections */
+    .section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 2rem;
+      opacity: 0;
+      transition: opacity 0.8s ease-out;
+      z-index: 10;
+    }
+
+    .section.active {
+      opacity: 1;
+    }
+
+    /* Effects */
+    .noise-text {
+      filter: url(#noiseFilter);
+      opacity: 0.8;
+    }
+
+    .blur-entry {
+      transform: translateX(100px);
+      opacity: 0;
+      filter: url(#motionBlur);
+    }
+
+    .section.active .blur-entry {
+      animation: slideIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes slideIn {
+      0% {
+        transform: translateX(100px);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Section Specific Styles */
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.9;
+      text-align: center;
+      background: linear-gradient(to bottom, #fff, #666);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2rem;
+    }
+
+    .role-card {
+      border-left: 2px solid var(--c-accent);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      transform: translateY(20px);
+      transition: transform 0.5s ease, background 0.3s;
+    }
+
+    .role-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .clock-display {
+      font-family: 'Space Grotesk', monospace;
+      color: var(--c-danger);
+      text-shadow: 0 0 10px var(--c-danger);
+      font-size: 4rem;
+      font-weight: 700;
+    }
+
+    .orb {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);
+      filter: url(#liquidDistort);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .orb:hover {
+      transform: scale(1.05);
+    }
+
+    .img-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.3;
+      mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS -->
+  <svg class="hidden-svg">
+    <defs>
+      <!-- 1. Animated Noise -->
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="0.5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.15" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- 2. Dynamic Motion Blur -->
+      <filter id="motionBlur" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="20,0">
+          <!-- Triggered via JS on entry -->
+          <animate attributeName="stdDeviation" values="20,0; 0,0" dur="0.8s" fill="freeze" begin="indefinite"
+            id="blurAnim" />
+        </feGaussianBlur>
+      </filter>
+
+      <!-- 3. Liquid Distortion -->
+      <filter id="liquidDistort">
+        <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.01;0.02;0.01" dur="3s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- HERO SECTION -->
+  <section class="section active">
+    <div class="grid-bg"></div>
+    <h4 class="text-sm tracking-[0.3em] text-gray-400 mb-4">THE TEXAS FSBO MANIFESTO</h4>
+    <h1 class="hero-title">THE DWELLINGLY<br>STANDARD</h1>
+    <p class="text-center max-w-md text-gray-400">Scroll to initiate protocol</p>
+  </section>
+
+  <!-- SECTION 1: THE DEAD DEAL -->
+  <section class="section" id="sec1">
+    <img src="../images/scene-176 (2).jpg" class="img-bg" alt="Chaos vs Order">
+    <div class="max-w-3xl z-10">
+      <h2 class="text-4xl md:text-6xl font-bold mb-6">1. The Silence of a Dead Deal</h2>
+      <p class="text-xl md:text-2xl font-light leading-relaxed mb-6">
+        Most Texas FSBO transactions don’t end in a "No"—they end in a <span
+          class="font-bold text-white bg-red-900/50 px-2 noise-text">"Huh?"</span>
+      </p>
+      <p class="text-gray-300 mb-8 max-w-2xl">
+        A missed deadline. An unsigned disclosure. A buyer who claims, <em>"I thought you were doing that."</em> In real
+        estate, ambiguity is a predator. It eats equity, kills dreams, and leads to legal nightmares.
+      </p>
+      <div class="border-l-4 border-white pl-6">
+        <p class="text-lg font-medium">
+          Dwellingly was not built to be another "app." It was built to be the <span
+            class="font-bold text-white">Grown-up in the Room.</span> We provide the procedural backbone that turns a
+          high-stakes handshake into a legally bulletproof closing. We don't provide an agent; we provide the <span
+            class="text-blue-400 font-bold">Authority of Order.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: ROLES -->
+  <section class="section" id="sec2">
+    <img src="../images/scene-2-21.jpg" class="img-bg" alt="The Pilot">
+    <div class="max-w-4xl w-full z-10">
+      <h2 class="text-4xl font-bold mb-8 blur-entry">2. Your Role is Your Shield</h2>
+      <p class="mb-8 text-gray-300">In this workspace, you are not just a "user." You are a Stakeholder with a specific
+        Mission. We enforce Role-Based Accountability because when everyone is responsible, <em>no one</em> is
+        responsible.</p>
+
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="role-card">
+          <h3 class="text-xl font-bold text-blue-400 mb-2">The Seller (The Pilot)</h3>
+          <p class="text-sm text-gray-300">Your mission is the preservation of your equity. You own the clock.</p>
+        </div>
+        <div class="role-card" style="border-color: var(--c-gold);">
+          <h3 class="text-xl font-bold text-[#d4af37] mb-2">The Buyer (The Partner)</h3>
+          <p class="text-sm text-gray-300">Your mission is clarity. You deserve a transparent path to homeownership.</p>
+        </div>
+        <div class="role-card" style="border-color: #aaa;">
+          <h3 class="text-xl font-bold text-gray-200 mb-2">The Collaborator</h3>
+          <p class="text-sm text-gray-300">The Specialist. They are here to provide data, not to steer the ship.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: THE CLOCK -->
+  <section class="section" id="sec3">
+    <img src="../images/scene-3-31.jpg" class="img-bg" alt="Contract Clock" style="opacity:0.5">
+    <div class="max-w-3xl text-center z-10">
+      <h2 class="text-5xl font-bold mb-6">3. The Inviolable Texas Contract Clock</h2>
+      <p class="text-xl text-gray-300 mb-8">In Texas, time isn't money—time is <em>legality</em>. The "Texas Contract
+        Clock" is an unforgiving force.</p>
+
+      <div class="flex flex-col md:flex-row justify-center gap-8 mb-8">
+        <div class="bg-black/50 p-6 border border-gray-700">
+          <h4 class="text-green-400 font-mono mb-2">EXECUTED DATE</h4>
+          <p class="text-sm">The "On Switch" for your life’s next chapter.</p>
+        </div>
+        <div class="bg-red-900/20 p-6 border border-red-900/50">
+          <h4 class="text-red-500 font-mono mb-2">OPTION PERIOD</h4>
+          <p class="text-sm">The "Danger Zone" where most deals go to die.</p>
+        </div>
+      </div>
+
+      <p class="text-lg border-t border-gray-700 pt-6">
+        Dwellingly doesn't just "track" these; it guards them. Our <span class="font-bold text-white">Audit Trail</span>
+        is a non-negotiable record of truth. It ensures that no one can say "I didn't know" when a milestone is missed.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 4: GUARDRAILS -->
+  <section class="section bg-neutral-900">
+    <div class="grid-bg"></div>
+    <div class="max-w-2xl z-10">
+      <h2 class="text-4xl font-bold mb-6 text-white">4. The Guardrails: Why We Say "No"</h2>
+      <p class="mb-6 text-gray-400">You will find things in this platform you <em>cannot</em> change. You cannot skip
+        steps. You cannot "fake" a completion.</p>
+      <p class="mb-6">
+        We didn't build these restrictions to annoy you; we built them to protect you. Our <span
+          class="text-blue-400 font-bold">Permissions Matrix</span> is your insurance policy against procedural chaos.
+        By restricting "who can do what," we ensure the integrity of the transaction remains intact from the first click
+        to the final signature.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 5: COMMAND CENTER -->
+  <section class="section" id="sec5">
+    <img src="../images/scene-4-41.jpg" class="img-bg" alt="Command Center">
+    <div class="max-w-4xl w-full flex flex-col md:flex-row items-center gap-12 z-10">
+      <div class="flex-1">
+        <h2 class="text-4xl font-bold mb-4">5. Your Command Center</h2>
+        <p class="text-xl mb-6">When you log in, don't look for "tasks." Look for <span
+            class="font-bold text-blue-400">The Primary Action.</span></p>
+        <p class="text-gray-300">Every day, there is one move that keeps the deal alive. We highlight it, we track it,
+          and we log it. This is how professional deals get done. This is how you win.</p>
+      </div>
+      <div class="flex-1 flex justify-center">
+        <div class="orb">
+          <span class="font-bold text-black text-center text-sm leading-tight">Primary<br>Action</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Intersection Observer to trigger entrance animations and SVG filters
+    const observerOptions = {
+      threshold: 0.2
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+
+          // Find the motion blur element inside and trigger animation
+          const blurEntry = entry.target.querySelector('.blur-entry');
+          if (blurEntry) {
+            const blurAnim = document.getElementById('blurAnim');
+            // We clone the animation node to re-trigger it cleanly for this instance if needed, 
+            // or simply re-trigger the main definition if single usage.
+            // For this specific constraint, we trigger the ID.
+            if (blurAnim.beginElement) blurAnim.beginElement();
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.section').forEach(section => {
+      observer.observe(section);
+    });
+  </script>
+
+</body>
+
+</html>
