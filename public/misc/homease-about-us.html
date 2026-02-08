@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOMEase | AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e5e5e5;
+            --accent: #3b82f6;
+            --warmth: #f59e0b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* UTILITIES */
+        .scrolly-section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .text-content {
+            z-index: 10;
+            position: relative;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scrolly-section.in-view .text-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 1.5s ease-out;
+        }
+
+        .scrolly-section.in-view .bg-image {
+            transform: scale(1.05);
+        }
+
+        /* FILTER CLASSES */
+        .filter-noise {
+            filter: url(#noise-filter) grayscale(100%) contrast(1.2);
+        }
+
+        .filter-liquid {
+            filter: url(#liquid-distort);
+        }
+
+        /* SPECIFIC LAYOUTS */
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            animation: fadeUp 1.2s forwards 0.5s;
+        }
+
+        .hero-sub {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-style: italic;
+            color: #888;
+            opacity: 0;
+            animation: fadeUp 1.2s forwards 0.8s;
+        }
+
+        /* Tech Grid Overlay */
+        .tech-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .scrolly-section.in-view .tech-grid {
+            opacity: 1;
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+            opacity: 0;
+        }
+
+        .scrolly-section.in-view .scan-line {
+            opacity: 1;
+            animation: scan 3s infinite linear;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0%;
+            }
+
+            50% {
+                top: 100%;
+                opacity: 0;
+            }
+
+            51% {
+                top: 0%;
+                opacity: 0;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 1;
+            }
+        }
+
+        /* Quote Block */
+        .quote-block {
+            text-align: center;
+            border: none;
+            background: transparent;
+        }
+
+        .quote-block h2 {
+            background: linear-gradient(90deg, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG FILTERS -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <!-- 1. ANIMATED NOISE (Fear/Uncertainty) -->
+            <filter id="noise-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+                    <animate attributeName="baseFrequency" values="0.8;0.85;0.8" dur="0.5s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+                <feComposite operator="in" in2="SourceGraphic" result="monoNoise" />
+                <feBlend in="SourceGraphic" in2="monoNoise" mode="multiply" />
+            </filter>
+
+            <!-- 2. LIQUID DISTORTION (Tech/Data) -->
+            <filter id="liquid-distort">
+                <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence">
+                    <animate attributeName="baseFrequency" values="0.01;0.02;0.01" dur="4s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="10" />
+            </filter>
+
+            <!-- 3. MOTION BLUR (Transition) -->
+            <filter id="motion-blur">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
+                    <animate attributeName="stdDeviation" values="10,0; 0,0" dur="0.8s" begin="indefinite"
+                        class="blur-trigger" />
+                </feGaussianBlur>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- SECTION 0: HERO -->
+    <main>
+        <section class="scrolly-section bg-black flex-col text-center">
+            <div class="absolute inset-0 opacity-40">
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+            </div>
+            <h1 class="hero-title mb-4 z-20 filter-liquid">HOMEase | AI</h1>
+            <p class="hero-sub z-20">The Right to Stay Home</p>
+            <div class="absolute bottom-10 animate-bounce text-gray-500 text-sm">SCROLL TO EXPLORE</div>
+        </section>
+
+        <!-- SECTION 1: THE MISSION (Fear/Hallway) -->
+        <section class="scrolly-section">
+            <img src="../images/scene-12.jpg?width=1080&height=1920&nologo=true" alt="Dark Hallway"
+                class="bg-image filter-noise">
+            <div class="absolute inset-0 bg-black/50"></div>
+
+            <div class="text-content">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 text-red-50"> Ending the Era of "The Fall"
+                </h2>
+                <p class="text-lg md:text-xl leading-relaxed text-gray-200">
+                    For most seniors, the greatest threat to their dignity isn't age—it’s their own hallway. A loose rug
+                    or a poorly lit step isn't just a "domestic hazard"; it is a tripwire that ends independence.
+                </p>
+                <p class="mt-4 text-lg md:text-xl leading-relaxed text-gray-200">
+                    At HOMEase | AI, we believe that staying in your home as you age is a fundamental right, not a
+                    luxury. We didn't build this platform to generate leads; we built it to ensure that the "Midnight
+                    Phone Call" never happens.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE TECH (Precision/Phone) -->
+        <section class="scrolly-section">
+            <img src="../images/scene-21 (2).jpg?width=1080&height=1920&nologo=true" alt="Phone Scanning"
+                class="bg-image">
+            <div class="tech-grid"></div>
+            <div class="scan-line"></div>
+            <div class="absolute inset-0 bg-blue-950/40"></div>
+
+            <div class="text-content" style="border-left-color: var(--accent);">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 text-blue-100">A Silent Guardian, Not a
+                    Software Stack</h2>
+                <p class="text-lg md:text-xl leading-relaxed">
+                    We are obsessed with the "Architecture of Dignity." While others settle for "good enough"
+                    checklists, we have built a high-fidelity safety net.
+                </p>
+                <ul class="mt-6 space-y-4">
+                    <li class="border-l-4 border-blue-500 pl-4">
+                        <strong class="text-white block mb-1">Vision with a Heart:</strong> Our AI doesn't just "see"
+                        data; it views your home through the eyes of a Certified Aging-in-Place Specialist. Using WebXR,
+                        we turn your smartphone into a clinical-grade diagnostic tool. No apps to download, no barriers
+                        to entry—just instant, life-saving clarity.
+                    </li>
+                    <li class="border-l-4 border-blue-500 pl-4">
+                        <strong class="text-white block mb-1">The Speed of Safety:</strong> We moved our entire
+                        infrastructure to the "Edge" because when it comes to home safety, a three-second delay is three
+                        seconds too long. We use Next.js 15 and Supabase not for the "tech specs," but because your
+                        family’s safety data deserves the same security and speed as a global bank.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE MARKETPLACE (Trust/Handshake) -->
+        <section class="scrolly-section">
+            <img src="../images/scene-32.jpg?width=1080&height=1920&nologo=true" alt="Trust" class="bg-image">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
+
+            <div class="text-content"
+                style="margin-right: auto; margin-left: 0; border-left: none; border-right: 1px solid rgba(255,255,255,0.2);">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 text-yellow-50">The Marketplace: A Circle of Trust</h2>
+                <p class="text-lg leading-relaxed text-gray-200">
+                    The "Age-Tech" world is unfortunately filled with predatory actors. We’ve used "Trust-Tech" to fix
+                    that.
+                </p>
+                <div class="mt-6 grid gap-6">
+                    <div>
+                        <h4 class="text-xl font-bold text-yellow-500 mb-2">Radial Integrity</h4>
+                        <p class="text-sm md:text-base text-gray-300">We don't just find "contractors." We use precision
+                            geospatial mapping to find the specialized craftsmen in your neighborhood who are
+                            CAPS-certified.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-yellow-500 mb-2">The Unseen Guardian</h4>
+                        <p class="text-sm md:text-base text-gray-300">We use Row Level Security at the database kernel
+                            because your mother’s home layout and financial data are sacred. In our system, privacy
+                            isn't a feature; it’s a mathematical certainty.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: FUTURE (Peace/Kitchen) -->
+        <section class="scrolly-section">
+            <img src="../images/scene-42.jpg?width=1080&height=1920&nologo=true" alt="Future" class="bg-image">
+            <div class="absolute inset-0 bg-black/40"></div>
+
+            <div class="text-content quote-block">
+                <h2 class="text-4xl md:text-6xl font-bold mb-8">The Future: Dignity by Design</h2>
+                <p class="text-xl md:text-2xl leading-relaxed text-white drop-shadow-lg mb-8">
+                    We aren't just "optimizing home modifications." We are future-proofing the human experience. By
+                    merging the precision of AI with the empathy of clinical expertise, HOMEase | AI is making sure that
+                    "home" remains the safest place on earth.
+                </p>
+                <hr class="w-24 mx-auto border-white/50 mb-8">
+                <p class="text-2xl md:text-4xl font-serif italic text-white leading-tight">
+                    "Because the best nursing home in the world is the one you never have to move into."
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Vanilla JS for Scroll Logic (IntersectionObserver)
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.25,
+                rootMargin: "0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+
+                        // Trigger specific SVG animations if elements exist inside
+                        const blurTrigger = document.getElementById('motion-blur')?.querySelector('animate');
+                        if (blurTrigger) {
+                            blurTrigger.beginElement();
+                        }
+                    } else {
+                        // Optional: remove class to re-trigger animation on scroll up
+                        // entry.target.classList.remove('in-view');
+                    }
+                });
+            }, observerOptions);
+
+            const sections = document.querySelectorAll('.scrolly-section');
+            sections.forEach(sec => observer.observe(sec));
+        });
+    </script>
+</body>
+
+</html>

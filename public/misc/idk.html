@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Manifesto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    /* CUSTOM CURSOR & SCROLLBAR */
+    body {
+      cursor: crosshair;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* TYPOGRAPHY */
+    .font-editorial {
+      family: 'Cinzel', serif;
+    }
+
+    .font-tech {
+      family: 'Space Mono', monospace;
+    }
+
+    /* BACKGROUND LAYERS */
+    .bg-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s ease;
+      z-index: 0;
+      filter: brightness(0.6) grayscale(0.2);
+    }
+
+    .bg-layer.active {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* TEXT EFFECTS */
+    .text-reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease-out;
+      filter: url(#motion-blur-filter);
+    }
+
+    .text-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* SCANLINES OVERLAY */
+    .scanlines {
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.2));
+      background-size: 100% 4px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* GLITCH ANIMATION FOR HEADERS */
+    @keyframes glitch-anim {
+      0% {
+        transform: translate(0);
+      }
+
+      20% {
+        transform: translate(-2px, 2px);
+      }
+
+      40% {
+        transform: translate(-2px, -2px);
+      }
+
+      60% {
+        transform: translate(2px, 2px);
+      }
+
+      80% {
+        transform: translate(2px, -2px);
+      }
+
+      100% {
+        transform: translate(0);
+      }
+    }
+
+    .glitch-hover:hover {
+      animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+      color: #00ffcc;
+    }
+
+    /* RED LINE ALERT */
+    .alert-pulse {
+      animation: pulseRed 2s infinite;
+    }
+
+    @keyframes pulseRed {
+      0% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 20px rgba(220, 38, 38, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white overflow-x-hidden">
+
+  <!-- SVG FILTERS -->
+  <svg style="display: none;">
+    <defs>
+      <!-- 1. ANIMATED NOISE (Film Grain) -->
+      <filter id="noise-grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="baseFrequency" values="0.85;0.9;0.85" dur="2s" repeatCount="indefinite" />
+          <animate attributeName="seed" values="0;100" dur="0.5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="table" tableValues="0 0.15" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- 2. DYNAMIC MOTION BLUR (Simulating Speed) -->
+      <filter id="motion-blur-filter">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0 0">
+          <animate attributeName="stdDeviation" values="0 10; 0 0" dur="0.6s" fill="freeze" begin="indefinite"
+            class="blur-trigger" />
+        </feGaussianBlur>
+      </filter>
+
+      <!-- 3. LIQUID DISTORTION (Heat/Under water) -->
+      <filter id="liquid">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.02;0.03;0.02" dur="5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- BACKGROUND IMAGES (Fixed) -->
+  <div class="fixed inset-0 z-0">
+    <!-- Image 1: Burnout -->
+    <img src="../images/scene-1 (1).jpg" id="bg-1" class="bg-layer active" alt="Burnout">
+    <!-- Image 2: Command Center -->
+    <img src="../images/scene-2 (1).jpg" id="bg-2" class="bg-layer" alt="Command Center">
+    <!-- Image 3: Red Line -->
+    <img src="../images/scene-3 (1).jpg" id="bg-3" class="bg-layer" alt="Utilization">
+    <!-- Image 4: Success -->
+    <img src="../images/scene-4 (1).jpg" id="bg-4" class="bg-layer" alt="Success">
+
+    <!-- Noise Overlay -->
+    <div class="absolute inset-0 z-10 opacity-40 pointer-events-none mix-blend-overlay"
+      style="filter: url(#noise-grain);"></div>
+    <div class="scanlines"></div>
+  </div>
+
+  <!-- SCROLL CONTENT -->
+  <main class="relative z-20 snap-y snap-mandatory h-screen w-full overflow-y-scroll scroll-smooth">
+
+    <!-- SECTION 1: THE LIE -->
+    <section data-bg="bg-1"
+      class="h-screen w-full snap-start flex flex-col justify-center items-center p-8 bg-black/60 backdrop-blur-sm border-b border-white/10">
+      <div class="max-w-2xl border-l-4 border-red-500 pl-8">
+        <h1 class="text-5xl md:text-7xl font-editorial font-bold mb-4 glitch-hover tracking-tighter">THE END OF
+          HOPE-BASED MANAGEMENT</h1>
+        <h3 class="text-xl font-tech text-red-400 mb-8 uppercase tracking-widest">/// A Manifesto for Agentic
+          Orchestration</h3>
+
+        <div class="text-reveal">
+          <h2 class="text-3xl font-bold mb-4">The Lie of the Gantt Chart</h2>
+          <p class="font-tech text-lg leading-relaxed text-gray-200 mb-4">
+            For decades, technical project management has been a theater of polite lies. We use "gut feelings" to set
+            deadlines. We use "historical vibes" to allocate resources. We treat $10,000-a-week engineers like static
+            blocks on a spreadsheet.
+          </p>
+          <p class="font-tech text-lg leading-relaxed text-gray-200">
+            The result? 70% of complex systems fail to meet their original goals. This isn't just a business problem;
+            it’s a human tragedy. It’s the sound of burned-out developers quitting at 2 AM and stakeholders losing faith
+            in the very word "innovation."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THE REVOLUTION -->
+    <section data-bg="bg-2"
+      class="h-screen w-full snap-start flex flex-col justify-center items-end p-8 bg-blue-900/40 backdrop-blur-md">
+      <div class="max-w-2xl bg-black/80 p-8 border border-cyan-500 shadow-[0_0_30px_rgba(0,255,255,0.3)]">
+        <div class="text-reveal">
+          <h2 class="text-4xl font-editorial text-cyan-400 mb-6 border-b border-cyan-500/50 pb-4">The Agentic Revolution
+          </h2>
+          <p class="font-tech text-lg mb-6">
+            We are obsessed with a single truth: <strong class="text-white bg-cyan-900/50 px-2">Complexity cannot be
+              managed by intuition.</strong>
+          </p>
+          <p class="font-tech text-sm text-cyan-100 mb-6">
+            The <em>Agentic Project Management Framework</em> was not built to "track tasks." It was built to eliminate
+            the fog of war. By replacing heuristic guessing with data-validated computations, we have moved project
+            management out of the realm of "opinion" and into the realm of "physics."
+          </p>
+
+          <h3 class="text-2xl font-editorial text-white mt-8 mb-4">The New Professional Standard</h3>
+          <p class="font-tech text-sm text-gray-300">
+            We don’t "estimate" duration; we calculate it using weighted complexity multipliers (0.6x to 2.2x) that
+            account for the brutal reality of distributed systems and blockchain architecture.
+          </p>
+          <p class="font-tech text-sm text-gray-300 mt-4">
+            We don’t "hope" for alignment; our Agentic MCP Server runs automated gap analysis to flag missing critical
+            stakeholders before a single line of code is written. If your Data Science project lacks a Subject Matter
+            Expert, the system doesn't just "note" it—it halts the line.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: COMPUTATIONAL TRUTH -->
+    <section data-bg="bg-3"
+      class="h-screen w-full snap-start flex flex-col justify-center items-center p-4 bg-red-900/20">
+      <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-black/90 p-6 border-t-4 border-red-600 alert-pulse text-reveal">
+          <h2 class="text-3xl font-editorial text-red-500 mb-4">Computational Truth in Execution</h2>
+          <ul class="space-y-4 font-tech text-sm">
+            <li class="flex items-start">
+              <span class="text-red-500 mr-2">[>]</span>
+              <span><strong>No More Resource Gambling:</strong> We govern allocation through a rigorous $10,000/week
+                base-unit formula, optimized for Time, Budget, or Balance. We don't guess if you're over-leveraged; we
+                detect it the moment utilization crosses the 95% "Red Line."</span>
+            </li>
+            <li class="flex items-start">
+              <span class="text-red-500 mr-2">[>]</span>
+              <span><strong>Predictive Risk, Not Reactive Panic:</strong> Our 3-tier mitigation strategy (Prevention,
+                Mitigation, Contingency) is coded into the project’s DNA. We identify bottlenecks via Python-executed
+                date arithmetic before they become delays.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-black/90 p-6 border-b-4 border-cyan-600 flex flex-col justify-end text-reveal"
+          style="transition-delay: 0.2s">
+          <h3 class="text-xl font-editorial text-cyan-400 mb-2">The Delivery Duty</h3>
+          <p class="font-tech text-sm text-gray-300 mb-4">
+            We treat rollouts with the precision of surgery. Web-based cloud deployments get Blue-green instant
+            rollbacks. Hardware gets staged Feature Flags. We don't "launch and pray." We orchestrate.
+          </p>
+          <div class="h-32 w-full bg-gray-900 relative overflow-hidden border border-gray-700">
+            <div
+              class="absolute inset-0 flex items-center justify-center text-5xl font-bold text-gray-800 tracking-tighter select-none"
+              style="filter: url(#liquid)">ORCHESTRATE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: THE MISSION -->
+    <section data-bg="bg-4"
+      class="h-screen w-full snap-start flex flex-col justify-center items-center p-8 bg-gradient-to-t from-amber-900/60 to-transparent">
+      <div class="text-center max-w-3xl text-reveal">
+        <h2 class="text-5xl md:text-8xl font-editorial text-white mb-6 drop-shadow-lg"></h2>
+        <p class="font-tech text-xl md:text-2xl text-amber-100 mb-8 leading-relaxed">
+          We are here to kill the "Death March." We are here to bring scientific rigor to the creative act of building
+          software. We believe that when the math is right, the team is happy, the stakeholder is confident, and the
+          product is inevitable.
+        </p>
+        <div class="inline-block border border-white/40 p-1">
+          <div class="bg-white text-black font-bold font-tech text-xl md:text-3xl px-8 py-4 uppercase">
+            Stop managing by hope.<br>Start managing by Agency.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // LOGIC: Intersection Observer to handle background switching and text reveals
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section');
+      const backgrounds = document.querySelectorAll('.bg-layer');
+      const blurAnimations = document.querySelectorAll('.blur-trigger');
+
+      const observerOptions = {
+        root: document.querySelector('main'),
+        threshold: 0.5 // Trigger when 50% of section is visible
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // 1. Switch Background
+            const targetId = entry.target.getAttribute('data-bg');
+            backgrounds.forEach(bg => {
+              bg.classList.remove('active');
+              if (bg.id === targetId) bg.classList.add('active');
+            });
+
+            // 2. Trigger Text Reveal
+            const reveals = entry.target.querySelectorAll('.text-reveal');
+            reveals.forEach((el, index) => {
+              setTimeout(() => {
+                el.classList.add('visible');
+                // Retrigger SVG animation for blur
+                blurAnimations.forEach(anim => {
+                  anim.beginElement();
+                });
+              }, index * 200);
+            });
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom Fonts & Base */
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;600;700&display=swap');
+
+    :root {
+      --c-dark: #050505;
+      --c-neon: #00ff9d;
+      --c-alert: #ff2a6d;
+      --c-blue: #05d9e8;
+    }
+
+    body {
+      margin: 0;
+      background: var(--c-dark);
+      font-family: 'Space Grotesk', sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+
+    /* Scrollytelling Container */
+    .scroll-container {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Card/Slide Styles */
+    .slide {
+      height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    /* Background Image Styling */
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0.6;
+      transition: transform 10s ease;
+    }
+
+    .slide:hover .bg-img {
+      transform: scale(1.05);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(5, 5, 5, 1) 10%, rgba(5, 5, 5, 0.7) 50%, rgba(5, 5, 5, 0.4) 100%);
+      z-index: 1;
+    }
+
+    /* Content Layout */
+    .content {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    /* Typography */
+    h1,
+    h2 {
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, #fff, #aaa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      color: var(--c-neon);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    p {
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      line-height: 1.6;
+      color: #e0e0e0;
+      margin-bottom: 1.5rem;
+      max-width: 65ch;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      color: var(--c-blue);
+    }
+
+    /* SVG Filter Classes */
+    .filter-noise {
+      filter: url('#noise-filter') contrast(1.2) brightness(0.9);
+    }
+
+    .filter-glitch {
+      filter: url('#glitch-filter');
+    }
+
+    .filter-holo {
+      filter: url('#holo-glow');
+    }
+
+    .text-shadow-neon {
+      text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+    }
+
+    /* List Styles */
+    ul.tech-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    ul.tech-list li {
+      border-left: 2px solid var(--c-blue);
+      padding-left: 1rem;
+      background: rgba(5, 217, 232, 0.05);
+      padding: 1rem;
+    }
+
+    ul.tech-list strong {
+      color: var(--c-blue);
+      display: block;
+      margin-bottom: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+    }
+
+    /* Animations */
+    @keyframes text-reveal {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: text-reveal 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      opacity: 0;
+    }
+
+    .delay-1 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.6s;
+    }
+
+    .delay-4 {
+      animation-delay: 0.8s;
+    }
+
+    /* Scanline Overlay */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.2));
+      background-size: 100% 4px;
+      z-index: 5;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition -->
+  <svg style="display: none;">
+    <defs>
+      <!-- 1. Animated Noise (Decay) -->
+      <filter id="noise-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" from="0" to="100" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.15" />
+        </feComponentTransfer>
+        <feComposite operator="in" in2="SourceGraphic" />
+      </filter>
+
+      <!-- 2. Glitch Distortion -->
+      <filter id="glitch-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.1" numOctaves="1" result="warp">
+          <animate attributeName="baseFrequency" values="0.02 0.1; 0.02 0.4; 0.02 0.1" dur="3s"
+            repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="20" in="SourceGraphic" in2="warp" />
+      </filter>
+
+      <!-- 3. Holo Glow -->
+      <filter id="holo-glow">
+        <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="scroll-container">
+
+    <!-- SLIDE 1: TITLE -->
+    <section class="slide">
+      <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop"
+        class="bg-img filter-noise" alt="Codebase Chaos">
+      <div class="overlay"></div>
+      <div class="content text-center">
+        <p class="mono animate-in"># SYSTEM_STATUS: CRITICAL</p>
+        <h1 class="animate-in delay-1 filter-glitch">The Architect’s Ghost:<br>Turning Codebase Chaos into Engineering
+          Certainty</h1>
+        <div class="w-24 h-1 bg-white mx-auto mt-8 animate-in delay-2"></div>
+      </div>
+      <div class="scanlines"></div>
+    </section>
+
+    <!-- SLIDE 2: THE PROBLEM -->
+    <section class="slide">
+      <img src="../images/scene-1 (2).jpg?q=80&w=2070&auto=format&fit=crop" class="bg-img"
+        style="filter: grayscale(100%) contrast(120%);" alt="Decay">
+      <div class="overlay" style="background: linear-gradient(0deg, #050505 20%, transparent 100%);"></div>
+      <!-- Applying noise locally to a decorative element -->
+      <div
+        style="position:absolute; inset:0; opacity:0.3; pointer-events:none; filter: url(#noise-filter); mix-blend-mode: overlay; background: white;">
+      </div>
+
+      <div class="content">
+        <h2 class="animate-in" style="color: var(--c-alert);">The Invisible Decay</h2>
+        <p class="animate-in delay-1">
+          Every codebase is dying. From the moment the first line is written, entropy takes hold. Technical debt isn't
+          just a metaphor; it’s a silent tax that slows your innovation to a crawl and keeps your best engineers trapped
+          in a cycle of "archeology"—digging through layers of legacy mess just to fix a single bug.
+        </p>
+        <p class="animate-in delay-2 font-bold"
+          style="color: white; border-left: 4px solid var(--c-alert); padding-left: 1rem;">
+          You aren't building a product; you’re managing a catastrophe.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: THE VISION -->
+    <section class="slide">
+      <img src="../images/scene-2 (2).jpg?q=80&w=2070&auto=format&fit=crop" class="bg-img" alt="Vision">
+      <div class="overlay" style="background: rgba(5,5,5,0.85);"></div>
+
+      <div class="content">
+        <h2 class="animate-in filter-holo">The Self-Healing System</h2>
+        <p class="animate-in delay-1">
+          We believe that high-level architecture shouldn't exist only in a PDF that no one reads. It should live in the
+          code, enforced by an unblinking, digital Senior Architect.
+        </p>
+        <p class="animate-in delay-2">
+          We’ve built a framework that doesn't just "analyze" code—it <strong
+            style="color: var(--c-neon);">guards</strong> it.
+        </p>
+        <!-- Animated SVG Graphic representing the guardian -->
+        <svg class="animate-in delay-3" width="100%" height="60" viewBox="0 0 400 60" style="opacity:0.8">
+          <line x1="0" y1="30" x2="400" y2="30" stroke="var(--c-neon)" stroke-width="1">
+            <animate attributeName="stroke-width" values="1;3;1" dur="2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+          </line>
+          <rect x="180" y="20" width="40" height="20" fill="none" stroke="var(--c-neon)">
+            <animateTransform attributeName="transform" type="rotate" from="0 200 30" to="360 200 30" dur="10s"
+              repeatCount="indefinite" />
+          </rect>
+        </svg>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: HOW WE FIGHT -->
+    <section class="slide" style="align-items: flex-start;">
+      <img src="../images/scene-3 (2).jpg?q=80&w=2070&auto=format&fit=crop" class="bg-img" alt="AI Scanning">
+      <div class="overlay" style="background: rgba(5,5,5,0.92);"></div>
+
+      <div class="content mx-auto">
+        <h2 class="animate-in text-shadow-neon">The Digital Guardian</h2>
+        <p class="animate-in delay-1 text-sm mb-6">We have codified the intuition of the world’s most elite engineers
+          into a systematic "Intelligence Ecosystem."</p>
+
+        <ul class="tech-list animate-in delay-2">
+          <li>
+            <strong>Sovereign Discovery</strong>
+            Our system maps your "Haunted Forest." It identifies the God Classes and the tangled dependencies that are
+            strangling your scalability. We don't just see files; we see the skeletal structure of your business logic.
+          </li>
+          <li>
+            <strong>The Debt Collector</strong>
+            Using brutal, objective metrics—Cyclomatic Complexity and Halstead Effort—we quantify exactly how much your
+            technical debt is costing you in human hours. No more guessing. We provide the roadmap to solvency.
+          </li>
+          <li>
+            <strong>Zero-Trust Security</strong>
+            We don't wait for a breach. Our system hunts for SQL injections, secrets, and "Command Injection" flaws with
+            the aggression of a red-team hacker, ensuring your trust boundaries are impenetrable.
+          </li>
+          <li>
+            <strong>Fail-Safe Evolution</strong>
+            Refactoring is usually terrifying. We make it boring. Our Phased Protocols and automated rollback mechanisms
+            mean you can evolve your system at 10x speed with 0x the anxiety.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: MISSION -->
+    <section class="slide">
+      <img src="../images/scene-4 (2).jpg?q=80&w=2070&auto=format&fit=crop" class="bg-img" alt="Futuristic City">
+      <div class="overlay" style="background: linear-gradient(180deg, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0.4) 100%);"></div>
+
+      <div class="content text-center">
+        <h2 class="animate-in" style="justify-content: center; color: white;">Engineering Freedom</h2>
+        <p class="animate-in delay-1 mx-auto text-lg">
+          We are here to kill the "manual review" and bury "technical debt" forever. We provide the "Ground Truth" of
+          your system so your team can stop worrying about what might break and start focusing on what they can create.
+        </p>
+        <div class="mt-12 p-6 border border-white/20 backdrop-blur-sm animate-in delay-3">
+          <p class="font-bold text-xl md:text-2xl text-white m-0">
+            "Your system is either an asset or a liability.<br>
+            <span style="color: var(--c-neon);">We make sure it’s an asset."</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+
+</html>

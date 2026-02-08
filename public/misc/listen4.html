@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listen & Fix Scrollytelling</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&family=Inter:wght@300;400;600&display=swap');
+
+    :root {
+      --neon-accent: #00ff9d;
+      --text-color: #f0f0f0;
+      --bg-dark: #0a0a0a;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-color);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      text-transform: uppercase;
+    }
+
+    .headline-font {
+      font-family: 'Syncopate', sans-serif;
+    }
+
+    /* Utility Classes for Scroll Animation */
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .active .reveal-text {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.4s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.6s;
+    }
+
+    /* SVG Filter Application Classes */
+    .glitch-text {
+      filter: url(#glitch-filter);
+      position: relative;
+    }
+
+    .noise-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.15;
+      pointer-events: none;
+      filter: url(#noise-filter);
+      z-index: 10;
+      mix-blend-mode: overlay;
+    }
+
+    .hud-border {
+      border: 1px solid rgba(0, 255, 157, 0.3);
+      background: rgba(0, 255, 157, 0.05);
+      backdrop-filter: blur(5px);
+    }
+
+    /* Image Containers */
+    .parallax-wrap {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .parallax-img {
+      transition: transform 1.5s ease-out;
+      transform: scale(1.1);
+    }
+
+    .active .parallax-img {
+      transform: scale(1);
+    }
+
+    /* List Items */
+    .step-card {
+      border-left: 2px solid #333;
+      padding-left: 2rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .step-card:hover {
+      border-left-color: var(--neon-accent);
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- SVG Filters Definition -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Filter 1: Static Noise / Grain -->
+      <filter id="noise-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="0.5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.5" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- Filter 2: Glitch Displacement -->
+      <filter id="glitch-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.01 0.001" numOctaves="1" result="warp">
+          <animate attributeName="baseFrequency" values="0.01 0.001; 0.05 0.1; 0.01 0.001" dur="3s"
+            repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="warp" scale="5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Fixed Noise Overlay -->
+  <div class="noise-overlay"></div>
+
+  <!-- Section 1: Hero -->
+  <section class="h-screen flex items-center justify-center relative overflow-hidden px-6 text-center observe-section">
+    <div class="max-w-4xl relative z-20">
+      <h1 class="headline-font text-4xl md:text-7xl font-bold mb-6 glitch-text leading-tight reveal-text">
+        You Are No Longer At The Mercy Of The Machine
+      </h1>
+      <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto reveal-text reveal-delay-1">
+        The balance of power has shifted.
+      </p>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10"></div>
+    <!-- Abstract background element -->
+    <div class="absolute inset-0 opacity-30 z-0">
+      <div
+        class="w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800 via-black to-black">
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: The Problem (Gritty) -->
+  <section class="min-h-screen grid grid-cols-1 md:grid-cols-2 observe-section">
+    <div class="parallax-wrap h-[50vh] md:h-auto relative group">
+      <img src="../images/scene-113.jpg" alt="Frustrated man in basement"
+        class="parallax-img absolute inset-0 w-full h-full object-cover grayscale brightness-75 contrast-125">
+      <div class="absolute inset-0 bg-red-900/20 mix-blend-multiply"></div>
+    </div>
+    <div class="flex flex-col justify-center p-8 md:p-16 bg-[#0f0f0f] relative z-20">
+      <h2 class="text-3xl font-bold mb-6 text-red-500 reveal-text">We’ve all felt it.</h2>
+      <p class="text-gray-300 mb-6 leading-relaxed reveal-text reveal-delay-1">
+        That sickening <em>thud</em> from the basement. The mysterious <em>hiss</em> under the hood. In that moment, you
+        aren't just facing a broken appliance; you’re facing a power imbalance.
+      </p>
+      <p class="text-gray-400 leading-relaxed reveal-text reveal-delay-2">
+        You’re at the mercy of expensive "expert" schedules, predatory markups, and the crushing feeling that you are
+        helpless to fix the world around you.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 3: The Solution (Tech) -->
+  <section class="min-h-screen relative flex items-center bg-[#050505] py-20 observe-section">
+    <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="order-2 md:order-1">
+        <div class="hud-border p-8 rounded-lg relative overflow-hidden reveal-text">
+          <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+          <h2 class="text-2xl md:text-4xl font-bold mb-4 text-green-400">'Listen & Fix' was born to give that power back
+            to you.</h2>
+          <p class="text-gray-300 mb-6">
+            We didn't just build an app; we built a "Universal Translator" for the physical world. It’s an AI-powered
+            sidekick that listens to the heartbeat of your home and tells you exactly what it’s trying to say.
+          </p>
+        </div>
+      </div>
+      <div class="order-1 md:order-2 parallax-wrap rounded-xl overflow-hidden shadow-2xl shadow-green-900/20">
+        <img src="../images/scene-213.jpg" alt="AI analyzing engine" class="w-full h-auto parallax-img">
+        <!-- Tech overlay graphic -->
+        <div class="absolute inset-0 border-2 border-green-500/30 pointer-events-none"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: The Process (Blueprint) -->
+  <section class="bg-neutral-900 py-24 observe-section">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-bold mb-16 text-center reveal-text">From Panic to Plan in 60 Seconds</h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <!-- Visual Side -->
+        <div class="relative lg:sticky lg:top-24 h-fit reveal-text">
+          <img src="../images/scene-313.jpg" alt="Tablet blueprint" class="rounded-lg shadow-2xl opacity-90">
+          <div class="absolute -bottom-4 -right-4 bg-white text-black p-4 font-bold font-mono text-sm">
+            STATUS: DIAGNOSED
+          </div>
+        </div>
+
+        <!-- Text Steps Side -->
+        <div class="space-y-12">
+          <div class="step-card reveal-text reveal-delay-1">
+            <h3 class="text-xl font-bold text-white mb-2">1. See & Hear</h3>
+            <p class="text-gray-400">You record the rattle or snap the photo. Our AI doesn't just "see" an image; it
+              perceives the problem with the combined experience of a million master technicians.</p>
+          </div>
+
+          <div class="step-card reveal-text reveal-delay-2">
+            <h3 class="text-xl font-bold text-white mb-2">2. The Diagnosis</h3>
+            <p class="text-gray-400">We don’t give you "error codes." We give you the truth. Is it a five-minute fix or
+              a safety emergency? Our "Detective Engine" cross-references your specific model to give you a confidence
+              score you can actually trust.</p>
+          </div>
+
+          <div class="step-card reveal-text reveal-delay-3">
+            <h3 class="text-xl font-bold text-white mb-2">3. The Bespoke Blueprint</h3>
+            <p class="text-gray-400">Most manuals are written for engineers. Our guides are written for <em>you</em>.
+              Whether you’re a master tinkerer or have never held a wrench, 'Listen & Fix' translates complex
+              engineering into a personalized, step-by-step rescue mission.</p>
+          </div>
+
+          <div class="step-card reveal-text reveal-delay-1">
+            <h3 class="text-xl font-bold text-white mb-2">4. Closing the Loop</h3>
+            <p class="text-gray-400">We don't leave you stranded in the driveway. We find the exact part, at the best
+              price, in a store near you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: The Mission (Human) -->
+  <section class="min-h-screen relative flex items-center justify-center observe-section overflow-hidden">
+    <!-- Full BG Image -->
+    <div class="absolute inset-0 z-0">
+      <img src="../images/scene-413.jpg" alt="Happy woman fixing appliance"
+        class="w-full h-full object-cover brightness-50 sepia-[.3]">
+    </div>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-6 text-center py-20">
+      <div class="bg-black/60 backdrop-blur-sm p-10 rounded-xl border border-white/10 reveal-text">
+        <h2 class="text-3xl md:text-5xl font-bold mb-8 text-amber-500">A World Where Nothing Is 'Unfixable'
+        </h2>
+        <p class="text-lg text-gray-200 mb-6">
+          The "Mercenary" companies want you to throw it away and buy a new one. They want you to feel intimidated by
+          the tech you own.
+        </p>
+        <p class="text-lg text-gray-200 mb-10">
+          We are the Missionaries of Repair. We believe that when you fix something yourself, you don't just save
+          $200—you gain a sense of mastery over your life.
+        </p>
+        <hr class="border-gray-500 mb-10 w-24 mx-auto">
+        <h3 class="text-2xl md:text-4xl font-bold text-white uppercase tracking-widest">
+          Stop guessing. Start fixing.
+        </h3>
+        <p class="text-green-400 mt-4 uppercase tracking-wider text-sm">Speak the language of your home.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Simple Vanilla JS Intersection Observer to trigger animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const observerOptions = {
+        threshold: 0.15
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, observerOptions);
+
+      const sections = document.querySelectorAll('.observe-section');
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sovereign Navigator</title>
+  <style>
+    :root {
+      --bg-dark: #050505;
+      --text-main: #f0f0f0;
+      --accent-cyan: #00f0ff;
+      --accent-green: #00ff9d;
+      --accent-red: #ff003c;
+      --font-head: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-mono: 'Courier New', Courier, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-head);
+      overflow-x: hidden;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    /* --- SVG FILTERS & OVERLAYS --- */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.07;
+      filter: url(#noiseFilter);
+    }
+
+    .motion-blur-target {
+      filter: url(#motionBlur);
+      will-change: transform, opacity;
+    }
+
+    /* --- LAYOUT --- */
+    .bg-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 1s ease-in-out;
+      z-index: 0;
+      opacity: 0;
+    }
+
+    .bg-layer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(5, 5, 5, 0.3), var(--bg-dark));
+    }
+
+    .bg-layer.active {
+      opacity: 0.6;
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* --- TYPOGRAPHY --- */
+    h1,
+    h2,
+    h3 {
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 1.1;
+      background: linear-gradient(90deg, #fff, #aaa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      border-left: 4px solid var(--accent-cyan);
+      padding-left: 1rem;
+      margin-top: 2rem;
+    }
+
+    .mono-label {
+      font-family: var(--font-mono);
+      color: var(--accent-cyan);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #ccc;
+      max-width: 600px;
+    }
+
+    strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* --- COMPONENTS --- */
+    .hud-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+      font-family: var(--font-mono);
+    }
+
+    .stat-box {
+      border: 1px solid #333;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+    }
+
+    .stat-val {
+      font-size: 2rem;
+      font-weight: bold;
+      display: block;
+    }
+
+    .bulletproof {
+      color: var(--accent-green);
+      text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+    }
+
+    .risk {
+      color: var(--accent-red);
+      text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+    }
+
+    .nav-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 1.5rem 3rem;
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      letter-spacing: 0.2em;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 20px var(--accent-cyan);
+    }
+
+    /* --- ANIMATIONS --- */
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-text.in-view {
+      opacity: 1;
+      transform: translateY(0);
+      /* Trigger the motion blur logic in JS/CSS coordination if needed, 
+       but CSS transition handles the transform. 
+       The SVG blur is applied via class constantly or keyframes. */
+    }
+
+    /* Keyframe animation for the blur effect specifically */
+    @keyframes blurSnap {
+      0% {
+        filter: url(#motionBlurStart);
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      100% {
+        filter: url(#motionBlurEnd);
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .snap-in {
+      animation: blurSnap 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    /* Stagger delays */
+    .delay-1 {
+      transition-delay: 0.1s;
+      animation-delay: 0.1s;
+    }
+
+    .delay-2 {
+      transition-delay: 0.2s;
+      animation-delay: 0.2s;
+    }
+
+    .delay-3 {
+      transition-delay: 0.3s;
+      animation-delay: 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG ASSETS -->
+  <svg style="display: none;">
+    <defs>
+      <!-- 1. ANIMATED NOISE -->
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0" />
+      </filter>
+
+      <!-- 2. DYNAMIC MOTION BLUR STATES -->
+      <!-- Strong Vertical Blur for motion start -->
+      <filter id="motionBlurStart">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0, 10" />
+      </filter>
+      <!-- No Blur for rest state -->
+      <filter id="motionBlurEnd">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0, 0" />
+      </filter>
+
+      <!-- 3. GLITCH DISTORTION for chaos -->
+      <filter id="glitchFilter">
+        <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence">
+          <animate attributeName="baseFrequency" values="0.05;0.02;0.05" dur="4s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- NOISE OVERLAY -->
+  <div class="noise-overlay"></div>
+
+  <!-- BACKGROUNDS -->
+  <!-- Image 1: Sentinel -->
+  <div class="bg-layer active" id="bg-1"
+    style="background-image: url('../images/scene-1(77).jpg?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D45df16a7-a70d-44aa-971c-43f1480f745e.webp&sig=O2xK0kL2yU%2BAm22k7o8eB17aO%2BE3L5k/lT3Qo2i3/vY%3D');">
+  </div>
+  <!-- Image 2: Lighthouse -->
+  <div class="bg-layer" id="bg-2"
+    style="background-image: url('https://files.oaiusercontent.com/file-75pW7Pj2y6x4fM82y8VzPq?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D0f3e8f8a-9c7e-4b6a-9f5c-8d5e1f7a6c9e.webp&sig=w3G/2u6%2B5f%2Bk8u9%2Bb18eA17aO%2BE3L5k/lT3Qo2i3/vY%3D');">
+  </div>
+  <!-- Image 3: Family/HUD -->
+  <div class="bg-layer" id="bg-3"
+    style="background-image: url('https://files.oaiusercontent.com/file-98qX8Qk3z7x5gN93z9WaQr?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D1g4f9g9b-0d8f-5c7b-0g6d-9e6f2g8b7d0f.webp&sig=Z4xL1lL3vY%2BCn33l8p9fC28bP%2CF4M6l/mT4Qp3j4/wZ%3D');">
+  </div>
+  <!-- Note: Using placeholder logic for Image 3 url as I must respect provided image indices. I will map user Image 3 here. -->
+  <!-- Actually mapping strictly to provided image order -->
+  <div class="bg-layer" id="bg-4"
+    style="background-image: url('https://files.oaiusercontent.com/file-98qX8Qk3z7x5gN93z9WaQr?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D3b544321-cc54-4a49-9d58-75f1131c9693.webp&sig=fW2zJ9k2yX%2BAm22k7o8eB17aO%2BE3L5k/lT3Qo2i3/vY%3D');">
+  </div>
+  <!-- Image 4: Navigator -->
+  <div class="bg-layer" id="bg-5"
+    style="background-image: url('https://files.oaiusercontent.com/file-2Tf5qZ64x7x6fM72x7VzPq?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D2c433210-bb43-3938-8c47-64e0020b8582.webp&sig=qE1yH8j1xW%2BZl11j6n7dA06zN%2AD2K4j/kS2Po1h2/uX%3D');">
+  </div>
+
+  <main>
+    <!-- SECTION 0: HERO -->
+    <section data-bg="bg-1">
+      <span class="mono-label reveal-text">Manifesto 2025</span>
+      <h1 class="snap-in">The End of Financial Guesswork</h1>
+      <h3 class="reveal-text delay-2">A Manifesto for the Sovereign Navigator</h3>
+    </section>
+
+    <!-- SECTION 1: DEATH OF SPREADSHEET -->
+    <section data-bg="bg-1">
+      <div class="reveal-text">
+        <p>Most "financial plans" are beautiful lies. They are static snapshots of a world that no longer exists—dead
+          spreadsheets created by an industry that profits from your uncertainty.</p>
+        <p>They give you a "number," but they can’t give you the one thing you actually crave:
+          <strong>Certainty.</strong></p>
+      </div>
+      <div class="reveal-text delay-2">
+        <span class="mono-label">01. The Death of the Spreadsheet</span>
+        <h2>We provide a Dynamic Co-Pilot.</h2>
+        <p>Traditional planning assumes the future is a straight line. It isn't. It’s a storm. Powered by the Vertex AI
+          engine, our system doesn’t just store your data—it <em>breathes</em> it.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 2: SILENT ERODERS -->
+    <section data-bg="bg-2">
+      <div class="reveal-text">
+        <span class="mono-label">02. Identifying the Silent Eroders</span>
+        <h2 style="filter: url(#glitchFilter);">Inflation is the Thief.</h2>
+        <p>While others celebrate "nominal returns," we hunt for the <strong>Real Return.</strong> We expose the "Silent
+          Eroder" that turns a million-dollar dream into a thousand-dollar reality. We don't just show you what you
+          have; we show you what you can <em>actually do</em> with it.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: TAMING CHAOS -->
+    <section data-bg="bg-2">
+      <div class="reveal-text">
+        <span class="mono-label">03. Taming the Chaos</span>
+        <h2>The Market is not a ruler; it is a wave.</h2>
+        <p>To protect your legacy, we run your life through 500 "Stress-Tests" every single day. Using the Box-Muller
+          Transform, we simulate market crashes, global shocks, and outliers.</p>
+        <p style="border-left: 2px solid var(--accent-red); padding-left: 10px;">If your plan can’t survive the 2008s
+          and 2020s of the future, it’s not a plan—it’s a risk.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4: FREEDOM SCORE -->
+    <section data-bg="bg-4">
+      <div class="reveal-text">
+        <span class="mono-label">04. Your Freedom Score</span>
+        <h2>We don't give you a Target Net Worth.</h2>
+        <p>We give you a <strong>Success Probability.</strong> This is your "Sleep-at-Night" score.</p>
+
+        <div class="hud-stats">
+          <div class="stat-box">
+            <span class="stat-val bulletproof">85%+</span>
+            <small>GREEN: BULLETPROOF</small>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val risk">&lt;60%</span>
+            <small>RED: AT RISK</small>
+          </div>
+        </div>
+        <p>This isn't just math; it’s an <strong>Action Signal.</strong> It’s the permission to spend more today, or the
+          warning to tighten the hull.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 5: PANIC GUARD -->
+    <section data-bg="bg-4">
+      <div class="reveal-text">
+        <span class="mono-label">05. The Panic Guard</span>
+        <h2>Protecting You From Yourself.</h2>
+        <p>The greatest threat to your wealth isn't the market—it’s your own heartbeat. Our <strong>Panic Score</strong>
+          acts as a digital circuit breaker.</p>
+        <p>When the system detects emotional "noise," it automatically shifts your stance to a defensive posture.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 6: OUTRO -->
+    <section data-bg="bg-5">
+      <div class="reveal-text">
+        <h1 class="snap-in">Become the Navigator.</h1>
+        <p>We didn’t build Holistic AI to give you more charts. We built it to give you back your time, your confidence,
+          and your sovereignty.</p>
+        <p>Stop being a passenger in your financial life.</p>
+        <button class="nav-btn">Initiate Sequence</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Background Image Sources Mapped correctly to user images
+    // Image 1: Sentinel
+    // Image 2: Lighthouse
+    // Image 3: Family
+    // Image 4: Superhero
+
+    const images = [
+      "../images/scene-1(77).jpg?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D45df16a7-a70d-44aa-971c-43f1480f745e.webp&sig=O2xK0kL2yU%2BAm22k7o8eB17aO%2BE3L5k/lT3Qo2i3/vY%3D",
+      "../images/scene-2-22.jpg?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D0f3e8f8a-9c7e-4b6a-9f5c-8d5e1f7a6c9e.webp&sig=w3G/2u6%2B5f%2Bk8u9%2Bb18eA17aO%2BE3L5k/lT3Qo2i3/vY%3D",
+      "../images/scene-3-32.jpg?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D3b544321-cc54-4a49-9d58-75f1131c9693.webp&sig=fW2zJ9k2yX%2BAm22k7o8eB17aO%2BE3L5k/lT3Qo2i3/vY%3D",
+      "../images/scene-4-42.jpg?se=2025-02-14T20%3A18%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D2c433210-bb43-3938-8c47-64e0020b8582.webp&sig=qE1yH8j1xW%2BZl11j6n7dA06zN%2AD2K4j/kS2Po1h2/uX%3D"
+    ];
+
+    document.getElementById('bg-1').style.backgroundImage = `url(${images[0]})`;
+    document.getElementById('bg-2').style.backgroundImage = `url(${images[1]})`;
+    document.getElementById('bg-4').style.backgroundImage = `url(${images[2]})`;
+    document.getElementById('bg-5').style.backgroundImage = `url(${images[3]})`;
+
+    // Intersection Observer for Text Reveals
+    const observerOptions = {
+      threshold: 0.2
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          // If it's a section, trigger background change
+          if (entry.target.tagName === 'SECTION') {
+            const bgId = entry.target.getAttribute('data-bg');
+            document.querySelectorAll('.bg-layer').forEach(bg => bg.classList.remove('active'));
+            if (bgId) document.getElementById(bgId).classList.add('active');
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-text, .snap-in').forEach(el => observer.observe(el));
+    document.querySelectorAll('section').forEach(el => observer.observe(el));
+
+  </script>
+</body>
+
+</html>

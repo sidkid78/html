@@ -131,13 +131,683 @@
                     <span class="text-white">HOMEASE</span> <span class="text-cyan-400">|</span> <span
                         class="text-gray-400">AI</span>
                 </h1>
-                <p class="text-xs text-gray-500 mono mt-1">FILE GALLERY // 112 FILES ACROSS 6 CATEGORIES</p>
+                <p class="text-xs text-gray-500 mono mt-1">FILE GALLERY // 142 FILES ACROSS 6 CATEGORIES</p>
             </div>
-            <a href="#" onclick="showHome()" class="text-sm text-cyan-400 hover:underline mono">← ALL FOLDERS</a>
+            <div class="flex gap-6">
+                <a href="#" onclick="showHome()"
+                    class="text-sm text-gray-400 hover:text-cyan-400 hover:underline mono transition-colors">FOLDERS</a>
+                <a href="#" onclick="showAllFiles()"
+                    class="text-sm text-gray-400 hover:text-cyan-400 hover:underline mono transition-colors">ALL
+                    FILES</a>
+            </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <!-- ALL FILES VIEW -->
+        <section id="all-files-view" class="folder-section">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">📂</span>
+                <div>
+                    <h2 class="text-2xl font-bold">All Files</h2>
+                    <p class="text-sm text-gray-500">Complete index of all 142 HTML files</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Content will be injected here or hardcoded below -->
+                <a href="agentic-ai/agentic-engineering.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Agentic Engineering</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/agentic-mastery.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Agentic Mastery</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/architecting-for-agents.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Architecting For Agents</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/architecting.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Architecting</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/architectual.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Architectual</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/codebase-directories.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Codebase Directories</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/plan_mode.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Plan Mode</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/programmable_agentic_coding.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Programmable Agentic Coding</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/scaling-engineering.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Scaling Engineering</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/scaling-your-impact.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Scaling Your Impact</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/singularity.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Singularity</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/team-rules.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Team Rules</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="agentic-ai/time.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Time</p>
+                        <p class="text-xs text-gray-500 mono">agentic-ai/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwell-ad.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Ad</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwell-insta-reel.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Insta Reel</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwell-instagram.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Instagram</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwell-manifesto.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Manifesto</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwell-reel.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Reel</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwell-walk.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Walk</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwellingly-ad.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwellingly Ad</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwellingly-carousel.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwellingly Carousel</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwellingly.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwellingly</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwellingly1.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwellingly 1</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/dwellngly-linkedin.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwellingly LinkedIn</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/kinetic-card - 2026-01-23T110404.588.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="dwellingly/social-dwell.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Social Dwell</p>
+                        <p class="text-xs text-gray-500 mono">dwellingly/</p>
+                    </div>
+                </a>
+                <a href="index.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">🏠</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Home / Index</p>
+                        <p class="text-xs text-gray-500 mono">./</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/ceo1.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CEO 1</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/cto3.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CTO 3</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card (78).html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card (78)</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card (81).html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card (81)</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card (91).html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card (91)</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card (92).html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card (92)</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card (93).html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card (93)</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card (94).html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card (94)</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card (96).html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card (96)</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/kinetic-card - 2026-01-11T005212.265.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Kinetic Card - Jan 11</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/listen-and-fix2.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Listen and Fix 2</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/mastering-the-gemini-agent.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Mastering Gemini Agent</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/sg-vamp.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">SG Vamp</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/sub-guard.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Sub Guard</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/thread-based-engineering.html"
+                    class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Thread Based Engineering</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="kinetic-cards/thread.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Thread</p>
+                        <p class="text-xs text-gray-500 mono">kinetic-cards/</p>
+                    </div>
+                </a>
+                <a href="misc/armor-for-artisan.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Armor for Artisan</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/build-in-public.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Build in Public</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/canto1.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Canto 1</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/canto2.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Canto 2</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/canto3.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Canto 3</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/canto4.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Canto 4</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/canto5.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Canto 5</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/ceo2.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CEO 2</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/codebase1.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Codebase 1</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/cto.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CTO</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/demist.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Demist</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/dreaming.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dreaming</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/early.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Early</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/revamp.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Revamp</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/tooling.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Tooling</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/ukg.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">UKG</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="misc/virologist.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Virologist</p>
+                        <p class="text-xs text-gray-500 mono">misc/</p>
+                    </div>
+                </a>
+                <a href="senior-care/a-sanctuary.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">A Sanctuary</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/a-single-step.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">A Single Step</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/caregiver.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Caregiver</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/contractor-outreach.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Contractor Outreach</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/exile.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Exile</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/fall.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Fall</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/healthcare.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Healthcare</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/home.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Home</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/homies.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Homies</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/never.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Never</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/senior.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Senior</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="senior-care/the-sovereignty-of-home.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Sovereignty of Home</p>
+                        <p class="text-xs text-gray-500 mono">senior-care/</p>
+                    </div>
+                </a>
+                <a href="social-media/austin-is-home.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Austin is Home</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/austin-safety.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Austin Safety</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/cto2.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">CTO 2</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/dignity.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dignity</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/dwell-insta-reel.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Insta Reel</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/dwell-instagram.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwell Instagram</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/dwellingly-carousel.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwellingly Carousel</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/dwellngly-linkedin.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Dwellingly LinkedIn</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-brand.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Brand</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-lead.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Lead</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-lead2.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Lead 2</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/facebook-lead3.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Facebook Lead 3</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/insta-legit.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Insta Legit</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/insta-web.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Insta Web</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/instagram.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Instagram</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/instagram1.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Instagram 1</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/instaremodel.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Insta Remodel</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/linkedin-brand.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">LinkedIn Brand</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/peace-of-mind.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">Peace of Mind</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+                <a href="social-media/tiktok-brand-awareness.html" class="file-card rounded-lg overflow-hidden block">
+                    <div class="h-24 bg-gray-800/50 flex items-center justify-center text-4xl">📄</div>
+                    <div class="p-3">
+                        <p class="text-sm font-medium truncate">TikTok Brand</p>
+                        <p class="text-xs text-gray-500 mono">social-media/</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
 
         <!-- HOME VIEW: Folder Cards -->
         <section id="home-view">
@@ -171,7 +841,8 @@
                             <span class="text-2xl">🎴</span>
                             <h3 class="text-xl font-bold">Kinetic Cards</h3>
                         </div>
-                        <p class="text-sm text-gray-400 mb-3">Interactive scrolling card experiences and UI experiments
+                        <p class="text-sm text-gray-400 mb-3">Interactive scrolling card experiences and UI
+                            experiments
                         </p>
                         <div class="flex items-center justify-between">
                             <span class="tag">14 FILES</span>
@@ -188,7 +859,8 @@
                             <span class="text-2xl">🔧</span>
                             <h3 class="text-xl font-bold">Misc</h3>
                         </div>
-                        <p class="text-sm text-gray-400 mb-3">CTO profiles, tooling docs, and experimental pages</p>
+                        <p class="text-sm text-gray-400 mb-3">CTO profiles, tooling docs, and experimental pages
+                        </p>
                         <div class="flex items-center justify-between">
                             <span class="tag">10 FILES</span>
                             <span class="text-xs text-gray-500 mono">misc/</span>
@@ -204,7 +876,8 @@
                             <span class="text-2xl">📱</span>
                             <h3 class="text-xl font-bold">Social Media</h3>
                         </div>
-                        <p class="text-sm text-gray-400 mb-3">Instagram, Facebook, LinkedIn, TikTok marketing pages</p>
+                        <p class="text-sm text-gray-400 mb-3">Instagram, Facebook, LinkedIn, TikTok marketing
+                            pages</p>
                         <div class="flex items-center justify-between">
                             <span class="tag">37 FILES</span>
                             <span class="text-xs text-gray-500 mono">social-media/</span>
@@ -220,7 +893,8 @@
                             <span class="text-2xl">🏠</span>
                             <h3 class="text-xl font-bold">Senior Care</h3>
                         </div>
-                        <p class="text-sm text-gray-400 mb-3">Aging-in-place campaigns, caregiver resources, healthcare
+                        <p class="text-sm text-gray-400 mb-3">Aging-in-place campaigns, caregiver resources,
+                            healthcare
                         </p>
                         <div class="flex items-center justify-between">
                             <span class="tag">34 FILES</span>
@@ -237,7 +911,8 @@
                             <span class="text-2xl">🏡</span>
                             <h3 class="text-xl font-bold">Dwellingly</h3>
                         </div>
-                        <p class="text-sm text-gray-400 mb-3">Dwellingly brand content, social media, and marketing
+                        <p class="text-sm text-gray-400 mb-3">Dwellingly brand content, social media, and
+                            marketing
                             materials
                         </p>
                         <div class="flex items-center justify-between">
@@ -473,7 +1148,8 @@
                 <span class="text-3xl">📱</span>
                 <div>
                     <h2 class="text-2xl font-bold">Social Media</h2>
-                    <p class="text-sm text-gray-500">Marketing pages for Instagram, Facebook, LinkedIn, TikTok</p>
+                    <p class="text-sm text-gray-500">Marketing pages for Instagram, Facebook, LinkedIn, TikTok
+                    </p>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -749,6 +1425,13 @@
         function showHome() {
             document.getElementById('home-view').style.display = 'block';
             document.querySelectorAll('.folder-section').forEach(s => s.classList.remove('active'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showAllFiles() {
+            document.getElementById('home-view').style.display = 'none';
+            document.querySelectorAll('.folder-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('all-files-view').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>

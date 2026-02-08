@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The End of Day Zero</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Syncopate:wght@400;700&display=swap');
+
+        :root {
+            --accent-red: #ff2a2a;
+            --accent-cyan: #00f0ff;
+            --accent-green: #0aff0a;
+            --bg-dark: #050505;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* Typography */
+        .font-display {
+            font-family: 'Syncopate', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Scrollytelling Layout */
+        .scrolly-container {
+            position: relative;
+        }
+
+        .sticky-backgrounds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .bg-slide.active {
+            opacity: 1;
+        }
+
+        .bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(5, 5, 5, 0.8), rgba(5, 5, 5, 0.95));
+            z-index: 1;
+        }
+
+        .content-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* SVG Filter Classes */
+        .glitch-text {
+            filter: url(#glitch-filter);
+        }
+
+        .liquid-text {
+            filter: url(#liquid-filter);
+        }
+
+        .noise-bg {
+            filter: url(#noise-filter);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Animations */
+        @keyframes revealUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Specific Section Styles */
+        .manifesto-border {
+            border-left: 2px solid var(--accent-red);
+            padding-left: 2rem;
+        }
+
+        .rfd-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .rfd-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s;
+        }
+
+        .rfd-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Terminal Code Block Style */
+        .terminal-block {
+            background: #000;
+            border: 1px solid #333;
+            font-family: monospace;
+            padding: 1rem;
+            border-radius: 4px;
+            color: var(--accent-green);
+            box-shadow: 0 0 20px rgba(10, 255, 10, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG FILTERS -->
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+        <defs>
+            <!-- 1. ANIMATED NOISE (Grain/Static) -->
+            <filter id="noise-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+                    <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.5" />
+                </feComponentTransfer>
+            </filter>
+
+            <!-- 2. LIQUID / DISTORTION -->
+            <filter id="liquid-filter">
+                <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence">
+                    <animate attributeName="baseFrequency" values="0.01;0.02;0.01" dur="5s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="10" xChannelSelector="R"
+                    yChannelSelector="G" />
+            </filter>
+
+            <!-- 3. GLITCH / CHROMATIC ABERRATION -->
+            <filter id="glitch-filter">
+                <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence">
+                    <animate attributeName="baseFrequency" values="0.05;0.9;0.05" dur="5s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" xChannelSelector="R"
+                    yChannelSelector="G" result="distorted" />
+
+                <feOffset in="distorted" dx="2" dy="0" result="redChannel">
+                    <animate attributeName="dx" values="2;-2;2" dur="0.2s" repeatCount="indefinite" />
+                </feOffset>
+                <feOffset in="distorted" dx="-2" dy="0" result="blueChannel">
+                    <animate attributeName="dx" values="-2;2;-2" dur="0.3s" repeatCount="indefinite" />
+                </feOffset>
+
+                <!-- Re-assemble is complex in simple filters, simplifying to just distortion + red shift for impact -->
+                <feMerge>
+                    <feMergeNode in="redChannel" />
+                    <feMergeNode in="distorted" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- BACKGROUND LAYER -->
+    <div class="sticky-backgrounds">
+        <!-- Noise Overlay -->
+        <div class="absolute inset-0 noise-bg z-20 mix-blend-overlay"></div>
+
+        <!-- Images -->
+        <div class="bg-slide active" id="bg-1"
+            style="background-image: url('../images/scene-111.jpg?width=1080&height=1920&nologo=true');"></div>
+        <div class="bg-slide" id="bg-2"
+            style="background-image: url('../images/scene-222.jpg?width=1080&height=1920&nologo=true');"></div>
+        <div class="bg-slide" id="bg-3"
+            style="background-image: url('../images/scene-333.jpg?width=1080&height=1920&nologo=true');"></div>
+        <div class="bg-slide" id="bg-4"
+            style="background-image: url('../images/scene-444.jpg?width=1080&height=1920&nologo=true');"></div>
+
+        <div class="bg-overlay"></div>
+    </div>
+
+    <!-- SCROLL CONTENT -->
+    <main class="scrolly-container max-w-4xl mx-auto text-gray-200">
+
+        <!-- SECTION 1: TITLE & MANIFESTO -->
+        <section class="content-section" data-bg="bg-1">
+            <div class="mb-20">
+                <h1 class="text-5xl md:text-8xl font-display font-bold mb-4 glitch-text text-white leading-tight">
+                    THE END OF<br><span class="text-red-500">DAY ZERO</span>
+                </h1>
+                <h2 class="text-xl md:text-2xl font-light text-gray-400 tracking-widest uppercase">
+                    Reclaiming the Human Cost of Codebases
+                </h2>
+            </div>
+
+            <div class="manifesto-border reveal">
+                <h3 class="text-3xl font-bold mb-6 text-red-400 font-display">The Manifesto</h3>
+                <p class="text-lg md:text-xl leading-relaxed mb-6">
+                    Every year, millions of hours of peak cognitive energy are incinerated in "Setup Hell." We hire the
+                    world’s brightest minds to solve global problems, then force them to spend their first 48 hours
+                    fighting Python path errors and missing <code class="bg-gray-800 px-2 py-1 text-sm">.env</code>
+                    variables.
+                </p>
+                <p class="text-lg md:text-xl leading-relaxed">
+                    We believe this "Onboarding Tax" is a failure of imagination. We are obsessed with the
+                    "Zero-Latency" developer experience—where the distance between "cloning a repo" and "shipping a
+                    feature" is measured in heartbeats, not days.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE LIVING CODEBASE -->
+        <section class="content-section" data-bg="bg-2">
+            <div class="reveal">
+                <h3 class="text-4xl md:text-6xl font-display font-bold mb-8 text-cyan-400 liquid-text">The Living
+                    Codebase System</h3>
+                <p class="text-xl md:text-2xl leading-relaxed mb-8">
+                    We didn't just build an installation script; we built a <strong>Self-Healing Immune System</strong>
+                    for your codebase. By fusing the rigid reliability of deterministic scripts with the high-reasoning
+                    "brain" of Gemini 3 Pro, we’ve created an agentic layer that doesn't just run commands—it
+                    <em>understands</em> why they fail.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: R-F-D PHILOSOPHY -->
+        <section class="content-section" data-bg="bg-2">
+            <div class="w-full reveal">
+                <h3 class="text-3xl font-display font-bold mb-10 border-b border-gray-700 pb-4">The R-F-D Architectural
+                    Philosophy</h3>
+                <p class="text-lg mb-8 text-gray-400">Complexity is the enemy of stability. Our system utilizes a
+                    <strong>Retain-Focus-Delete (R-F-D)</strong> orchestration to prevent "AI Drift":</p>
+
+                <div class="rfd-grid">
+                    <div class="rfd-card">
+                        <div class="text-cyan-400 text-sm font-bold mb-2 uppercase tracking-widest">01. Node A</div>
+                        <h4 class="text-2xl font-bold mb-2">Retain</h4>
+                        <p class="text-sm text-gray-300">A high-level Orchestrator (Gemini 3 Pro) holds the vision of
+                            the perfect environment.</p>
+                    </div>
+
+                    <div class="rfd-card">
+                        <div class="text-cyan-400 text-sm font-bold mb-2 uppercase tracking-widest">02. Node B</div>
+                        <h4 class="text-2xl font-bold mb-2">Focus</h4>
+                        <p class="text-sm text-gray-300">Specialized Worker Agents (Gemini 3 Flash) execute surgical
+                            tasks with extreme speed and zero context-bloat.</p>
+                    </div>
+
+                    <div class="rfd-card">
+                        <div class="text-red-500 text-sm font-bold mb-2 uppercase tracking-widest">03. Node C</div>
+                        <h4 class="text-2xl font-bold mb-2">Delete</h4>
+                        <p class="text-sm text-gray-300">To ensure security and total isolation, every worker is purged
+                            the moment the job is done. No residue. No ghosts in the machine.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: HUMAN INTERFACE -->
+        <section class="content-section" data-bg="bg-3">
+            <div class="reveal">
+                <h3 class="text-3xl md:text-5xl font-display font-bold mb-8 text-green-400">The Human
+                    Interface:<br><span class="text-white text-2xl md:text-3xl normal-case font-light">From Manuals to
+                        Mentorship</span></h3>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <p class="text-lg">Traditional setup is a lecture; our <strong>InteractiveSetupAgent</strong> is
+                            a conversation.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">➜</span>
+                                <span><strong>It Diagnoses:</strong> It reads logs like a Senior SRE, identifying that a
+                                    database connection failed not because of your code, but because of a specific
+                                    Docker socket permissions error.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">➜</span>
+                                <span><strong>It Protects:</strong> With a "Safety First" protocol, the system creates
+                                    backups and sandboxes every operation. It treats your local machine with the
+                                    reverence it deserves.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="terminal-block self-center">
+                        <div class="text-xs text-gray-500 mb-2">// SYSTEM.LOG -- ACTIVE MONITORING</div>
+                        <p>> Scanning merged branches...</p>
+                        <p>> Secrets check: <span class="text-green-500">PASS</span></p>
+                        <p>> Dependency drift detected: <span class="text-yellow-500">WARNING</span></p>
+                        <p class="mt-4 text-white"><strong>It Maintains:</strong> Beyond the first day, the system acts
+                            as a silent guardian, pruning merged branches, scanning for exposed secrets, and flagging
+                            major dependency shifts before they break your production build.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: MISSION -->
+        <section class="content-section text-center" data-bg="bg-4">
+            <div class="reveal">
+                <h3 class="text-xl tracking-widest uppercase text-gray-400 mb-6">The Mission</h3>
+                <p class="text-2xl md:text-4xl font-light mb-12 max-w-2xl mx-auto">
+                    We aren't just automating scripts. We are liberating developers from the mundane. We are making "Day
+                    Zero" a relic of the past.
+                </p>
+                <div class="inline-block border-2 border-white px-8 py-6">
+                    <h2 class="text-3xl md:text-6xl font-display font-bold glitch-text">STOP CONFIGURING.<br>START
+                        CREATING.</h2>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Scrollytelling Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.content-section');
+            const backgrounds = document.querySelectorAll('.bg-slide');
+            const reveals = document.querySelectorAll('.reveal');
+
+            // Intersection Observer for Background Transitions
+            const bgObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Get ID of bg to show
+                        const bgId = entry.target.getAttribute('data-bg');
+
+                        // Remove active from all
+                        backgrounds.forEach(bg => bg.classList.remove('active'));
+
+                        // Add active to target
+                        const targetBg = document.getElementById(bgId);
+                        if (targetBg) targetBg.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            sections.forEach(section => bgObserver.observe(section));
+
+            // Intersection Observer for Text Reveal
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            reveals.forEach(el => revealObserver.observe(el));
+        });
+    </script>
+</body>
+
+</html>

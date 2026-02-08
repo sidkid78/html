@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The End of the Static Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #f0f0f0;
+            --accent: #00f0ff;
+            --accent-secondary: #ff0055;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* SVG Filters Definitions */
+        .svg-defs {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        /* Background Management */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 10s ease-out;
+            transform: scale(1.1);
+        }
+
+        .bg-image.active {
+            opacity: 0.6;
+            transform: scale(1);
+        }
+
+        /* Filter Application Classes */
+        .filter-noise {
+            filter: url(#noise-filter) grayscale(100%) contrast(1.2);
+        }
+
+        .filter-liquid {
+            filter: url(#liquid-filter) brightness(0.8);
+        }
+
+        .filter-speed {
+            filter: url(#speed-filter) saturate(1.5);
+        }
+
+        .filter-clean {
+            filter: blur(0px) brightness(0.6);
+        }
+
+        /* Scrollytelling Layout */
+        .content-scroll {
+            position: relative;
+            z-index: 10;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            opacity: 0.2;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            transform: translateY(20px);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typography & Components */
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .list-item {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            transition: border-left 0.3s ease;
+        }
+
+        .list-item:hover {
+            border-left: 4px solid var(--accent-secondary);
+        }
+
+        /* Animations */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px var(--accent-secondary);
+            }
+
+            50% {
+                box-shadow: 0 0 30px var(--accent-secondary);
+            }
+        }
+
+        .pulse-card {
+            border: 1px solid var(--accent-secondary);
+            padding: 1.5rem;
+            background: rgba(20, 0, 10, 0.6);
+            animation: pulse-glow 3s infinite;
+            border-radius: 12px;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG Filters -->
+    <svg class="svg-defs">
+        <defs>
+            <!-- 1. Animated Noise (Static/Glitch) -->
+            <filter id="noise-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise">
+                    <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.5" />
+                </feComponentTransfer>
+                <feComposite operator="in" in2="SourceGraphic" result="composite" />
+                <feBlend mode="overlay" in="composite" in2="SourceGraphic" />
+            </filter>
+
+            <!-- 2. Liquid Distortion (Alive) -->
+            <filter id="liquid-filter">
+                <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="turbulence">
+                    <animate attributeName="baseFrequency" values="0.01;0.02;0.01" dur="10s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="30" xChannelSelector="R"
+                    yChannelSelector="G" />
+            </filter>
+
+            <!-- 3. Motion Speed (Dynamic) -->
+            <filter id="speed-filter">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
+                    <animate attributeName="stdDeviation" values="0,0; 10,0; 0,0" dur="3s" repeatCount="indefinite" />
+                </feGaussianBlur>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Background Images Layer -->
+    <div class="bg-container">
+        <img src="../images/scene-1.jpg" alt="Frustrated User" class="bg-image filter-noise" data-index="0">
+        <img src="../images/scene-2.jpg" alt="Digital Brain" class="bg-image filter-liquid" data-index="1">
+        <img src="../images/scene-3.jpg" alt="Flash vs Pro" class="bg-image filter-speed" data-index="2">
+        <img src="../images/scene-4.jpg" alt="Concierge" class="bg-image filter-clean" data-index="3">
+    </div>
+
+    <!-- Scrollytelling Content -->
+    <div class="content-scroll">
+
+        <!-- Section 1: Title & The Ghost -->
+        <section data-index="0">
+            <div class="max-w-3xl mx-auto">
+                <h1>The End of the<br>Static Interface</h1>
+                <div class="mt-12">
+                    <h2>The Ghost in the Machine</h2>
+                    <p>
+                        Every day, millions of users hit "The Wall." They open an app, get confused by a cluttered menu,
+                        struggle with a form, and eventually—quietly—they leave. For years, we’ve treated software like
+                        a static building: once the concrete is poured, the user has to figure out how to navigate it.
+                        If they get lost, that’s their problem.
+                    </p>
+                    <p class="text-xl font-bold text-red-500 uppercase tracking-widest">We find that unacceptable.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Mission -->
+        <section data-index="1">
+            <div class="max-w-3xl mx-auto md:ml-auto">
+                <p>
+                    We believe software should be alive. It should have eyes to see where you stumble and the intuition
+                    to move the furniture out of your way before you trip.
+                </p>
+                <p>
+                    Our <span class="highlight">Adaptive UX Expert</span> isn't just an API; it is a "Digital Brain"
+                    dedicated to the art of the frictionless experience.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: The Loop -->
+        <section data-index="2">
+            <div class="max-w-3xl mx-auto pulse-card">
+                <h2>A Pulse, Not a Process</h2>
+                <p class="mb-6">While other systems wait weeks for "A/B test results," our system lives in the moment.
+                </p>
+
+                <div class="list-item">
+                    <strong class="text-cyan-400">It Feels:</strong> It tracks the subtle micro-hesitations of a
+                    frustrated user.
+                </div>
+                <div class="list-item">
+                    <strong class="text-purple-400">It Thinks:</strong> Using a "Dual-Model" architecture, it makes
+                    split-second decisions to simplify a layout (The Flash) while simultaneously reflecting on deeper
+                    behavioral patterns in the background (The Pro).
+                </div>
+                <div class="list-item">
+                    <strong class="text-yellow-400">It Evolves:</strong> It doesn't just "store data"; it develops
+                    <em>Expertise.</em> It learns that a busy CEO needs a different interface than a first-time
+                    hobbyist. It bridges the gap between human intent and digital execution.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Profession & Result -->
+        <section data-index="3">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2>The Profession of Perfection</h2>
+                <p class="mx-auto">
+                    We didn't build this to "manage endpoints." We built this to end the era of "dumb" software. We’ve
+                    codified the soul of a world-class UX designer into a self-improving engine. By managing the
+                    "Expertise Cache," we ensure that your UI isn't just a tool—it’s a concierge that grows smarter
+                    every time a user touches the screen.
+                </p>
+
+                <div class="mt-16 p-8 border-t border-gray-700">
+                    <h3 class="text-2xl font-bold mb-4">The Result</h3>
+                    <p class="text-xl italic mx-auto text-gray-300">
+                        "Stop forcing your users to learn your software. Give them software that learns them."
+                    </p>
+                    <p class="mt-4 text-sm uppercase tracking-widest text-accent">
+                        This is more than an API—it’s the heartbeat of a user-centric revolution.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Vanilla JS for Scrollytelling Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const bgImages = document.querySelectorAll('.bg-image');
+            const sections = document.querySelectorAll('section');
+
+            const observerOptions = {
+                root: null,
+                threshold: 0.5, // Trigger when 50% of the section is visible
+                rootMargin: "0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Get index of active section
+                        const index = entry.target.getAttribute('data-index');
+
+                        // Activate Section Text
+                        entry.target.classList.add('visible');
+
+                        // Swap Background Image
+                        bgImages.forEach(img => {
+                            img.classList.remove('active');
+                            if (img.getAttribute('data-index') === index) {
+                                img.classList.add('active');
+                            }
+                        });
+                    } else {
+                        // Optional: Fade text out when leaving viewport
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+
+</html>

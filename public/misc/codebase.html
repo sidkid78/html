@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Codebase System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syncopate:wght@400;700&display=swap');
+
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        /* SVG Background Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.07;
+            filter: url(#noiseFilter);
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Syncopate', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Animations */
+        .reveal-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: blur(5px);
+        }
+
+        .reveal-section.active {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        /* Glitch Effect Class */
+        .glitch-target:hover {
+            animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+            color: var(--neon-cyan);
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0) } 
+            20% { transform: translate(-2px, 2px) } 
+            40% { transform: translate(-2px, -2px) } 
+            60% { transform: translate(2px, 2px) } 
+            80% { transform: translate(2px, -2px) } 
+            100% { transform: translate(0) }
+        }
+
+        /* Image Frames */
+        .holo-frame {
+            position: relative;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(188, 19, 254, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
+        }
+        
+        .holo-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(40%) contrast(120%);
+            transition: filter 0.5s ease;
+        }
+
+        .holo-frame:hover img {
+            filter: grayscale(0%) contrast(100%);
+        }
+
+        .terminal-box {
+            background: rgba(0,0,0,0.8);
+            border-left: 2px solid var(--neon-cyan);
+            padding: 1rem;
+            font-size: 0.85rem;
+            position: relative;
+        }
+        
+        .terminal-box::before {
+            content: 'sys.log';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: var(--dark-bg);
+            padding: 0 5px;
+            color: var(--neon-cyan);
+            font-size: 0.6rem;
+        }
+
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- SVG Filters -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch">
+                    <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.6" />
+                </feComponentTransfer>
+            </filter>
+            
+            <filter id="glowFilter">
+                <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-6 py-20 relative z-10">
+
+        <!-- Header -->
+        <header class="mb-24 reveal-section text-center">
+            <div class="inline-block border border-cyan-900 px-3 py-1 mb-4 text-xs tracking-widest text-cyan-500">SYSTEM V.3.0 // ONLINE</div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight glitch-target">
+                Agentic Codebase <br>
+                <span class="gradient-text">Installation & Maintenance</span>
+            </h1>
+            <p class="text-slate-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                A sophisticated framework designed to automate the setup, configuration, and ongoing health of development environments. Built on Google's Gemini AI.
+            </p>
+        </header>
+
+        <!-- Executive Summary -->
+        <section class="mb-32 reveal-section">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-2xl text-cyan-400">The Core Philosophy</h2>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        The system employs a hybrid approach combining deterministic scripts for routine operations with agentic intelligence for validation.
+                    </p>
+                    <div class="terminal-box">
+                        <p>> Justfile (Launcher)</p>
+                        <p class="text-green-500">> Deterministic Script + Logging</p>
+                        <p class="text-purple-400">> Agentic Prompt (Validation)</p>
+                    </div>
+                    <p class="text-xs text-slate-500">Leverages Gemini 3 Pro for planning and Gemini 3 Flash for execution.</p>
+                </div>
+                <div class="holo-frame">
+                    <!-- User Image 1: Justfile/Brain -->
+                    <img src="../images/scene-11.jpg" alt="Deterministic Workflow vs Gemini AI">
+                    <div class="absolute bottom-2 right-2 text-[10px] bg-black/80 px-2 text-cyan-500 border border-cyan-900">FIG 01. HYBRID WORKFLOW</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture: R-F-D -->
+        <section class="mb-32 reveal-section">
+            <div class="border-l-4 border-purple-600 pl-6 mb-12">
+                <h2 class="text-3xl mb-2">R-F-D Orchestration</h2>
+                <p class="text-slate-400">Retain. Focus. Delete.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-4 mb-12">
+                <div class="bg-slate-900/50 p-6 border border-slate-800 hover:border-cyan-500 transition-colors duration-300">
+                    <h3 class="text-lg text-cyan-400 mb-2">01. Retain</h3>
+                    <p class="text-xs text-slate-400">The SetupOrchestrator maintains high-level state, creates execution plans, and synthesizes final results.</p>
+                </div>
+                <div class="bg-slate-900/50 p-6 border border-slate-800 hover:border-purple-500 transition-colors duration-300">
+                    <h3 class="text-lg text-purple-400 mb-2">02. Focus</h3>
+                    <p class="text-xs text-slate-400">Worker agents receive minimal, highly specific context to execute single tasks like dependency checks.</p>
+                </div>
+                <div class="bg-slate-900/50 p-6 border border-slate-800 hover:border-red-500 transition-colors duration-300">
+                    <h3 class="text-lg text-red-400 mb-2">03. Delete</h3>
+                    <p class="text-xs text-slate-400">Workers are cleaned up immediately after task completion to maintain efficiency and security.</p>
+                </div>
+            </div>
+
+            <div class="holo-frame w-full h-64 overflow-hidden relative">
+                 <!-- User Image 2: Drones/Orchestrator -->
+                <img src="../images/scene-21.jpg" alt="SetupOrchestrator Drones" class="object-cover w-full h-full">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-4 text-sm font-bold tracking-widest text-white">MULTI-AGENT SWARM // DEPLOYED</div>
+            </div>
+        </section>
+
+        <!-- Key Components -->
+        <section class="mb-32 reveal-section">
+            <h2 class="text-center text-3xl mb-12">System Components</h2>
+            
+            <div class="space-y-4">
+                <details class="group bg-slate-900/30 border border-slate-800 open:border-cyan-500 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
+                        <span class="text-lg font-bold group-open:text-cyan-400">1. AgentRunner</span>
+                        <span class="text-cyan-500 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-300 border-t border-slate-800 mt-2">
+                        A "justfile-style" command launcher serving as the central hub. Manages command registration, hooks (pre_hook/post_hook), and context management.
+                    </div>
+                </details>
+
+                <details class="group bg-slate-900/30 border border-slate-800 open:border-purple-500 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
+                        <span class="text-lg font-bold group-open:text-purple-400">2. SetupOrchestrator</span>
+                        <span class="text-purple-500 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-300 border-t border-slate-800 mt-2">
+                        Uses Gemini 3 Pro to analyze codebase structure and generate a SetupPlan. Parallel executes tasks via Gemini 3 Flash and synthesizes a unified SetupReport.
+                    </div>
+                </details>
+
+                <details class="group bg-slate-900/30 border border-slate-800 open:border-green-500 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
+                        <span class="text-lg font-bold group-open:text-green-400">3. InteractiveSetupAgent</span>
+                        <span class="text-green-500 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-300 border-t border-slate-800 mt-2">
+                        Facilitates human-in-the-loop workflows. Guides users through Q&A for database modes, installation types, and environment variables.
+                    </div>
+                </details>
+
+                <details class="group bg-slate-900/30 border border-slate-800 open:border-yellow-500 transition-all">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
+                        <span class="text-lg font-bold group-open:text-yellow-400">4. SetupToolsManager</span>
+                        <span class="text-yellow-500 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-300 border-t border-slate-800 mt-2">
+                        Provides function calling capabilities. Tools include: Dependency Checking, Script Execution, Environment management, and Logging.
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- Interactive Workflow Visual -->
+        <section class="mb-32 reveal-section">
+            <div class="holo-frame mb-8">
+                 <!-- User Image 3: Monitors -->
+                <img src="../images/scene-31.jpg" alt="Interactive Setup Screens">
+            </div>
+            <div class="grid grid-cols-2 gap-8 text-center">
+                <div>
+                    <h4 class="text-cyan-400 uppercase tracking-wider text-sm mb-2">Automated Mode</h4>
+                    <p class="text-xs text-slate-500">Sensible defaults. Primes context via README. Zero prompting.</p>
+                </div>
+                <div>
+                    <h4 class="text-purple-400 uppercase tracking-wider text-sm mb-2">Interactive Mode</h4>
+                    <p class="text-xs text-slate-500">Friendly assistant. Real-time feedback. User preference Q&A.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security & Maintenance -->
+        <section class="mb-32 reveal-section">
+            <div class="flex flex-col-reverse md:flex-row gap-12 items-center">
+                <div class="flex-1 space-y-6">
+                    <h2 class="text-2xl text-red-500 flex items-center gap-3">
+                        <span class="inline-block w-2 h-8 bg-red-500"></span>
+                        Security Protocols
+                    </h2>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-start gap-3">
+                            <span class="text-red-500 mt-1">::</span>
+                            <span><strong>Sandboxing:</strong> File operations restricted to workspace.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-red-500 mt-1">::</span>
+                            <span><strong>Safety First:</strong> No deletion without confirmation. Backups mandatory.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-red-500 mt-1">::</span>
+                            <span><strong>Credential Protection:</strong> Sensitive info never logged.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="flex-1 w-full">
+                    <div class="holo-frame">
+                         <!-- User Image 4: Security Lock -->
+                        <img src="../images/scene-41.jpg" alt="Security Lock Hologram">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer / Technical Integration -->
+        <footer class="border-t border-slate-800 pt-12 pb-24 reveal-section text-center">
+            <h2 class="text-lg mb-6 text-slate-500">Technical Integration Patterns</h2>
+            <div class="flex flex-wrap justify-center gap-4 text-xs font-mono">
+                <span class="bg-slate-900 px-4 py-2 border border-slate-700">MCP Server Integration</span>
+                <span class="bg-slate-900 px-4 py-2 border border-slate-700">Full-Stack Agents</span>
+                <span class="bg-slate-900 px-4 py-2 border border-slate-700">Autonomous Setup Loop</span>
+            </div>
+            <p class="mt-12 text-[10px] text-slate-600 tracking-widest">GENERATED BY AGENTIC CODEBASE SYSTEM // TERMINATED</p>
+        </footer>
+
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: Unobserve to only animate once
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
