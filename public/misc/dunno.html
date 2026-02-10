@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Holy Grail Refinery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4AF37;
+      --neon: #00f3ff;
+      --dark: #050505;
+    }
+
+    body {
+      background-color: var(--dark);
+      color: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    .font-display {
+      font-family: 'Cinzel', serif;
+    }
+
+    .font-code {
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* --- SCROLL ANIMATIONS --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .blur-reveal {
+      filter: blur(10px);
+      opacity: 0;
+      transition: all 1.2s ease-out;
+    }
+
+    .blur-reveal.active {
+      filter: blur(0px);
+      opacity: 1;
+    }
+
+    /* --- SVG FILTER CLASSES --- */
+    .filter-noise {
+      filter: url(#static-noise);
+    }
+
+    .filter-liquid {
+      filter: url(#liquid-heat);
+    }
+
+    .filter-glitch:hover {
+      filter: url(#chromatic-aberration);
+    }
+
+    /* --- UTILITIES --- */
+    .text-glow {
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    .neon-glow {
+      text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+    }
+
+    /* --- LAYOUT SPECIFICS --- */
+    .sticky-wrapper {
+      position: relative;
+      height: 200vh;
+    }
+
+    .sticky-visual {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      object-fit: cover;
+      z-index: 0;
+      mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    }
+
+    .scroll-content {
+      position: relative;
+      z-index: 10;
+      margin-top: -80vh;
+      padding-bottom: 20vh;
+      background: linear-gradient(to bottom, transparent, var(--dark) 20%, var(--dark) 100%);
+    }
+
+    .glass-card {
+      background: rgba(10, 10, 10, 0.8);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Decorative lines */
+    .line-v {
+      position: fixed;
+      left: 50px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 50;
+    }
+  </style>
+</head>
+
+<body class="antialiased selection:bg-yellow-600 selection:text-white">
+
+  <!-- SVG FILTERS DEFINITION -->
+  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+    <defs>
+      <!-- 1. LIQUID HEAT (For LogicNode/Refinement) -->
+      <filter id="liquid-heat">
+        <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" numOctaves="1" result="warp">
+          <animate attributeName="baseFrequency" values="0.01 0.04; 0.01 0.08; 0.01 0.04" dur="4s"
+            repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="6" in="SourceGraphic" in2="warp" />
+      </filter>
+
+      <!-- 2. STATIC NOISE (For The Lie/Hallucination) -->
+      <filter id="static-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="0.5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComposite operator="in" in2="SourceGraphic" result="noiseLayer" />
+        <feBlend mode="overlay" in="SourceGraphic" in2="noiseLayer" />
+      </filter>
+
+      <!-- 3. CHROMATIC ABERRATION (Interact) -->
+      <filter id="chromatic-aberration">
+        <feColorMatrix type="matrix" result="redish" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+        <feOffset in="redish" dx="2" dy="0" result="redish-offset">
+          <animate attributeName="dx" values="2; -2; 2" dur="0.2s" repeatCount="indefinite" />
+        </feOffset>
+        <feColorMatrix type="matrix" in="SourceGraphic" result="blueish"
+          values="0 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+        <feOffset in="blueish" dx="-2" dy="0" result="blueish-offset">
+          <animate attributeName="dx" values="-2; 2; -2" dur="0.2s" repeatCount="indefinite" />
+        </feOffset>
+        <feBlend mode="screen" in="redish-offset" in2="blueish-offset" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="line-v hidden md:block"></div>
+
+  <!-- SECTION 1: HERO -->
+  <section class="sticky-wrapper">
+    <div class="absolute inset-0 bg-black/40 z-10"></div>
+    <img src="../images/scene-2 (6).jpg" alt="Furnace Core"
+      class="sticky-visual grayscale opacity-80 mix-blend-luminosity">
+
+    <div class="relative z-20 h-screen flex flex-col justify-center items-center text-center px-6">
+      <p class="font-code text-xs md:text-sm text-yellow-500 mb-4 tracking-[0.3em] uppercase reveal active">Manifesto
+        v1.0</p>
+      <h1 class="font-display text-5xl md:text-8xl font-black tracking-tight leading-none mb-6 text-white reveal active"
+        style="transition-delay: 0.2s">
+        THE <span class="text-[#D4AF37] italic filter-liquid inline-block">HOLY GRAIL</span><br>REFINERY
+      </h1>
+      <p class="font-code text-sm md:text-base max-w-xl text-gray-300 border-l-2 border-yellow-500 pl-4 text-left mx-auto reveal active"
+        style="transition-delay: 0.4s">
+        A Manifesto for the Post-Hallucination Era
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE LIE -->
+  <section class="scroll-content max-w-4xl mx-auto px-6">
+    <div class="glass-card p-8 md:p-12 mb-32 rounded-sm border-l-4 border-red-500 relative overflow-hidden reveal">
+      <!-- Image Overlay -->
+      <div class="absolute top-0 right-0 w-full h-full opacity-20 pointer-events-none">
+        <img src="../images/scene-1 (6).jpg" class="object-cover w-full h-full filter-noise">
+      </div>
+
+      <h2 class="font-display text-3xl md:text-4xl mb-6 text-white relative z-10">The Great Lie of <span
+          class="text-red-500 line-through decoration-red-500">Modern AI</span></h2>
+      <p class="text-lg md:text-xl leading-relaxed text-gray-300 relative z-10">
+        For the last three years, the software industry has settled for "good enough." We have allowed AI "assistants"
+        to flood our repositories with <span class="font-code text-white bg-red-900/50 px-1 filter-noise">"vibe-based"
+          code</span>—probabilistic guesses that look right but fail under pressure.
+      </p>
+      <p class="mt-6 text-gray-400 relative z-10">
+        We have traded security for speed and sovereignty for convenience. We are building the future on a foundation of
+        digital sand.
+      </p>
+      <div class="mt-12 text-center">
+        <h3 class="font-display text-2xl text-white border-y border-white/20 py-4 reveal">The Holy Grail Refinery is the
+          end of the compromise.</h3>
+      </div>
+    </div>
+
+    <!-- SECTION 3: THE QUEST -->
+    <div class="grid md:grid-cols-2 gap-12 items-center mb-32">
+      <div class="order-2 md:order-1 reveal">
+        <h2 class="font-display text-3xl text-yellow-400 mb-2">The Quest for the "One"</h2>
+        <p class="font-code text-xs text-gray-500 mb-6 uppercase tracking-widest">The 14 → 4 → 1 Philosophy</p>
+
+        <p class="text-gray-300 mb-4">
+          We don’t believe in "translation." Translation is for tourists. We believe in <strong
+            class="text-white">Refinement.</strong> Our proprietary "14 → 4 → 1" model is a digital furnace.
+        </p>
+        <p class="text-gray-300 mb-4">
+          We take 14 fragmented, messy source languages and strip away the syntactic ego. We melt them down through four
+          paradigm-shifting "Pods" until only the <span class="text-neon neon-glow font-bold">LogicNode</span> remains:
+          the pure, mathematical intent of the creator.
+        </p>
+        <div class="mt-6 p-4 border border-yellow-500/30 bg-yellow-500/5">
+          <p class="font-display italic text-lg text-yellow-200">This isn't just code. It is <span
+              class="font-bold text-white">Refined-IR</span>—the first universal language of human thought.</p>
+        </div>
+      </div>
+      <div class="order-1 md:order-2 relative h-96 reveal">
+        <img src="../images/scene-3 (5).jpg"
+          class="absolute inset-0 w-full h-full object-cover rounded-lg shadow-2xl grayscale hover:grayscale-0 transition-all duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: THE STANDARD -->
+    <div class="glass-card p-10 mb-32 border-t border-neon reveal">
+      <div class="flex flex-col md:flex-row gap-8">
+        <div class="md:w-1/3">
+          <h2
+            class="font-code text-6xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-800 font-bold opacity-50">
+            0.0001%</h2>
+          <p class="text-xs font-code uppercase tracking-widest text-neon mt-2">The Standard</p>
+        </div>
+        <div class="md:w-2/3">
+          <p class="text-lg text-gray-300 mb-4">
+            While our competitors celebrate "helpful suggestions," we demand <strong class="text-white">Formal
+              Truth.</strong> The Refinery does not guess. Each LogicNode is subjected to a 1,000-test gauntlet of
+            formal verification.
+          </p>
+          <p class="text-gray-300">
+            We aren't aiming for "productivity"; we are aiming for <strong
+              class="text-white filter-glitch cursor-crosshair">Infallibility.</strong> Our 99.9999% accuracy target
+            isn't a benchmark—it’s a moral obligation.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: SOVEREIGNTY (BYOK) -->
+    <div class="relative mb-32 min-h-screen flex items-center">
+      <!-- Background Image fixed for this section -->
+      <div class="absolute inset-0 z-0 overflow-hidden rounded-lg">
+        <img src="../images/scene-4 (4).jpg" class="w-full h-full object-cover opacity-30">
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 w-full md:w-1/2 p-6">
+        <h2 class="font-display text-4xl text-white mb-6">Sovereignty as a Right <span
+            class="block text-base font-code text-gray-400 mt-2">(The BYOK Revolution)</span></h2>
+        <p class="text-gray-300 mb-6">
+          Your intellectual property is your soul. The "Mercenary" AI models want to rent your soul back to you,
+          charging you for every token while harvesting your secrets.
+        </p>
+        <div class="pl-4 border-l-4 border-white">
+          <p class="text-lg text-white mb-4">
+            The Refinery is different. Through our <span class="font-bold">Bring Your Own Key (BYOK)</span>
+            architecture, we hand the keys of the kingdom back to you.
+          </p>
+          <p class="text-gray-400 text-sm">
+            You provide the power; you own the results. Your code never leaves your sight. Your costs are transparent.
+            Your data is your own.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: FACTORY OF FACTORIES -->
+    <div class="text-center max-w-3xl mx-auto mb-40 reveal">
+      <h2 class="font-display text-3xl md:text-5xl mb-8 text-white filter-liquid">The Factory of Factories</h2>
+      <p class="text-xl text-gray-400 mb-8">
+        We are starting with code, but we are building the <strong class="text-neon">Universal Logic Engine.</strong>
+      </p>
+      <p class="text-gray-500 mb-8">
+        Today, we solve the "Polyglot" nightmare. Tomorrow, the Refinery will use its own verified intelligence to
+        evolve. We are building a "Factory of Factories"—a system capable of distilling Legal, Medical, and Financial
+        truth with the same clinical precision.
+      </p>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="relative py-32 text-center overflow-hidden">
+      <div class="absolute inset-0 flex justify-center items-center opacity-10 pointer-events-none">
+        <span class="font-display text-[20vw] font-bold text-white">LOGIC</span>
+      </div>
+
+      <h2 class="font-display text-4xl md:text-6xl text-white mb-6 blur-reveal">Join the Crusade.</h2>
+      <p class="font-code text-yellow-500 mb-12 uppercase tracking-widest reveal">The era of "guessing" is over. The era
+        of Pure Logic has begun.</p>
+
+      <div class="inline-block border border-white/30 p-2">
+        <div class="border border-white/30 px-12 py-6 bg-white/5 backdrop-blur-sm">
+          <span class="font-display text-2xl md:text-3xl text-white">The Holy Grail Refinery: Build for Eternity.</span>
+        </div>
+      </div>
+    </footer>
+
+  </section>
+
+  <script>
+    // SCROLL LOGIC
+    document.addEventListener('DOMContentLoaded', () => {
+      const observerOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, observerOptions);
+
+      const elements = document.querySelectorAll('.reveal, .blur-reveal');
+      elements.forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
+
+</html>
