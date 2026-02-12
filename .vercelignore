@@ -1,0 +1,26 @@
+# Vercel Ignore File
+# Exclude files that are not needed for the build or at runtime
+
+# Local development files
+.env*.local
+.vercel
+node_modules
+.next
+out
+build
+
+# Project documentation and specs
+specs/
+article.md
+README.md
+
+# Build-time only tools
+agent_workspace/
+.agent/
+.gemini/
+
+# Large assets that are served via CDN and shouldn't be part of the function bundle
+# (Note: public/ remains accessible, but .vercelignore can help keep the deployment source clean)
+# public/images/ is already handled via next.config.ts for runtime exclusion
+public/images/
+public/audio/

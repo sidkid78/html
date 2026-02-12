@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
       'node_modules/@next/swc-linux-x64-gnu',
       'node_modules/@next/swc-linux-x64-musl',
       'node_modules/@next/swc-win32-x64-msvc',
+      'public/images/**/*',
+      'public/audio/**/*',
+      'public/dwellingly/**/*',
     ],
   },
 };
