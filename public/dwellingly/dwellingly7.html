@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Texas Sovereign Seller’s Manifesto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #d4af37;
+      --navy: #0f172a;
+      --text-main: #f8fafc;
+    }
+
+    body {
+      background-color: var(--navy);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand-font {
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* SVG FILTER CLASSES */
+    .noise-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0.07;
+      filter: url(#static-noise);
+    }
+
+    .liquid-text {
+      filter: url(#heat-haze);
+    }
+
+    .distress-border {
+      filter: url(#distress);
+    }
+
+    /* SCROLLYTELLING LAYOUT */
+    .section-container {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 10;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.3;
+      transition: opacity 1s ease;
+    }
+
+    .content-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--gold);
+      padding: 2.5rem;
+      max-width: 800px;
+      width: 100%;
+      position: relative;
+      backdrop-filter: blur(5px);
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .content-card.in-view {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Accent Lines */
+    .accent-line {
+      width: 0%;
+      height: 2px;
+      background: var(--gold);
+      margin: 1.5rem 0;
+      transition: width 1s ease 0.3s;
+    }
+
+    .in-view .accent-line {
+      width: 100px;
+    }
+
+    /* Special Typography */
+    .highlight {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* Hero Specifics */
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.1;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG FILTERS DEFINITION -->
+  <svg style="display: none;">
+    <defs>
+      <!-- 1. ANIMATED NOISE: Film Grain -->
+      <filter id="static-noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="seed" values="0;100" dur="1s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.5" />
+        </feComponentTransfer>
+      </filter>
+
+      <!-- 2. LIQUID DISTORTION: Heat Haze for Titles -->
+      <filter id="heat-haze">
+        <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="warp">
+          <animate attributeName="baseFrequency" values="0.015;0.025;0.015" dur="8s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="5" in="SourceGraphic" in2="warp" />
+      </filter>
+
+      <!-- 3. DISTRESS: Rough Edges for Borders -->
+      <filter id="distress">
+        <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- VISUAL LAYERS -->
+  <div class="noise-bg"></div>
+
+  <!-- HERO -->
+  <section class="section-container" id="hero">
+    <img src="../images/scene-1 (9).jpg" alt="Texas Rancher Shield" class="bg-image" style="opacity: 0.5;">
+    <div class="content-card in-view" style="text-align: center; border: 4px double var(--gold); padding: 4rem 2rem;">
+      <div class="accent-line" style="margin: 0 auto 2rem auto;"></div>
+      <h1 class="hero-title liquid-text">The Texas Sovereign Seller’s Manifesto</h1>
+      <h2 class="text-xl mt-4 tracking-widest">Defending Your Equity</h2>
+      <div class="accent-line" style="margin: 2rem auto 0 auto;"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 1 -->
+  <section class="section-container">
+    <!-- Reusing Hero Image darkened -->
+    <img src="../images/scene-1 (9).jpg" alt="Shield" class="bg-image" style="filter: brightness(0.4);">
+    <div class="content-card reveal-on-scroll">
+      <h3 class="text-2xl mb-4 text-gold-400 brand-font">1. Why Your Paperwork is Your Fortress</h3>
+      <div class="accent-line"></div>
+      <p class="leading-relaxed text-gray-300">
+        In Texas, selling your home FSBO isn't just about "saving 3%." It’s an act of financial sovereignty. But the
+        moment you plant that sign in the yard, you aren't just a homeowner—you are the <span class="highlight">Guardian
+          of the Deal.</span>
+      </p>
+      <p class="mt-4 leading-relaxed text-gray-300">
+        In our market, deals don’t die because the house is bad; they die because the seller was "exposed." One missing
+        date or one vague sentence is a crack in your armor that predatory buyers and aggressive inspectors will exploit
+        to bleed your price dry.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="section-container">
+    <div class="content-card reveal-on-scroll">
+      <h3 class="text-2xl mb-4 brand-font">2. Your Truth is Your Weapon</h3>
+      <div class="accent-line"></div>
+      <p class="leading-relaxed text-gray-300">
+        The Seller’s Disclosure Notice (SDN) isn't a chore; it is your <span class="highlight">legal kill-switch for
+          future lawsuits.</span> Most sellers treat this as a checklist. You must treat it as a sworn deposition.
+      </p>
+      <p class="mt-4 leading-relaxed text-gray-300">
+        By being radically transparent, you don't just "comply"—you strip the buyer of their power to renegotiate three
+        weeks later. You are removing the "surprises" that weak sellers use to hide, and replacing them with the cold,
+        hard facts that professional sellers use to win.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="section-container">
+    <img src="../images/scene-2 (9).jpg" alt="T-47 Affidavit and Map" class="bg-image">
+    <div class="content-card reveal-on-scroll">
+      <h3 class="text-2xl mb-4 brand-font">3. Defending Your Dirt</h3>
+      <div class="accent-line"></div>
+      <p class="leading-relaxed text-gray-300">
+        Your land is your legacy. The T-47 Affidavit and Survey are the maps of your kingdom. Don't let a title company
+        or a buyer's agent confuse you into spending money you don't need to spend.
+      </p>
+      <p class="mt-4 leading-relaxed text-gray-300">
+        By mastering these documents, you aren't just "organizing files"—you are proving the boundaries of your
+        sovereignty and ensuring no one can question the ground you stand on.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="section-container">
+    <img src="../images/scene-3 (8).jpg" alt="Luxury Packet Handover" class="bg-image">
+    <div class="content-card reveal-on-scroll">
+      <h3 class="text-2xl mb-4 brand-font">4. The Psychological Strike</h3>
+      <div class="accent-line"></div>
+      <p class="leading-relaxed text-gray-300">
+        When a buyer walks into a FSBO home, they are looking for weakness. They expect chaos. When you hand them a
+        pre-assembled, notarized, and flawless <span class="highlight">Sovereign Seller Packet</span>, the power dynamic
+        shifts instantly.
+      </p>
+      <p class="mt-4 leading-relaxed text-gray-300">
+        You have signaled that you are not a "hobbyist"—you are a professional. This creates <span
+          class="highlight">"Deal Momentum,"</span> a psychological state where the buyer feels <em>lucky</em> to work
+        with you, rather than feeling like they are taking a risk.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="section-container">
+    <img src="../images/scene-4 (7).jpg" alt="Contract Clock" class="bg-image">
+    <div class="content-card reveal-on-scroll">
+      <h3 class="text-2xl mb-4 brand-font">5. The Heartbeat of the Deal</h3>
+      <div class="accent-line"></div>
+      <p class="leading-relaxed text-gray-300">
+        The moment the ink is dry, the "Contract Clock" begins its countdown. In Texas, time is either your ally or your
+        executioner. We don't just "track deadlines"; we dominate the timeline.
+      </p>
+      <p class="mt-4 leading-relaxed text-gray-300">
+        The "Option Period" is the danger zone. By being prepared, you turn this from a period of "Buyer Anxiety" into a
+        period of "Seller Authority."
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section class="section-container">
+    <div class="content-card reveal-on-scroll">
+      <h3 class="text-2xl mb-4 brand-font">6. The Sovereign Guardrails</h3>
+      <div class="accent-line"></div>
+      <p class="leading-relaxed text-gray-300">
+        You are a Coordinator, an Architect, a Protector. You are not a victim of the process. You don't give "legal
+        advice" because you don't have to—the documents speak for you. You don't "negotiate" out of desperation; you
+        log, record, and dictate the flow of information.
+      </p>
+    </div>
+  </section>
+
+  <!-- OUTRO / MISSION -->
+  <section class="section-container" style="background: linear-gradient(to top, #000, #0f172a);">
+    <div class="content-card reveal-on-scroll" style="border-color: #fff; text-align: center;">
+      <h2 class="text-3xl brand-font mb-6">The Mission</h2>
+      <p class="text-lg mb-8 leading-relaxed">
+        Your equity is the result of years of hard work. Don't let a clerical error hand it over to someone else.
+      </p>
+
+      <div class="p-6 border-2 border-dashed border-yellow-600 bg-yellow-900 bg-opacity-20">
+        <h3 class="text-xl brand-font text-yellow-500 mb-2">Your 24-Hour Mandate:</h3>
+        <p class="text-md italic mb-4">
+          Complete your SDN and secure your survey tonight.
+        </p>
+        <p class="text-sm font-light">
+          Not because the law requires it, but because your financial freedom depends on it.
+        </p>
+        <h4 class="text-2xl brand-font mt-6 liquid-text">Own the paperwork. Own the deal. Keep the equity.</h4>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Vanilla JS to trigger CSS animations on scroll
+    document.addEventListener("DOMContentLoaded", () => {
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.2
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          }
+        });
+      }, observerOptions);
+
+      const targets = document.querySelectorAll(".reveal-on-scroll");
+      targets.forEach(target => observer.observe(target));
+    });
+  </script>
+
+</body>
+
+</html>

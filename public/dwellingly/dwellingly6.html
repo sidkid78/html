@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The End of 'I Thought You Were Doing That'</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,400&display=swap');
+
+        :root {
+            --teal: #308976;
+            --muted-teal: #4D726B;
+            --black: #000000;
+            --gray: #9B9C9C;
+            --dark: #0A0A0A;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--gray);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--white);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        em {
+            font-family: 'Playfair Display', serif;
+            color: var(--teal);
+            font-style: italic;
+        }
+
+        strong {
+            color: var(--white);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        .section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            border-bottom: 1px solid #222;
+            overflow: hidden;
+        }
+
+        .fullscreen-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.3;
+            filter: grayscale(100%) contrast(1.2);
+            transition: transform 2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(10, 10, 10, 0.85);
+            padding: 2rem;
+            border-left: 4px solid var(--teal);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .in-view .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .in-view .fullscreen-bg {
+            transform: scale(1.05);
+            filter: grayscale(0%) contrast(1);
+        }
+
+        /* SVG FILTERS */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.05;
+            filter: url(#noiseFilter);
+        }
+
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .in-view .glitch-text {
+            animation: glitch-anim 0.3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                transform: translate(0)
+            }
+
+            20% {
+                transform: translate(-2px, 2px)
+            }
+
+            40% {
+                transform: translate(-2px, -2px)
+            }
+
+            60% {
+                transform: translate(2px, 2px)
+            }
+
+            80% {
+                transform: translate(2px, -2px)
+            }
+
+            100% {
+                transform: translate(0)
+            }
+        }
+
+        /* SECTION SPECIFICS */
+        #intro {
+            text-align: center;
+            background: var(--black);
+        }
+
+        #intro h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--white), var(--gray));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #nightmare .content {
+            border-color: #ff4444;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.1);
+        }
+
+        #shield .content {
+            border-color: var(--teal);
+            background: rgba(48, 137, 118, 0.1);
+            border: 1px solid var(--muted-teal);
+        }
+
+        #heartbeat h2 {
+            color: var(--teal);
+            text-shadow: 0 0 10px var(--teal);
+        }
+
+        #heartbeat .content {
+            text-align: center;
+            border: none;
+            background: transparent;
+        }
+
+        #victory {
+            background: linear-gradient(to bottom, var(--dark), var(--muted-teal));
+        }
+
+        #victory .content {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* ANIMATIONS */
+        .hud-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(var(--muted-teal) 1px, transparent 1px), linear-gradient(90deg, var(--muted-teal) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 1;
+            mask-image: radial-gradient(circle, black 40%, transparent 80%);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(48, 137, 118, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 20px rgba(48, 137, 118, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(48, 137, 118, 0);
+            }
+        }
+
+        .countdown {
+            font-family: 'Courier New', monospace;
+            font-size: 3rem;
+            color: var(--teal);
+            font-weight: bold;
+            letter-spacing: 5px;
+            filter: url(#glow);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--teal);
+            color: var(--white);
+        }
+
+        footer h2 {
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body><!-- SVG DEFS --><svg style="display: none;">
+        <defs>
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+                <feColorMatrix type="saturate" values="0" />
+            </filter>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="distort">
+                <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence">
+                    <animate attributeName="baseFrequency" values="0.05;0.01;0.05" dur="5s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" />
+            </filter>
+        </defs>
+    </svg>
+    <div class="noise-overlay"></div>
+    <div class="container"><!-- INTRO -->
+        <section class="section" id="intro">
+            <div class="hud-grid"></div>
+            <div class="content">
+                <h1>The End of<br>"I Thought You Were Doing That"</h1>
+                <p style="margin-top:20px; color:var(--teal); text-transform:uppercase; letter-spacing:2px;">A
+                    Dwellingly Report</p>
+            </div>
+        </section><!-- NIGHTMARE -->
+        <section class="section" id="nightmare"><img
+                src="../images/scene-1 (7).jpg?se=2025-01-22T08%3A23%3A02Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D42e9d562-a5e2-45e6-9403-13840656094b.webp&sig=G0757nO4Q%2Bh3oO1eCg4%2BCF9q2fVjYfXQk6m%2BDcI%2B3O8%3D"
+                class="fullscreen-bg" alt="Stressed Woman">
+            <div class="content">
+                <h2>The Nightmare <span style="color:#ff4444"></span></h2>
+                <p>In Texas real estate, there is a specific kind of silence that happens right before a $500,000 deal
+                    dies. It’s the silence that follows the phrase: <em>"I thought you were doing that."</em></p><br>
+                <p>For the FSBO seller, you aren't just selling a house; you are stepping into a legal arena against
+                    <span class="glitch-text">professional predators</span>. The "anxiety" you feel isn't just about
+                    being messy—it’s the biological realization that you are unprotected. One missed checkbox on a Texas
+                    Seller’s Disclosure isn't a "to-do item"—it’s a lawsuit waiting to happen three years from now.
+                </p>
+            </div>
+        </section><!-- COVENANT -->
+        <section class="section" style="background:var(--dark);">
+            <div class="content" style="border-left-color:var(--white);">
+                <h2>The Covenant</h2>
+                <p>We built Dwellingly because we believe the 6% "expert tax" is a penalty on your hard-earned equity.
+                    But you cannot beat the system with just "determination." You beat the system with <strong>Superior
+                        Order.</strong></p><br>
+                <p>Dwellingly is your "Experienced Family Member" in digital form—the one who has seen 1,000 closings
+                    and knows exactly where the traps are hidden.</p>
+            </div>
+        </section><!-- SHIELD -->
+        <section class="section" id="shield">
+            <div class="hud-grid" style="opacity:0.3"></div><img
+                src="../images/scene-2 (7).jpg?se=2025-01-22T08%3A23%3A02Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D1293a388-7254-4770-9833-2868848cf94e.webp&sig=6Y4Vp/Z634g%2BiJ68h4G861Xh61y2eGf%2B5k8y3H3nLho%3D"
+                class="fullscreen-bg" alt="Tablet Command Center">
+            <div class="content">
+                <h2>(Step 1-3: The Professionalism)</h2>
+                <p>The moment you enter your address, the chaos stops. You aren't looking at a "dashboard"; you are
+                    looking at your <strong>Command Center.</strong></p>
+                <ul style="list-style:none; margin-top:1rem;">
+                    <li style="margin-bottom:1rem;"><strong style="color:var(--teal)">The Missing Document
+                            Count:</strong> This isn't a "to-do list." It’s a threat-detection system. If it says
+                        "Missing," you are vulnerable. If it says "Uploaded," you are protected.</li>
+                    <li><strong style="color:var(--teal)">The Buyer Packet:</strong> This is your psychological weapon.
+                        When a buyer’s agent sees a chaotic mess of emails, they see a seller they can bully. When they
+                        receive a single, professional, "Texas-Standard" Dwellingly link, they realize they are dealing
+                        with a pro. You've won the negotiation before it even started.</li>
+                </ul>
+            </div>
+        </section><!-- HEARTBEAT -->
+        <section class="section" id="heartbeat"><img
+                src="../images/scene-3 (6).jpg?se=2025-01-22T08%3A23%3A02Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D23f8a481-9876-4554-1234-567890abcdef.webp&sig=dummy_signature_will_be_ignored_by_browser_but_structure_kept"
+                class="fullscreen-bg" style="opacity:0.6" alt="Countdown">
+            <div class="content">
+                <h2>The Heartbeat (Step 4: The Clock)</h2>
+                <p>When the contract is executed, the "Texas Contract Clock" awakens. This is the pulse of your deal. In
+                    real estate, time is either your friend or your executioner.</p>
+                <div class="countdown" style="margin: 2rem 0;">04:59:32</div>
+                <p>Dwellingly turns the abstract deadlines of a 24-page contract into a literal countdown. You don't
+                    "hope" you're on time; you <em>know</em> you are.</p>
+            </div>
+        </section><!-- DEAL DEATH -->
+        <section class="section" style="background:#111;">
+            <div class="content" style="border-left:none; border-right:4px solid #ff4444;">
+                <h2 style="text-align:right;">The Deal-Death Prevention<br>(Step 5: The Option Period)</h2>
+                <p style="text-align:right;">This is the "Killing Field." The Option Period is where buyers get cold
+                    feet and agents try to "re-trade" the price. Dwellingly gives you the <strong>Option Period Command
+                        Center.</strong></p>
+                <ul style="list-style:none; margin-top:1rem; text-align:right;">
+                    <li style="margin-bottom:0.5rem;">We don't just "log" repairs; we document the history of the deal.
+                    </li>
+                    <li>We don't just "track" inspections; we build a fortress of transparency that makes it impossible
+                        for the buyer to claim "I didn't know."</li>
+                </ul>
+            </div>
+        </section><!-- VICTORY -->
+        <section class="section" id="victory"><img
+                src="../images/scene-4 (5).jpg?se=2025-01-22T08%3A23%3A02Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D0f345678-abcd-ef01-2345-678901abcdef.webp&sig=dummy_signature"
+                class="fullscreen-bg" alt="Modern House">
+            <div class="content" style="filter:url(#distort);">
+                <h2>The Victory (Conclusion)</h2>
+                <p>You started this journey to save money. You will finish it by realizing you’ve gained something more:
+                    <strong>Total Agency.</strong>
+                </p><br>
+                <p>With Dwellingly, you aren't "trying" to sell your house. You are executing a professional transaction
+                    with the same precision as a Tier-1 brokerage. You are in control, you are protected, and your
+                    equity is staying exactly where it belongs: with you.</p>
+            </div>
+        </section>
+        <footer>
+            <h2>Welcome to the Confident Path.</h2>
+        </footer>
+    </div>
+    <script>const observerOptions = { root: null, rootMargin: '0px', threshold: 0.4 }; const observer = new IntersectionObserver((entries, observer) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in-view'); } else { entry.target.classList.remove('in-view'); } }); }, observerOptions); document.querySelectorAll('.section').forEach(section => { observer.observe(section); });</script>
+</body>
+
+</html>

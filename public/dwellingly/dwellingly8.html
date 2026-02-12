@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dwellingly | The End of the Safety Tax</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Oswald:wght@300;500;700&display=swap');
+
+        :root {
+            --brand-teal: #308976;
+            --brand-muted: #4D726B;
+            --brand-black: #000000;
+            --brand-grey: #9B9C9C;
+            --brand-dark: #0A0A0A;
+        }
+
+        body {
+            background-color: var(--brand-dark);
+            color: var(--brand-grey);
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Utility Scrollytelling Classes */
+        .scrolly-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--brand-black);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .chapter {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-bottom: 1px solid #222;
+        }
+
+        .full-height {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(48, 137, 118, 0.6);
+        }
+
+        .bg-clip-text {
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+            background-image: linear-gradient(to bottom, #fff, #9B9C9C);
+        }
+
+        /* Animations */
+        @keyframes pulse-red {
+
+            0%,
+            100% {
+                color: #fff;
+                text-shadow: 0 0 5px red;
+            }
+
+            50% {
+                color: red;
+                text-shadow: 0 0 20px red;
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes drift {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .clock-ticking {
+            animation: pulse-red 1s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: var(--brand-teal);
+            opacity: 0.5;
+            filter: blur(5px);
+            animation: scanline 3s linear infinite;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scrolly-container"><!-- SVG FILTERS --><svg aria-hidden="true"
+            style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1"
+            xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="noise-static">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+                        <animate attributeName="seed" values="0;100" dur="0.5s" repeatCount="indefinite" />
+                    </feTurbulence>
+                    <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 15 -7" />
+                    <feComposite operator="in" in2="SourceGraphic" result="monoNoise" />
+                    <feBlend in="SourceGraphic" in2="monoNoise" mode="multiply" />
+                </filter>
+                <filter id="tech-distort">
+                    <feTurbulence type="turbulence" baseFrequency="0.01 0.05" numOctaves="2" result="turbulence">
+                        <animate attributeName="baseFrequency" values="0.01 0.05;0.02 0.06;0.01 0.05" dur="5s"
+                            repeatCount="indefinite" />
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="10" xChannelSelector="R"
+                        yChannelSelector="G" />
+                </filter>
+            </defs>
+        </svg>
+
+        <!-- AUDIO ELEMENTS -->
+        <audio id="audio-1" preload="auto">
+            <source src="../audio/download (1).wav" type="audio/wav">
+        </audio>
+        <audio id="audio-2" preload="auto">
+            <source src="../audio/download (2).wav" type="audio/wav">
+        </audio>
+        <audio id="audio-3" preload="auto">
+            <source src="../audio/download (3).wav" type="audio/wav">
+        </audio>
+        <audio id="audio-4" preload="auto">
+            <source src="../audio/download (4).wav" type="audio/wav">
+        </audio>
+        <audio id="audio-5" preload="auto">
+            <source src="../audio/download (5).wav" type="audio/wav">
+        </audio>
+
+        <!-- MUTE TOGGLE -->
+        <button id="mute-toggle" title="Toggle Sound"
+            class="fixed bottom-8 right-8 z-100 bg-black/80 border border-[#308976] text-[#308976] p-4 rounded-full hover:bg-[#308976] hover:text-white shadow-lg transition-all duration-300">
+            <svg id="icon-unmuted" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z">
+                </path>
+            </svg>
+            <svg id="icon-muted" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z">
+                </path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+            </svg>
+        </button>
+
+        <!-- SECTION 1: THE GHOST -->
+        <section id="section-1" class="chapter full-height relative">
+            <div class="absolute inset-0 z-0">
+                <video id="video-1" autoplay loop muted playsinline class="w-full h-full object-cover opacity-40"
+                    style="filter: url(#noise-static);">
+                    <source src="../images/animation-1.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="relative z-10">
+                <div class="border-l-4 border-[#308976] pl-6 mb-8">
+                    <h1 class="font-['Oswald'] text-5xl uppercase text-white font-bold leading-none tracking-tighter">
+                        The Ghost<br><span class="text-[#308976]">In The Room</span></h1>
+                </div>
+                <p class="text-lg leading-relaxed mb-6 text-gray-300">In Texas, a real estate contract isn't just
+                    paper—it’s a ticking clock.</p>
+                <div class="bg-black/80 border border-red-900/50 p-6 rounded-lg backdrop-blur-sm">
+                    <h2 class="font-['Oswald'] text-6xl text-center clock-ticking mb-2">5:01 PM</h2>
+                    <p class="text-xs text-center uppercase tracking-[0.3em] text-red-500">Final Day // Option
+                        Period
+                    </p>
+                </div>
+                <p class="mt-8 text-sm text-gray-400">Fortunes are won or lost. For the FSBO seller, this is pure,
+                    unadulterated anxiety. One missed box, one unverified wire instruction...</p>
+                <div
+                    class="mt-8 p-4 border border-dashed border-gray-700 text-xs uppercase tracking-widest text-center">
+                    Status: <span class="text-red-500">VULNERABLE</span></div>
+            </div>
+        </section><!-- SECTION 2: THE PIVOT -->
+        <section id="section-2" class="chapter bg-[#308976] text-black py-20 px-8">
+            <h2 class="font-['Oswald'] text-4xl font-bold uppercase leading-tight mb-4">The Industry's Lie</h2>
+            <p class="font-bold mb-8 opacity-80">They charge a $15,000 "safety tax" (commission) to manage a
+                workflow.
+            </p>
+            <div class="border-y-2 border-black py-8">
+                <h2 class="font-['Oswald'] text-5xl uppercase font-black text-center leading-none">Dwellingly is the
+                    end
+                    of the Safety Tax.</h2>
+            </div>
+        </section><!-- SECTION 3: THE ARMOR -->
+        <section id="section-3" class="chapter full-height relative">
+            <div class="absolute inset-0 z-0">
+                <video id="video-3" autoplay loop muted playsinline class="w-full h-full object-cover opacity-50">
+                    <source src="../images/animation-2.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="scan-line"></div>
+            <div class="relative z-10 bg-linear-to-t from-black via-black/80 to-transparent p-6 pt-32">
+                <h3 class="font-['Oswald'] text-3xl uppercase text-white mb-2 text-glow">We are not your
+                    agent.<br>We
+                    are your Armor.</h3>
+                <p class="text-[#308976] font-bold uppercase tracking-widest text-xs mb-6">// Compliance Fortress
+                    Active
+                </p>
+                <p class="mb-4">Dwellingly is built for the homeowner who refuses to overpay but refuses to be
+                    unprotected. We don’t give "advice"—advice is subjective. We provide <strong
+                        class="text-white">Procedural Certainty.</strong></p>
+                <div class="grid grid-cols-1 gap-4 mt-8">
+                    <div class="bg-[#0A0A0A]/90 border-l-2 border-[#308976] p-4">
+                        <h4 class="text-white font-bold uppercase text-sm mb-1">Flight Deck Protocol</h4>
+                        <p class="text-xs">We’ve codified the TREC 1-4 Family Residential Contract into a
+                            high-precision
+                            workflow.</p>
+                    </div>
+                </div>
+            </div>
+        </section><!-- SECTION 4: COMMAND CENTER (Features) -->
+        <section id="section-4" class="chapter relative bg-[#0A0A0A]">
+            <div class="absolute inset-0 z-0">
+                <video id="video-4" loop playsinline class="w-full h-full object-cover opacity-20">
+                    <source src="../images/animation-3.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="relative z-10 p-8 space-y-8"><!-- Feature 1 -->
+                <div class="group">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-2 h-2 bg-[#308976] rounded-full animate-pulse"></div>
+                        <h3 class="font-['Oswald'] text-2xl text-white uppercase">Option Period<br>Command Center
+                        </h3>
+                    </div>
+                    <p class="text-sm pl-5 border-l border-[#308976]">We don't just "track dates." We guard your
+                        5:00 PM
+                        CST deadline with the intensity of a mission-control specialist.</p>
+                </div><!-- Feature 2 -->
+                <div class="group">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-2 h-2 bg-[#308976] rounded-full"></div>
+                        <h3 class="font-['Oswald'] text-2xl text-white uppercase">Disclosure<br>Assistant (AI)</h3>
+                    </div>
+                    <p class="text-sm pl-5 border-l border-[#308976]">We hunt for "hidden liabilities" in your
+                        property
+                        history. When you hand over keys, you never look over your shoulder.</p>
+                </div><!-- Feature 3 -->
+                <div class="group">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-2 h-2 bg-[#308976] rounded-full"></div>
+                        <h3 class="font-['Oswald'] text-2xl text-white uppercase">Wire Fraud<br>Shield</h3>
+                    </div>
+                    <p class="text-sm pl-5 border-l border-[#308976]">We treat your equity like a sovereign reserve.
+                        Hard-coded barriers against hackers.</p>
+                </div>
+            </div>
+        </section><!-- SECTION 5: MISSION -->
+        <section id="section-5" class="chapter full-height relative">
+            <div class="absolute inset-0 z-0">
+                <video id="video-5" loop muted playsinline class="w-full h-full object-cover opacity-60"
+                    style="animation: drift 20s infinite alternate linear;">
+                    <source src="../images/animation-4.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="absolute inset-0 bg-linear-to-t from-[#0A0A0A] via-transparent to-transparent"></div>
+            <div class="relative z-10 flex flex-col justify-end h-full p-8 pb-16">
+                <h2 class="font-['Oswald'] text-6xl uppercase text-white mb-4 mix-blend-overlay"></h2>
+                <div class="bg-black/60 p-6 backdrop-blur-md border-t-4 border-[#308976]">
+                    <p class="text-white mb-4 font-light italic">"The Texas Way is built on independence and
+                        integrity.
+                        You have the right to sell your own home."</p>
+                    <ul class="text-sm space-y-2 mb-6">
+                        <li class="flex items-center"><svg class="w-4 h-4 text-[#308976] mr-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg> Own the process.</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-[#308976] mr-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg> Keep the equity.</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-[#308976] mr-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg> Sleep through the night.</li>
+                    </ul>
+                    <div class="text-center"><span
+                            class="inline-block py-2 px-6 border border-[#308976] text-[#308976] font-bold uppercase tracking-widest text-xs">Dwellingly.com</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const sections = document.querySelectorAll('.chapter');
+        const audios = {
+            'section-1': document.getElementById('audio-1'),
+            'section-2': document.getElementById('audio-2'),
+            'section-3': document.getElementById('audio-3'),
+            'section-4': document.getElementById('audio-4'),
+            'section-5': document.getElementById('audio-5')
+        };
+        const muteToggle = document.getElementById('mute-toggle');
+        const iconMuted = document.getElementById('icon-muted');
+        const iconUnmuted = document.getElementById('icon-unmuted');
+
+        // Slow down first video to match audio length (~8s video vs ~26s audio)
+        const video1 = document.getElementById('video-1');
+        if (video1) video1.playbackRate = 0.3;
+
+        // Slow down third video to match audio length (~8s video vs ~28s audio)
+        const video3 = document.getElementById('video-3');
+        if (video3) video3.playbackRate = 0.3;
+
+        // Slow down fifth video to match audio length (~8s video vs ~15s audio)
+        const video5 = document.getElementById('video-5');
+        if (video5) video5.playbackRate = 0.5;
+
+        let isMuted = true;
+
+        // Intersection Observer for scroll triggers
+        const observerOptions = {
+            threshold: 0.6 // Higher threshold to ensure only one is "active"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const sectionId = entry.target.id;
+                const audio = audios[sectionId];
+                const video = entry.target.querySelector('video');
+
+                if (entry.isIntersecting) {
+                    // Pause all audios first to prevent overlap
+                    Object.values(audios).forEach(a => a.pause());
+
+                    if (!isMuted) {
+                        if (audio) audio.play().catch(e => console.log('Audio wait for interaction'));
+                        if (video) {
+                            video.muted = false; // Enable video audio if unmuted
+                            video.play();
+                        }
+                    }
+                } else {
+                    if (audio) audio.pause();
+                    if (video) video.pause();
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        // Mute Toggle Logic
+        muteToggle.addEventListener('click', () => {
+            isMuted = !isMuted;
+            iconMuted.classList.toggle('hidden');
+            iconUnmuted.classList.toggle('hidden');
+
+            // Find current active section and play its audio/video
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top >= -rect.height / 2 && rect.top <= rect.height / 2) {
+                    const audio = audios[section.id];
+                    const video = section.querySelector('video');
+                    if (isMuted) {
+                        if (audio) audio.pause();
+                        if (video) {
+                            video.muted = true;
+                            video.pause();
+                        }
+                    } else {
+                        if (audio) audio.play().catch(e => console.log('Playback failed'));
+                        if (video) {
+                            video.muted = false; // Sync video mute state on toggle
+                            video.play();
+                        }
+                    }
+                }
+            });
+        });
+
+        // Auto-scroll when audio ends
+        Object.keys(audios).forEach((sectionId, index) => {
+            const audio = audios[sectionId];
+            if (audio) {
+                audio.addEventListener('ended', () => {
+                    const nextSection = sections[index + 1];
+                    if (nextSection) {
+                        nextSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

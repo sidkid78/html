@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Automation of Strategy</title>
+    <style>
+        /* --- RESET & TYPOGRAPHY --- */
+        :root {
+            --bg: #050505;
+            --text: #e0e0e0;
+            --accent-gold: #d4af37;
+            --accent-cyan: #00f2ff;
+            --font-serif: 'Georgia', serif;
+            --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-mono: 'Courier New', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-size: 18px;
+        }
+
+        /* --- SVG FILTERS & UTILS --- */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.07;
+            filter: url(#noiseFilter);
+        }
+
+        /* --- SCROLLYTELLING SECTIONS --- */
+        section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- TYPOGRAPHY STYLES --- */
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-serif);
+            font-weight: 300;
+            line-height: 1.1;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 2rem;
+            position: relative;
+            mix-blend-mode: exclusion;
+        }
+
+        .hero-title span {
+            display: block;
+            color: var(--accent-gold);
+        }
+
+        .section-header {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent-cyan);
+            padding-left: 1rem;
+        }
+
+        .lead {
+            font-size: 1.25rem;
+            max-width: 70ch;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .meta-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+        }
+
+        /* --- IMAGES & FIGURES --- */
+        .visual-container {
+            width: 100%;
+            height: 60vh;
+            position: relative;
+            overflow: hidden;
+            margin: 3rem 0;
+            border-radius: 4px;
+            background: #111;
+        }
+
+        .visual-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            filter: grayscale(20%);
+        }
+
+        .visual-container:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        /* Specific Image Overlays */
+        .overlay-stat {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border: 1px solid var(--accent-gold);
+            backdrop-filter: blur(10px);
+        }
+
+        .big-stat {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            line-height: 1;
+            display: block;
+        }
+
+        /* --- CODE TERMINAL --- */
+        .terminal {
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #a8a8a8;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .terminal::before {
+            content: '● ● ●';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 10px;
+            color: #555;
+            letter-spacing: 2px;
+        }
+
+        .code-keyword {
+            color: #ff79c6;
+        }
+
+        .code-func {
+            color: #8be9fd;
+        }
+
+        .code-string {
+            color: #f1fa8c;
+        }
+
+        .code-comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        /* --- ANIMATION CLASSES --- */
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .reveal-text.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Motion Blur Entry Effect */
+        .blur-in {
+            opacity: 0;
+            filter: blur(20px);
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .blur-in.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateX(0);
+        }
+
+        /* Liquid Text Effect applied to headers */
+        .liquid-target {
+            filter: url(#liquidFilter);
+            display: inline-block;
+        }
+
+        /* --- GRID LAYOUTS --- */
+        .exec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .exec-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-top: 2px solid var(--accent-cyan);
+        }
+
+        .exec-role {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .visual-container {
+                height: 40vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG FILTERS DEFINITIONS -->
+    <svg class="visually-hidden">
+        <defs>
+            <!-- 1. ANIMATED NOISE -->
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+                    <animate attributeName="baseFrequency" values="0.8;0.82;0.8" dur="1s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feColorMatrix type="saturate" values="0" />
+            </filter>
+
+            <!-- 3. LIQUID / DISTORTION -->
+            <filter id="liquidFilter">
+                <feTurbulence type="turbulence" baseFrequency="0.01 0.01" numOctaves="2" result="fluid">
+                    <animate attributeName="baseFrequency" dur="5s" values="0.01 0.01;0.01 0.02;0.01 0.01"
+                        repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="fluid" scale="5" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="noise-overlay"></div>
+
+    <main>
+        <!-- SECTION 1: INTRO -->
+        <section
+            style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,1)), url('[AI Mood Image]'); background-size: cover; background-attachment: fixed;">
+            <div class="container">
+                <div class="meta-tags reveal-text">
+                    <span>#Business Intelligence</span>
+                    <span>#Data Automation</span>
+                    <span>#Strategic Management</span>
+                    <span>#Predictive Analytics</span>
+                </div>
+                <h1 class="hero-title reveal-text">
+                    The Automation<br>
+                    <span>of Strategy</span>
+                </h1>
+                <p class="lead reveal-text">
+                    Moving Beyond Dashboards to Decision Engines. Transform reactive BI into proactive decision engines.
+                    Learn how an automated framework identifies growth patterns, reduces churn, and optimizes
+                    operations.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE PROBLEM -->
+        <section>
+            <div class="container">
+                <div class="reveal-text">
+                    <p class="lead" style="border-left: 1px solid #555; padding-left: 2rem;">
+                        In the modern enterprise, the challenge is no longer a lack of data, but an overwhelming surplus
+                        of it. Traditional Business Intelligence (BI) has historically functioned as a rearview mirror,
+                        providing retrospective reports that tell leaders what happened yesterday without explaining
+                        why.
+                    </p>
+                    <p>The transition to an Automated Business Intelligence and Insight Investigation Framework
+                        represents a fundamental shift. By integrating sophisticated statistical rigor with automated
+                        discovery workflows, businesses can now identify hidden patterns—such as the 'Premium Segment
+                        Paradox' or the '45-day churn trigger'—before they impact the bottom line.</p>
+                </div>
+                <div class="visual-container blur-in">
+                    <!-- Placeholder for Mood Image or Generic Data visual -->
+                    <div
+                        style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#1a1a1a;">
+                        <h3 style="color:#333; text-transform:uppercase; letter-spacing:4px;">Decision Engine Active
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: EVOLUTION -->
+        <section>
+            <div class="container">
+                <h2 class="section-header liquid-target">The Evolution of Intelligence</h2>
+                <div class="reveal-text">
+                    <p class="lead">The core of the Framework is its ability to move beyond the aesthetic appeal of
+                        dashboards into the realm of actionable intelligence.</p>
+                    <p>While traditional BI tools require manual exploration, this system utilizes automated discovery
+                        tools to scan datasets for statistical anomalies. By employing an ensemble modeling
+                        approach—combining ARIMA, Prophet, and Linear models—the system transitions the organization
+                        from descriptive analytics to predictive business analytics, achieving a Mean Absolute
+                        Percentage Error (MAPE) as low as 4.2%.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: REVENUE & IMAGE 1 -->
+        <section>
+            <div class="container">
+                <div class="grid-cols"
+                    style="display:grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+                    <div class="blur-in">
+                        <h2 class="section-header">The Premium Segment Paradox</h2>
+                        <p>Automated revenue growth analysis often reveals that a disproportionately small percentage of
+                            the customer base—approximately 18%—drives more than half of the total revenue (52%).</p>
+                        <br>
+                        <p>This insight allows organizations to pivot their marketing and acquisition strategies toward
+                            high-value segments rather than chasing volume alone. Furthermore, the Framework tracks the
+                            LTV:CAC ratio with surgical precision, identifying an exceptional 9.4:1 ratio in
+                            top-performing cohorts.</p>
+                    </div>
+                    <div class="visual-container blur-in">
+                        <!-- USER IMAGE 1: Pie Chart -->
+                        <img src="../images/visual-113.png"
+                            alt="Gold and Silver Pie Chart showing Premium Segment Paradox">
+                        <div class="overlay-stat">
+                            <span class="big-stat">52%</span>
+                            <span>Revenue from 18% of Customers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: CHURN & IMAGE 2 -->
+        <section>
+            <div class="container">
+                <div class="grid-cols"
+                    style="display:grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+                    <div class="visual-container blur-in" style="order: 2; @media(max-width:768px){order:1}">
+                        <!-- USER IMAGE 2: Hourglass -->
+                        <img src="../images/visual-223.png" alt="Digital Hourglass showing 45-day threshold">
+                        <div class="overlay-stat" style="border-color: var(--accent-cyan);">
+                            <span class="big-stat" style="color: var(--accent-cyan)">45 Days</span>
+                            <span>Critical Churn Threshold</span>
+                        </div>
+                    </div>
+                    <div class="blur-in" style="order: 1; @media(max-width:768px){order:2}">
+                        <h2 class="section-header">Customer Behavior Intelligence</h2>
+                        <p>Understanding customer behavior is the cornerstone of sustainable growth. The Framework
+                            identifies leading indicators of churn, most notably the '45-day inactivity' threshold.
+                            There is a documented 0.89 correlation between usage frequency and retention.</p>
+                        <br>
+                        <p>By flagging customers who have not engaged with the product within this window, the system
+                            enables proactive intervention strategies.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: OPS EFFICIENCY & IMAGE 3 -->
+        <section>
+            <div class="container">
+                <h2 class="section-header">Operational Efficiency: The 78% Capacity Benchmark</h2>
+                <p class="lead reveal-text">Scaling a business requires a delicate balance between throughput and
+                    quality. Research suggests that an optimal capacity utilization rate is approximately 78%.</p>
+
+                <div class="visual-container blur-in">
+                    <!-- USER IMAGE 3: Office Holograms -->
+                    <img src="../images/visual-333.png" alt="Modern Office with Holographic Data Overlay">
+                </div>
+
+                <div class="reveal-text">
+                    <p>Pushing beyond this limit often leads to diminishing returns. By monitoring cycle times and
+                        process bottlenecks, the system has demonstrated the ability to drive efficiency improvements of
+                        up to 15% while maintaining strict quality standards.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: STATISTICAL RIGOR & CODE -->
+        <section>
+            <div class="container">
+                <h2 class="section-header">Statistical Rigor: Distinguishing Signal from Noise</h2>
+                <p>To ensure that the insights generated are reliable, the Framework applies advanced statistical
+                    methods, including Bonferroni corrections and time-series decomposition.</p>
+
+                <div class="terminal blur-in">
+                    <div class="code-comment"># Example of time-series decomposition logic used in the framework</div>
+                    <div><span class="code-keyword">import</span> statsmodels.api <span class="code-keyword">as</span>
+                        sm</div>
+                    <br>
+                    <div><span class="code-keyword">def</span> <span
+                            class="code-func">decompose_business_metrics</span>(data_series):</div>
+                    <div style="padding-left: 20px;"><span class="code-comment"># Decomposing into Trend, Seasonality,
+                            and Residuals</span></div>
+                    <div style="padding-left: 20px;">decomposition = sm.tsa.seasonal_decompose(data_series, model=<span
+                            class="code-string">'multiplicative'</span>)</div>
+                    <div style="padding-left: 20px;"><span class="code-keyword">return</span> decomposition.trend,
+                        decomposition.seasonal, decomposition.resid</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: EXEC SUMMARY -->
+        <section>
+            <div class="container">
+                <h2 class="section-header liquid-target">The Executive Summary Engine</h2>
+                <p class="lead">Translating complex data into role-specific intelligence.</p>
+
+                <div class="exec-grid">
+                    <div class="exec-card blur-in">
+                        <div class="exec-role">CEO</div>
+                        <p>Insights focused on market position and strategic KPIs.</p>
+                    </div>
+                    <div class="exec-card blur-in" style="transition-delay: 0.1s;">
+                        <div class="exec-role">CFO</div>
+                        <p>Unit economics, LTV:CAC ratios, and payback periods.</p>
+                    </div>
+                    <div class="exec-card blur-in" style="transition-delay: 0.2s;">
+                        <div class="exec-role">COO</div>
+                        <p>Metrics related to cycle times and automation levels.</p>
+                    </div>
+                </div>
+
+                <div class="terminal blur-in" style="margin-top: 3rem; background: #000; border-color: #00f2ff;">
+                    <div class="code-comment"># Example schedule for daily automated insight generation at 6:00 AM</div>
+                    <div>0 6 * * * /usr/bin/python3 /scripts/generate_executive_summary.py --impact-level high</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 9: CONCLUSION -->
+        <section style="text-align: center;">
+            <div class="container">
+                <h2 class="section-header" style="border:none; font-size: 4rem;">Conclusion</h2>
+                <p class="lead" style="margin: 0 auto;">The Automated Business Insight Investigation and Analytics
+                    Workflow represents the future of strategic management. The shift from reactive dashboards to
+                    proactive decision engines allows leaders to focus on execution rather than exploration.</p>
+                <br>
+                <h3
+                    style="color: var(--accent-gold); text-transform: uppercase; letter-spacing: 2px; margin-top: 2rem;">
+                    Turn Information Into Action.</h3>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // INTERSECTION OBSERVER FOR SCROLLYTELLING ANIMATIONS
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: Unobserve if you only want it to animate once
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const elementsToAnimate = document.querySelectorAll('.reveal-text, .blur-in');
+            elementsToAnimate.forEach(el => observer.observe(el));
+        });
+    </script>
+
+</body>
+
+</html>
