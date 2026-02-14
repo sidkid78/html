@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sovereignty of the Family</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --c-dark: #050505;
+      --c-accent: #00f0ff;
+      --c-gold: #ffd700;
+      --c-text: #e0e0e0;
+    }
+
+    body {
+      background-color: var(--c-dark);
+      color: var(--c-text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3 {
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tech-font {
+      font-family: 'Space Mono', monospace;
+      color: var(--c-accent);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Layout Structure */
+    .scroll-container {
+      position: relative;
+      width: 100%;
+    }
+
+    section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.4;
+      filter: grayscale(30%) contrast(120%);
+      transition: opacity 1s ease;
+    }
+
+    .content-card {
+      background: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2.5rem;
+      max-width: 650px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Active State Animation */
+    .content-card.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Decorative Lines */
+    .line-decoration {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--c-accent), transparent);
+    }
+
+    /* SVG Filters Classes */
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.15;
+      filter: url(#grain);
+    }
+
+    .glitch-text {
+      filter: url(#glitch);
+      display: inline-block;
+    }
+
+    .blur-motion {
+      transition: filter 0.5s ease;
+    }
+
+    .active .blur-motion {
+      animation: blurSnap 0.8s ease-out forwards;
+    }
+
+    @keyframes blurSnap {
+      0% {
+        filter: blur(10px);
+        letter-spacing: 10px;
+        opacity: 0;
+      }
+
+      100% {
+        filter: blur(0px);
+        letter-spacing: 0.05em;
+        opacity: 1;
+      }
+    }
+
+    /* Specific Section Styles */
+    #intro {
+      align-items: center;
+      text-align: center;
+    }
+
+    #intro h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+
+    /* Utility for highlighting */
+    .highlight {
+      color: var(--c-gold);
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SVG Filters Definition -->
+  <svg style="display: none;">
+    <defs>
+      <!-- 1. Animated Film Grain -->
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch">
+          <animate attributeName="baseFrequency" values="0.8;0.85;0.8" dur="0.5s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+
+      <!-- 2. Digital Glitch/Distortion -->
+      <filter id="glitch">
+        <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="1" result="warp">
+          <animate attributeName="baseFrequency" values="0.05;0.02;0.05" dur="2s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="5" in="SourceGraphic" in2="warp" />
+      </filter>
+
+      <!-- 3. Motion Blur Simulation (Static definition, animated via CSS/JS logic mostly, but here for reference) -->
+      <filter id="motionBlur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0,0">
+          <animate attributeName="stdDeviation" values="10,0; 0,0" dur="0.5s" fill="freeze" begin="indefinite" />
+        </feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- Main Scroll Container -->
+  <main class="scroll-container">
+
+    <!-- Title Section -->
+    <section id="intro">
+      <img src="../images/scene-1 (11).jpg?q=80&w=2600&auto=format&fit=crop" class="bg-image"
+        alt="Abstract Architecture" style="opacity: 0.2;">
+      <div class="content-card" style="text-align: center; border: none; background: transparent;">
+        <p class="tech-font">Architectural Manifest</p>
+        <h1 class="blur-motion">The Sovereignty of the Family</h1>
+        <p class="text-xl mt-4 max-w-2xl mx-auto">Why We Built a Fortress for the Care Journey</p>
+        <div class="mt-8 animate-bounce opacity-50">↓ SCROLL TO DECRYPT</div>
+      </div>
+    </section>
+
+    <!-- Section 1 -->
+    <section id="sec-1">
+      <img
+        src="../images/scene-1 (11).jpg?se=2025-02-23T05%3A32%3A58Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Ddb108b3c-dc69-450f-90e6-cf9b071720ce.webp&sig=6w7XG3eN98t8BqF%2BhvH1Z9Ua6l1%2Bs04l7Q/H/u5t/6w%3D"
+        class="bg-image" alt="Privacy Sanctuary">
+      <div class="content-card">
+        <div class="line-decoration"></div>
+        <span class="tech-font"></span>
+        <h2 class="text-2xl mt-2 mb-4">Privacy as a Human Right</h2>
+        <p class="leading-relaxed text-gray-300">
+          In family care, "Privacy-by-Design" isn't a line item on a compliance checklist; it’s a moral obligation. When
+          a family uses Care-Sync, they are trusting us with their most vulnerable moments—the medication lists, the
+          doctor’s difficult news, the private struggles of aging parents. As a Principal Security Architect, I believe
+          technical security is the only way to honor that trust. We didn’t just build a platform; we engineered a <span
+            class="text-white font-semibold">sanctuary</span> where the <span class="glitch-text text-red-400">"attack
+            surface"</span> is minimized by design, ensuring that your family’s data never becomes someone else's
+          commodity.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section id="sec-2">
+      <img
+        src="../images/scene-2 (12).jpg?se=2025-02-23T05%3A32%3A58Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D4e8a4a22-3870-4ccb-b5d1-925251648a1c.webp&sig=Zqj7q%2BsG9z1bW/Q6l3fP6b%2Bd9sR/9k4jL1n%2Bw3sJ2q0%3D"
+        class="bg-image" alt="Invisible Wall">
+      <div class="content-card">
+        <div class="line-decoration" style="background: linear-gradient(to bottom, #00ff9d, transparent);"></div>
+        <span class="tech-font" style="color: #00ff9d;"></span>
+        <h2 class="text-2xl mt-2 mb-4">Why Your Data is Yours Alone</h2>
+        <p class="leading-relaxed text-gray-300">
+          In the world of health tech, "data leakage" isn't just a bug—it’s a violation. We use <span
+            class="text-green-400 font-mono">Row Level Security (RLS)</span> to ensure that data isolation isn't just a
+          setting, but a fundamental property of the data itself. Imagine an invisible, impenetrable wall between every
+          family group. By enforcing access at the database level rather than the application level, we’ve removed the
+          "human error" that leads to leaks. We’ve automated the "Least Privilege" model so that from the very second a
+          user joins, they are wrapped in a protective layer that even our own administrators cannot peel back.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 3 -->
+    <section id="sec-3">
+      <img
+        src="../images/scene-3 (10).jpg?se=2025-02-23T05%3A32%3A58Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Da5f9c3c1-19d2-4b7e-90f5-5c1a823b1e7d.webp&sig=2q%2BjW/8g6t2n5h9o%2Bp4vR/9m7jL4o%2Bw8tK3r1%2Bs%3D"
+        class="bg-image" alt="The Vault">
+      <div class="content-card" style="border-color: rgba(255, 215, 0, 0.2);">
+        <div class="line-decoration" style="background: linear-gradient(to bottom, var(--c-gold), transparent);"></div>
+        <span class="tech-font" style="color: var(--c-gold);"></span>
+        <h2 class="text-2xl mt-2 mb-4 text-yellow-100">Cryptographic Sovereignty</h2>
+        <p class="leading-relaxed text-gray-300">
+          There are some documents so sensitive that even the platform hosting them shouldn't be able to see them. This
+          is why we built <span class="highlight">"The Vault."</span> Using client-side AES-256 GCM encryption, we’ve
+          shifted the power back to the user. When you upload a sensitive document, the encryption keys are generated on
+          <em>your</em> device, using <em>your</em> password. We never see your password. We never hold your keys. If a
+          bad actor were to compromise our entire server infrastructure, they would find nothing but <span
+            class="glitch-text">digital noise</span>. We call this "Zero-Knowledge" storage because we believe your
+          family’s secrets should remain exactly that: yours.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 4 -->
+    <section id="sec-4">
+      <img
+        src="../images/scene-4 (9).jpg?se=2025-02-23T05%3A32%3A58Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p.webp&sig=3r%2BkX/9h7u3o6i0p%2Bq5wS/0n8kM5p%2Bx9uL4s2%2Bt%3D"
+        class="bg-image" style="filter: hue-rotate(240deg) contrast(1.2);"
+        alt="Ethical AI placeholder - using Digital Brain from instructions">
+      <!-- Note: Using the brain image URL logic based on provided text, inserting placeholder for image 4 from context if exact URL isn't present in prompt logs, using image 2 logic for structure. Assuming Image 4 is available as previous input. -->
+
+
+      <div class="content-card">
+        <div class="line-decoration" style="background: linear-gradient(to bottom, #d53f8c, transparent);"></div>
+        <span class="tech-font" style="color: #d53f8c;"></span>
+        <h2 class="text-2xl mt-2 mb-4">Intelligence Without Exposure</h2>
+        <p class="leading-relaxed text-gray-300">
+          AI can be a superpower for caregivers, but it shouldn't come at the cost of your privacy. Our "Doctor Digest"
+          and "Med-Cabinet" features use a "Zero-Trust" pipeline. We’ve architected a system of <strong
+            class="text-pink-400">Data Ephemerality.</strong> Your audio recordings and medical images are processed in
+          a "flash" state—summarized, encrypted, and then immediately deleted. We utilize enterprise-grade shields that
+          contractually prohibit AI models from "learning" from your data. You get the brilliance of GPT-4 without the
+          risk of your health profile becoming part of a public training set.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 5 & Outro -->
+    <section id="sec-5" style="background: linear-gradient(to top, #000, #0a0a0a);">
+      <div class="content-card" style="max-width: 800px;">
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <span class="tech-font text-white"></span>
+            <h2 class="text-2xl mt-2 mb-4">Resilience is a Form of Care</h2>
+            <p class="leading-relaxed text-gray-400 text-sm">
+              A system that fails when you need it most is not a secure system. We’ve built Care-Sync with the same
+              rigor used in high-stakes financial systems—utilizing AWS-backed resilience and "God Key" mitigation to
+              ensure that while the platform is always available to you, it is never vulnerable to exploitation.
+            </p>
+          </div>
+          <div class="border-l border-gray-800 pl-6 flex flex-col justify-center">
+            <p class="italic text-lg text-white font-serif">
+              "This isn't just a blueprint. It is our commitment to the high-stakes world of healthcare: a convergence
+              of high-integrity architecture and a deep respect for the sanctity of the family."
+            </p>
+            <div class="mt-4 tech-font text-xs tracking-widest">// WE BUILT THE FORTRESS SO YOU CAN FOCUS ON THE CARE.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Vanilla JS Intersection Observer to handle scroll animations
+    document.addEventListener("DOMContentLoaded", () => {
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.3 // Trigger when 30% of the element is visible
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+            // Optional: Parallax effect on image
+            const img = entry.target.parentElement.querySelector('.bg-image');
+            if (img) img.style.opacity = "0.6";
+          } else {
+            entry.target.classList.remove("active");
+            const img = entry.target.parentElement.querySelector('.bg-image');
+            if (img) img.style.opacity = "0.2";
+          }
+        });
+      }, observerOptions);
+
+      const cards = document.querySelectorAll('.content-card');
+      cards.forEach(card => observer.observe(card));
+    });
+  </script>
+
+</body>
+
+</html>
